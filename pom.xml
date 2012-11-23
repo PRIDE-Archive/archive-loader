@@ -4,9 +4,104 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>prider-loader</groupId>
+    <groupId>uk.ac.ebi.pride.prider</groupId>
     <artifactId>prider-loader</artifactId>
     <version>1.0</version>
+    <packaging>jar</packaging>
+    <url>http://www.ebi.ac.uk/pride</url>
 
+    <parent>
+        <groupId>uk.ac.ebi.pride.maven</groupId>
+        <artifactId>pride-base-master</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <prider.core.version>1.2-SNAPSHOT</prider.core.version>
+        <px.submission.core.version>1.5-SNAPSHOT</px.submission.core.version>
+        <ms.data.core.api.version>0.3</ms.data.core.api.version>
+    </properties>
+
+    <dependencies>
+
+        <!-- Spring framework -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+
+        <!-- PRIDE-R core-->
+        <dependency>
+            <groupId>uk.ac.ebi.pride</groupId>
+            <artifactId>prider-core</artifactId>
+            <version>${prider.core.version}</version>
+        </dependency>
+
+        <!-- PX submission core-->
+        <dependency>
+            <groupId>uk.ac.ebi.pride</groupId>
+            <artifactId>px-submission-core</artifactId>
+            <version>${px.submission.core.version}</version>
+        </dependency>
+
+        <!-- ms data core api -->
+        <dependency>
+            <groupId>uk.ac.ebi.pride</groupId>
+            <artifactId>ms-data-core-api</artifactId>
+            <version>${ms.data.core.api.version}</version>
+        </dependency>
+
+        <!-- HSQLDB for integration testing -->
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>prider-loader</finalName>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+        </plugins>
+
+    </build>
+
+    <repositories>
+        <!-- EBI repo -->
+        <repository>
+            <id>nexus-ebi-repo</id>
+            <name>The EBI internal repository</name>
+            <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/</url>
+            <releases>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <!-- EBI SNAPSHOT repo -->
+        <repository>
+            <id>nexus-ebi-snapshot-repo</id>
+            <name>The EBI internal snapshot repository</name>
+            <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+            </snapshots>
+        </repository>
+    </repositories>
     
 </project>
