@@ -8,6 +8,7 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.Assert;
 import uk.ac.ebi.pride.data.controller.DataAccessException;
+import uk.ac.ebi.pride.data.io.SubmissionFileParser;
 import uk.ac.ebi.pride.data.model.DataFile;
 import uk.ac.ebi.pride.data.model.ProjectMetaData;
 import uk.ac.ebi.pride.data.model.SampleMetaData;
@@ -16,17 +17,13 @@ import uk.ac.ebi.pride.data.util.MassSpecFileType;
 import uk.ac.ebi.pride.data.util.SubmissionType;
 import uk.ac.ebi.pride.prider.core.assay.Assay;
 import uk.ac.ebi.pride.prider.core.assay.dao.AssayDao;
-import uk.ac.ebi.pride.prider.core.assay.dao.db.AssayDaoDB;
 import uk.ac.ebi.pride.prider.core.file.ProjectFile;
 import uk.ac.ebi.pride.prider.core.file.dao.ProjectFileDao;
-import uk.ac.ebi.pride.prider.core.file.dao.db.ProjectFileDaoDb;
 import uk.ac.ebi.pride.prider.core.iconfig.Instrument;
 import uk.ac.ebi.pride.prider.core.project.Project;
 import uk.ac.ebi.pride.prider.core.project.dao.ProjectDao;
-import uk.ac.ebi.pride.prider.core.project.dao.db.ProjectDaoDB;
 import uk.ac.ebi.pride.prider.core.user.User;
 import uk.ac.ebi.pride.prider.core.user.dao.UserDao;
-import uk.ac.ebi.pride.prider.core.user.dao.db.UserDaoDB;
 import uk.ac.ebi.pride.prider.loader.assay.AssayFactory;
 import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
 import uk.ac.ebi.pride.prider.loader.util.Constant;
@@ -50,18 +47,21 @@ public class ProjectLoader {
     private AssayDao assayDao;
     private ProjectFileDao projectFileDao;
 
-    public ProjectLoader(DataSource dataSource) {
+    public ProjectLoader(DataSource dataSource,
+                         UserDao userDao,
+                         ProjectDao projectDao,
+                         AssayDao assayDao,
+                         ProjectFileDao projectFileDao) {
         Assert.notNull(dataSource, "Data source cannot be null");
 
         this.transactionTemplate = new TransactionTemplate(new DataSourceTransactionManager(dataSource));
-        this.userDao = new UserDaoDB(dataSource);
-        this.projectDao = new ProjectDaoDB(dataSource);
-        this.assayDao = new AssayDaoDB(dataSource);
-        this.projectFileDao = new ProjectFileDaoDb(dataSource);
+        this.userDao = userDao;
+        this.projectDao = projectDao;
+        this.assayDao = assayDao;
+        this.projectFileDao = projectFileDao;
     }
 
-    public void load(final String projectAccession, final String doi, final Submission submission) throws ProjectLoaderException {
-
+    public void load(final String projectAccession, final String doi, final String submissionSummaryFile) throws ProjectLoaderException {
         // create a new transaction call object
         ProjectLoaderTransactionCallback<Boolean> transactionCallback = new ProjectLoaderTransactionCallback<Boolean>() {
 
@@ -69,6 +69,9 @@ public class ProjectLoader {
             public Boolean doInTransaction(TransactionStatus status) {
                 boolean success = true;
                 try {
+                    // load submission
+                    Submission submission = SubmissionFileParser.parse(new File(submissionSummaryFile));
+
                     // login as a PRIDE-R user
                     User user = checkUser(submission.getProjectMetaData().getContact().getEmail());
 
@@ -89,6 +92,7 @@ public class ProjectLoader {
 
                     // load file mappings
                     loadFileMappings(submission, projectId, assayIdMappings);
+
                 } catch (Exception ex) {
                     status.setRollbackOnly();
                     this.setException(ex);

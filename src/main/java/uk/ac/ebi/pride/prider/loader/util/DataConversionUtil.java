@@ -1,10 +1,13 @@
 package uk.ac.ebi.pride.prider.loader.util;
 
+import uk.ac.ebi.pride.data.core.InstrumentConfiguration;
+import uk.ac.ebi.pride.data.core.Software;
 import uk.ac.ebi.pride.data.model.CvParam;
 import uk.ac.ebi.pride.data.model.Param;
 import uk.ac.ebi.pride.data.util.MassSpecFileType;
 import uk.ac.ebi.pride.data.util.SubmissionType;
 import uk.ac.ebi.pride.prider.core.file.ProjectFile;
+import uk.ac.ebi.pride.prider.core.iconfig.Instrument;
 import uk.ac.ebi.pride.prider.core.project.Reference;
 import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
 
@@ -115,6 +118,23 @@ public final class DataConversionUtil {
      * @param originalCvParam original cv param
      * @return prider cv param
      */
+    public static uk.ac.ebi.pride.prider.core.param.CvParam convertCvParam(uk.ac.ebi.pride.data.core.CvParam originalCvParam) {
+        uk.ac.ebi.pride.prider.core.param.CvParam cvParam = new uk.ac.ebi.pride.prider.core.param.CvParam();
+
+        cvParam.setCvLabel(originalCvParam.getCvLookupID());
+        cvParam.setAccession(originalCvParam.getAccession());
+        cvParam.setName(originalCvParam.getName());
+        cvParam.setValue(originalCvParam.getValue());
+
+        return cvParam;
+    }
+
+    /**
+     * Convert a cv param to prider cv param
+     *
+     * @param originalCvParam original cv param
+     * @return prider cv param
+     */
     public static uk.ac.ebi.pride.prider.core.param.CvParam convertCvParam(CvParam originalCvParam) {
         uk.ac.ebi.pride.prider.core.param.CvParam cvParam = new uk.ac.ebi.pride.prider.core.param.CvParam();
 
@@ -165,5 +185,31 @@ public final class DataConversionUtil {
 
         }
         return -1;
+    }
+
+
+    /**
+     * Convert instrument
+     * @param instrumentConfiguration   instrument configuration
+     */
+    public static Instrument convertInstrument(InstrumentConfiguration instrumentConfiguration) {
+        Instrument instrument = new Instrument();
+
+        // todo: implement
+
+        return instrument;
+    }
+
+    public static uk.ac.ebi.pride.prider.core.assay.Software convertSoftware(Software originalSoftware) {
+        uk.ac.ebi.pride.prider.core.assay.Software software = new uk.ac.ebi.pride.prider.core.assay.Software();
+
+        software.setName(originalSoftware.getName());
+        software.setCustomization(originalSoftware.getCustomization());
+        software.setVersion(originalSoftware.getVersion());
+        List<Param> params = new ArrayList<Param>();
+        params.addAll(convertCvParams(originalSoftware.getCvParams()));
+        software.setParams(convertParams(originalSoftware.getCvParams()));
+
+        return software;
     }
 }
