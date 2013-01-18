@@ -17,7 +17,7 @@
     </parent>
 
     <properties>
-        <prider.core.version>1.2-SNAPSHOT</prider.core.version>
+        <prider.repo.version>0.1-SNAPSHOT</prider.repo.version>
         <px.submission.core.version>1.5-SNAPSHOT</px.submission.core.version>
         <ms.data.core.api.version>0.3</ms.data.core.api.version>
     </properties>
@@ -33,8 +33,8 @@
         <!-- PRIDE-R core-->
         <dependency>
             <groupId>uk.ac.ebi.pride</groupId>
-            <artifactId>prider-core</artifactId>
-            <version>${prider.core.version}</version>
+            <artifactId>prider-repo</artifactId>
+            <version>${prider.repo.version}</version>
         </dependency>
 
         <!-- PX submission core-->

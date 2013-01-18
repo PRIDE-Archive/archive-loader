@@ -6,10 +6,9 @@ import uk.ac.ebi.pride.data.model.CvParam;
 import uk.ac.ebi.pride.data.model.Param;
 import uk.ac.ebi.pride.data.util.MassSpecFileType;
 import uk.ac.ebi.pride.data.util.SubmissionType;
-import uk.ac.ebi.pride.prider.core.file.ProjectFile;
-import uk.ac.ebi.pride.prider.core.iconfig.Instrument;
-import uk.ac.ebi.pride.prider.core.project.Reference;
-import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
+import uk.ac.ebi.pride.prider.repo.file.ProjectFile;
+import uk.ac.ebi.pride.prider.repo.instrument.Instrument;
+import uk.ac.ebi.pride.prider.repo.project.Reference;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,45 +64,13 @@ public final class DataConversionUtil {
     }
 
     /**
-     * Convert a collection params
-     *
-     * @param originalParams original params
-     */
-    public static List<uk.ac.ebi.pride.prider.core.param.Param> convertParams(List<Param> originalParams) {
-        List<uk.ac.ebi.pride.prider.core.param.Param> params = new ArrayList<uk.ac.ebi.pride.prider.core.param.Param>();
-
-        for (Param originalParam : originalParams) {
-            params.add(convertParam(originalParam));
-        }
-
-        return params;
-    }
-
-    /**
-     * Convert submission type from px submission core format to prider core format
-     *
-     * @param submissionType px submission core format submission type
-     * @return submission type in prider core format
-     */
-    public static uk.ac.ebi.pride.prider.core.project.SubmissionType convertSubmissionType(SubmissionType submissionType) throws ProjectLoaderException {
-        switch (submissionType) {
-            case COMPLETE:
-                return uk.ac.ebi.pride.prider.core.project.SubmissionType.COMPLETE;
-            case PARTIAL:
-                return uk.ac.ebi.pride.prider.core.project.SubmissionType.PARTIAL;
-
-        }
-        return null;
-    }
-
-    /**
      * Convert a collection of cv params to prider cv params
      *
      * @param originalCvParams a collection of cv params
      * @return a collection of cv params
      */
-    public static List<uk.ac.ebi.pride.prider.core.param.CvParam> convertCvParams(Collection<CvParam> originalCvParams) {
-        List<uk.ac.ebi.pride.prider.core.param.CvParam> cvParams = new ArrayList<uk.ac.ebi.pride.prider.core.param.CvParam>();
+    public static List<uk.ac.ebi.pride.prider.repo.param.CvParam> convertCvParams(Collection<CvParam> originalCvParams) {
+        List<uk.ac.ebi.pride.prider.repo.param.CvParam> cvParams = new ArrayList<uk.ac.ebi.pride.prider.core.param.CvParam>();
 
         for (CvParam originalCvParam : originalCvParams) {
             cvParams.add(convertCvParam(originalCvParam));
@@ -118,8 +85,8 @@ public final class DataConversionUtil {
      * @param originalCvParam original cv param
      * @return prider cv param
      */
-    public static uk.ac.ebi.pride.prider.core.param.CvParam convertCvParam(uk.ac.ebi.pride.data.core.CvParam originalCvParam) {
-        uk.ac.ebi.pride.prider.core.param.CvParam cvParam = new uk.ac.ebi.pride.prider.core.param.CvParam();
+    public static uk.ac.ebi.pride.prider.repo.param.CvParam convertCvParam(uk.ac.ebi.pride.data.core.CvParam originalCvParam) {
+        uk.ac.ebi.pride.prider.repo.param.CvParam cvParam = new uk.ac.ebi.pride.prider.repo.param.CvParam();
 
         cvParam.setCvLabel(originalCvParam.getCvLookupID());
         cvParam.setAccession(originalCvParam.getAccession());
@@ -129,36 +96,6 @@ public final class DataConversionUtil {
         return cvParam;
     }
 
-    /**
-     * Convert a cv param to prider cv param
-     *
-     * @param originalCvParam original cv param
-     * @return prider cv param
-     */
-    public static uk.ac.ebi.pride.prider.core.param.CvParam convertCvParam(CvParam originalCvParam) {
-        uk.ac.ebi.pride.prider.core.param.CvParam cvParam = new uk.ac.ebi.pride.prider.core.param.CvParam();
-
-        cvParam.setCvLabel(originalCvParam.getCvLabel());
-        cvParam.setAccession(originalCvParam.getAccession());
-        cvParam.setName(originalCvParam.getName());
-        cvParam.setValue(originalCvParam.getValue());
-
-        return cvParam;
-    }
-
-    /**
-     * Convert a param to prider param
-     *
-     * @param originalParam original param
-     * @return prider param
-     */
-    public static uk.ac.ebi.pride.prider.core.param.Param convertParam(Param originalParam) {
-        if (originalParam instanceof CvParam) {
-            return convertCvParam((CvParam) originalParam);
-        } else {
-            return new uk.ac.ebi.pride.prider.core.param.Param(originalParam.getName(), originalParam.getValue());
-        }
-    }
 
     /**
      * Convert project file type
@@ -190,7 +127,8 @@ public final class DataConversionUtil {
 
     /**
      * Convert instrument
-     * @param instrumentConfiguration   instrument configuration
+     *
+     * @param instrumentConfiguration instrument configuration
      */
     public static Instrument convertInstrument(InstrumentConfiguration instrumentConfiguration) {
         Instrument instrument = new Instrument();
@@ -200,8 +138,8 @@ public final class DataConversionUtil {
         return instrument;
     }
 
-    public static uk.ac.ebi.pride.prider.core.assay.Software convertSoftware(Software originalSoftware) {
-        uk.ac.ebi.pride.prider.core.assay.Software software = new uk.ac.ebi.pride.prider.core.assay.Software();
+    public static uk.ac.ebi.pride.prider.repo.assay.software.Software convertSoftware(Software originalSoftware) {
+        uk.ac.ebi.pride.prider.repo.assay.software.Software software = new uk.ac.ebi.pride.prider.core.assay.Software();
 
         software.setName(originalSoftware.getName());
         software.setCustomization(originalSoftware.getCustomization());
@@ -211,5 +149,26 @@ public final class DataConversionUtil {
         software.setParams(convertParams(originalSoftware.getCvParams()));
 
         return software;
+    }
+
+    public static uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType convertSubmissionType(SubmissionType submissionType) {
+
+        switch (submissionType) {
+
+            case COMPLETE:
+                return uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType.COMPLETE;
+                break;
+            case PARTIAL:
+                return uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType.PARTIAL;
+                break;
+            case PRIDE:
+            case RAW:
+                throw new IllegalArgumentException("Unsupported submittion type for the PRIDE-R loader")
+                break;
+
+
+        }
+
+
     }
 }

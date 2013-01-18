@@ -15,19 +15,20 @@ import uk.ac.ebi.pride.data.model.SampleMetaData;
 import uk.ac.ebi.pride.data.model.Submission;
 import uk.ac.ebi.pride.data.util.MassSpecFileType;
 import uk.ac.ebi.pride.data.util.SubmissionType;
-import uk.ac.ebi.pride.prider.core.assay.Assay;
-import uk.ac.ebi.pride.prider.core.assay.dao.AssayDao;
-import uk.ac.ebi.pride.prider.core.file.ProjectFile;
-import uk.ac.ebi.pride.prider.core.file.dao.ProjectFileDao;
-import uk.ac.ebi.pride.prider.core.iconfig.Instrument;
-import uk.ac.ebi.pride.prider.core.project.Project;
-import uk.ac.ebi.pride.prider.core.project.dao.ProjectDao;
-import uk.ac.ebi.pride.prider.core.user.User;
-import uk.ac.ebi.pride.prider.core.user.dao.UserDao;
 import uk.ac.ebi.pride.prider.loader.assay.AssayFactory;
 import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
 import uk.ac.ebi.pride.prider.loader.util.Constant;
 import uk.ac.ebi.pride.prider.loader.util.DataConversionUtil;
+import uk.ac.ebi.pride.prider.repo.assay.Assay;
+import uk.ac.ebi.pride.prider.repo.assay.AssayRepository;
+import uk.ac.ebi.pride.prider.repo.file.ProjectFile;
+import uk.ac.ebi.pride.prider.repo.file.ProjectFileRepository;
+import uk.ac.ebi.pride.prider.repo.instrument.Instrument;
+import uk.ac.ebi.pride.prider.repo.param.CvParam;
+import uk.ac.ebi.pride.prider.repo.project.Project;
+import uk.ac.ebi.pride.prider.repo.project.ProjectRepository;
+import uk.ac.ebi.pride.prider.repo.user.User;
+import uk.ac.ebi.pride.prider.repo.user.UserRepository;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -42,16 +43,17 @@ public class ProjectLoader {
     public static final Logger logger = LoggerFactory.getLogger(ProjectLoader.class);
 
     private TransactionTemplate transactionTemplate;
-    private UserDao userDao;
-    private ProjectDao projectDao;
-    private AssayDao assayDao;
-    private ProjectFileDao projectFileDao;
+    private UserRepository userDao;
+    private ProjectRepository projectDao;
+    private AssayRepository assayDao;
+    private ProjectFileRepository projectFileDao;
+
 
     public ProjectLoader(DataSource dataSource,
-                         UserDao userDao,
-                         ProjectDao projectDao,
-                         AssayDao assayDao,
-                         ProjectFileDao projectFileDao) {
+                         UserRepository userDao,
+                         ProjectRepository projectDao,
+                         AssayRepository assayDao,
+                         ProjectFileRepository projectFileDao) {
         Assert.notNull(dataSource, "Data source cannot be null");
 
         this.transactionTemplate = new TransactionTemplate(new DataSourceTransactionManager(dataSource));
@@ -73,19 +75,32 @@ public class ProjectLoader {
                     Submission submission = SubmissionFileParser.parse(new File(submissionSummaryFile));
 
                     // login as a PRIDE-R user
-                    User user = checkUser(submission.getProjectMetaData().getContact().getEmail());
+                    User user = userDao.findByEmail(submission.getProjectMetaData().getContact().getEmail());
+                    if (user == null) {
+                        logAndThrowException("Failed to identify a existing user: " + submission.getProjectMetaData().getContact().getEmail());
+                    }
 
                     // make sure project accession doesn't exist
-                    checkProjectExistence(projectAccession);
+                    if (projectDao.findByAccession(projectAccession) != null) {
+                        logAndThrowException("Project accession already exists: " + projectAccession);
+                    }
 
                     // make sure all the assay accessions don't exist
-                    checkAssayExistence(submission);
+                    if (submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.COMPLETE)) {
+                        List<DataFile> dataFiles = submission.getDataFiles();
+                        for (DataFile dataFile : dataFiles) {
+                            String assayAccession = dataFile.getAssayAccession();
+                            if (assayAccession != null && assayDao.findByAccession(assayAccession) != null) {
+                                logAndThrowException("Assay accession already exists: " + assayAccession);
+                            }
+                        }
+                    }
 
                     // collect assay details
                     List<Assay> assays = collectAssayDetails(submission);
 
                     // load project metadata
-                    Long projectId = loadProjectMetaData(submission, projectAccession, doi, user.getId(), assays);
+                    Long projectId = loadProjectMetaData(submission, projectAccession, doi, user, assays);
 
                     // load assay entry
                     Map<String, Long> assayIdMappings = loadAssays(assays);
@@ -112,47 +127,6 @@ public class ProjectLoader {
         }
     }
 
-    /**
-     * Check user's existence
-     */
-    private User checkUser(String email) throws ProjectLoaderException {
-        User user = userDao.findUserByEmail(email);
-
-        if (user == null) {
-            logAndThrowException("Failed to identify a existing user: " + email);
-        }
-
-        return user;
-    }
-
-    /**
-     * Check project existence
-     *
-     * @param projectAccession project accession
-     */
-    private void checkProjectExistence(String projectAccession) throws ProjectLoaderException {
-        if (projectDao.isProjectPresent(projectAccession)) {
-            logAndThrowException("Project accession already exists: " + projectAccession);
-        }
-    }
-
-    /**
-     * Check assay existence
-     *
-     * @param submission submission summary which contains assay accessions
-     */
-    private void checkAssayExistence(Submission submission) throws ProjectLoaderException {
-        if (submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.COMPLETE)) {
-            List<DataFile> dataFiles = submission.getDataFiles();
-            for (DataFile dataFile : dataFiles) {
-                String assayAccession = dataFile.getAssayAccession();
-                if (assayAccession != null && assayDao.isAssayPresent(assayAccession)) {
-                    logAndThrowException("Assay accession already exists: " + assayAccession);
-                }
-            }
-        }
-    }
-
 
     /**
      * Create a collection of assay details
@@ -167,8 +141,7 @@ public class ProjectLoader {
             List<DataFile> dataFiles = submission.getDataFiles();
             for (DataFile dataFile : dataFiles) {
                 if (dataFile.isFile() && dataFile.getFileType().equals(MassSpecFileType.RESULT)) {
-                    SampleMetaData sampleMetaData = submission.getSampleMetaDataByFileID(dataFile.getFileId());
-                    assays.add(AssayFactory.makeAssay(dataFile, sampleMetaData));
+                    assays.add(AssayFactory.makeAssay(dataFile, dataFile.getSampleMetaData()));
                 }
             }
         }
@@ -181,11 +154,11 @@ public class ProjectLoader {
      *
      * @param submission       submission summary
      * @param projectAccession project accession
-     * @param submitterId      user id
+     * @param submitter        user
      * @param assays           a collection of assay details
      * @throws ProjectLoaderException exception indicates error when loading project data
      */
-    private Long loadProjectMetaData(Submission submission, String projectAccession, String doi, Long submitterId, List<Assay> assays) throws ProjectLoaderException {
+    private Long loadProjectMetaData(Submission submission, String projectAccession, String doi, User submitter, List<Assay> assays) throws ProjectLoaderException {
         Project project = new Project();
 
         // project accession
@@ -195,7 +168,7 @@ public class ProjectLoader {
         project.setDoi(doi);
 
         // submitter id
-        project.setSubmitterId(submitterId);
+        project.setSubmitter(submitter);
 
         // project title
         ProjectMetaData projectMetaData = submission.getProjectMetaData();
@@ -223,22 +196,22 @@ public class ProjectLoader {
         project.setExperimentTypes(DataConversionUtil.convertCvParams(projectMetaData.getMassSpecExperimentMethods()));
 
         // species
-        List<uk.ac.ebi.pride.prider.core.param.CvParam> samples = new ArrayList<uk.ac.ebi.pride.prider.core.param.CvParam>();
+        List<CvParam> samples = new ArrayList<CvParam>();
         samples.addAll(DataConversionUtil.convertCvParams(projectMetaData.getSpecies()));
         project.setSamples(samples);
 
         // instrument
-        List<uk.ac.ebi.pride.prider.core.param.Param> instruments = new ArrayList<uk.ac.ebi.pride.prider.core.param.Param>();
+        List<Param> instruments = new ArrayList<Param>();
         instruments.addAll(DataConversionUtil.convertParams(projectMetaData.getInstruments()));
         project.setInstruments(instruments);
 
         // modification
-        List<uk.ac.ebi.pride.prider.core.param.CvParam> ptms = new ArrayList<uk.ac.ebi.pride.prider.core.param.CvParam>();
+        List<CvParam> ptms = new ArrayList<CvParam>();
         ptms.addAll(DataConversionUtil.convertCvParams(projectMetaData.getModifications()));
         project.setPtms(ptms);
 
         // additional
-        List<uk.ac.ebi.pride.prider.core.param.Param> additionals = new ArrayList<uk.ac.ebi.pride.prider.core.param.Param>();
+        List<Param> additionals = new ArrayList<Param>();
         additionals.addAll(DataConversionUtil.convertParams(projectMetaData.getAdditional()));
         project.setParams(additionals);
 
@@ -266,9 +239,9 @@ public class ProjectLoader {
     private void mergeAssayDetails(Project project, List<Assay> assays) {
         for (Assay assay : assays) {
             // species
-            Collection<uk.ac.ebi.pride.prider.core.param.CvParam> samples = assay.getSamples();
-            Collection<uk.ac.ebi.pride.prider.core.param.CvParam> projectSamples = project.getSamples();
-            for (uk.ac.ebi.pride.prider.core.param.CvParam sample : samples) {
+            Collection<CvParam> samples = assay.getSamples();
+            Collection<CvParam> projectSamples = project.getSamples();
+            for (CvParam sample : samples) {
                 if (!projectSamples.contains(sample)) {
                     projectSamples.add(sample);
                 }
@@ -276,34 +249,33 @@ public class ProjectLoader {
 
             // instrument
             Collection<Instrument> instruments = assay.getInstruments();
-            Collection<uk.ac.ebi.pride.prider.core.param.Param> projectInstruments = project.getInstruments();
+            Collection<Param> projectInstruments = project.getInstruments();
             for (Instrument instrument : instruments) {
-                uk.ac.ebi.pride.prider.core.param.Param model = instrument.getModel();
+                Param model = instrument.getModel();
                 if (!projectInstruments.contains(model)) {
                     projectInstruments.add(model);
                 }
             }
 
             // modifications
-            Collection<uk.ac.ebi.pride.prider.core.param.CvParam> ptms = assay.getPtms();
-            Collection<uk.ac.ebi.pride.prider.core.param.CvParam> projectPtms = project.getPtms();
-            for (uk.ac.ebi.pride.prider.core.param.CvParam ptm : ptms) {
+            Collection<CvParam> ptms = assay.getPtms();
+            Collection<CvParam> projectPtms = project.getPtms();
+            for (CvParam ptm : ptms) {
                 if (!projectPtms.contains(ptm)) {
                     projectPtms.add(ptm);
                 }
             }
 
             // quantifications
-            Collection<uk.ac.ebi.pride.prider.core.param.CvParam> quants = assay.getQuantificationMethods();
-            Collection<uk.ac.ebi.pride.prider.core.param.CvParam> projectQuants = project.getQuantificationMethods();
-            for (uk.ac.ebi.pride.prider.core.param.CvParam quant : quants) {
+            Collection<CvParam> quants = assay.getQuantificationMethods();
+            Collection<CvParam> projectQuants = project.getQuantificationMethods();
+            for (CvParam quant : quants) {
                 if (!projectQuants.contains(quant)) {
                     projectQuants.add(quant);
                 }
             }
         }
     }
-
 
 
     /**
@@ -378,7 +350,7 @@ public class ProjectLoader {
     /**
      * Log and throw an {@code ProjectLoaderException}
      *
-      * @param msg  error message
+     * @param msg error message
      * @throws ProjectLoaderException
      */
     private void logAndThrowException(String msg) throws ProjectLoaderException {
