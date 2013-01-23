@@ -10,12 +10,11 @@ import uk.ac.ebi.pride.data.model.DataFile;
 import uk.ac.ebi.pride.data.model.Param;
 import uk.ac.ebi.pride.data.model.SampleMetaData;
 import uk.ac.ebi.pride.data.util.MassSpecFileFormat;
-import uk.ac.ebi.pride.prider.core.assay.Assay;
-import uk.ac.ebi.pride.prider.core.assay.Software;
-import uk.ac.ebi.pride.prider.core.iconfig.Instrument;
-import uk.ac.ebi.pride.prider.core.param.CvParam;
 import uk.ac.ebi.pride.prider.loader.util.Constant;
 import uk.ac.ebi.pride.prider.loader.util.DataConversionUtil;
+import uk.ac.ebi.pride.prider.repo.assay.Assay;
+import uk.ac.ebi.pride.prider.repo.assay.AssaySample;
+import uk.ac.ebi.pride.prider.repo.instrument.Instrument;
 
 import java.io.File;
 import java.util.*;
@@ -30,7 +29,6 @@ import java.util.*;
  */
 public final class AssayFactory {
 
-
     public static Assay makeAssay(DataFile dataFile, SampleMetaData sampleMetaData) throws DataAccessException {
         Assay assay = new Assay();
 
@@ -38,27 +36,31 @@ public final class AssayFactory {
         assay.setAccession(dataFile.getAssayAccession());
 
         // sample
-        List<CvParam> samples = new ArrayList<CvParam>();
-        samples.addAll(DataConversionUtil.convertCvParams(sampleMetaData.getSpecies()));
-        samples.addAll(DataConversionUtil.convertCvParams(sampleMetaData.getTissues()));
-        samples.addAll(DataConversionUtil.convertCvParams(sampleMetaData.getCellTypes()));
-        samples.addAll(DataConversionUtil.convertCvParams(sampleMetaData.getDiseases()));
+        List<AssaySample> samples = new ArrayList<AssaySample>();
+        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.SPECIES)));
+        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.TISSUE)));
+        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.CELL_TYPE)));
+        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.DISEASE)));
         assay.setSamples(samples);
 
         // quantification
-        assay.setQuantificationMethods(DataConversionUtil.convertCvParams(sampleMetaData.getQuantificationMethods()));
+        assay.setQuantificationMethods(DataConversionUtil.convertAssayQuantitationMethodCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.QUANTIFICATION_METHOD)));
 
         // instrument
         List<Instrument> instruments = new ArrayList<Instrument>();
-        List<Param> instrumentModels = sampleMetaData.getInstruments();
-        for (Param instrumentModel : instrumentModels) {
-            Instrument instrument = new Instrument();
-            instrument.setModel(DataConversionUtil.convertParam(instrumentModel));
-        }
+        Set<Param> instrumentModels = sampleMetaData.getMetaData(SampleMetaData.Type.INSTRUMENT);
+//        for (Param instrumentModel : instrumentModels) {
+//            Instrument instrument = new Instrument();
+//            instrument.setModel(DataConversionUtil.convertParam(instrumentModel));
+//        }
         assay.setInstruments(instruments);
 
         // experimental factor
-        assay.setExperimentalFactor(sampleMetaData.getExperimentalFactor());
+        Set<Param> experimentFactor = sampleMetaData.getMetaData(SampleMetaData.Type.EXPERIMENTAL_FACTOR);
+        if (!experimentFactor.isEmpty()) {
+            //todo is this sensible??
+            assay.setExperimentalFactor(experimentFactor.iterator().next().getName());
+        }
 
         // load assay details from file
         loadAssayDetailsFromFile(assay, dataFile);
@@ -122,10 +124,10 @@ public final class AssayFactory {
             assay.setChromatogram(resultFileScanner.hasChromatogram());
 
             // softwares
-            assay.setSoftwares(resultFileScanner.getSoftwares());
+            assay.setSoftwares(DataConversionUtil.convertSoftware(assay, resultFileScanner.getSoftwares()));
 
             // ptms
-            assay.setPtms(resultFileScanner.getPtms());
+            assay.setPtms(DataConversionUtil.convertAssayPTMs(assay, resultFileScanner.getPtms()));
 
         } finally {
             if (dataAccessController != null) {
@@ -145,19 +147,15 @@ public final class AssayFactory {
 
         // instrument
         List<Instrument> instruments = new ArrayList<Instrument>();
-        Collection<InstrumentConfiguration> instrumentConfigurations =  dataAccessController.getInstrumentConfigurations();
+        Collection<InstrumentConfiguration> instrumentConfigurations = dataAccessController.getInstrumentConfigurations();
         for (InstrumentConfiguration instrumentConfiguration : instrumentConfigurations) {
-
+            //todo build instruments
         }
 
         // software
         Set<Software> softwares = new HashSet<Software>();
-        List<uk.ac.ebi.pride.data.core.Software> originalSoftwares = dataAccessController.getExperimentMetaData().getSoftwares();
-        for (uk.ac.ebi.pride.data.core.Software originalSoftware : originalSoftwares) {
-            softwares.add(DataConversionUtil.convertSoftware(originalSoftware));
-        }
+        softwares.addAll(dataAccessController.getExperimentMetaData().getSoftwares());
         resultFileScanner.setSoftwares(softwares);
-
 
         // iterate over proteins
         Set<CvParam> ptms = new HashSet<CvParam>();
@@ -178,7 +176,7 @@ public final class AssayFactory {
                     List<uk.ac.ebi.pride.data.core.CvParam> cvParams = modification.getCvParams();
                     for (uk.ac.ebi.pride.data.core.CvParam cvParam : cvParams) {
                         if (cvParam.getCvLookupID().equalsIgnoreCase(Constant.MS) || cvParam.getCvLookupID().equalsIgnoreCase(Constant.UNIMOD)) {
-                            ptms.add(DataConversionUtil.convertCvParam(cvParam));
+                            ptms.add(cvParam);
                         }
                     }
                 }

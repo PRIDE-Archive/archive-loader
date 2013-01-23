@@ -2,6 +2,7 @@ package uk.ac.ebi.pride.prider.loader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
@@ -11,22 +12,18 @@ import uk.ac.ebi.pride.data.controller.DataAccessException;
 import uk.ac.ebi.pride.data.io.SubmissionFileParser;
 import uk.ac.ebi.pride.data.model.DataFile;
 import uk.ac.ebi.pride.data.model.ProjectMetaData;
-import uk.ac.ebi.pride.data.model.SampleMetaData;
 import uk.ac.ebi.pride.data.model.Submission;
-import uk.ac.ebi.pride.data.util.MassSpecFileType;
-import uk.ac.ebi.pride.data.util.SubmissionType;
+import uk.ac.ebi.pride.prider.dataprovider.file.ProjectFileType;
+import uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType;
 import uk.ac.ebi.pride.prider.loader.assay.AssayFactory;
 import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
 import uk.ac.ebi.pride.prider.loader.util.Constant;
 import uk.ac.ebi.pride.prider.loader.util.DataConversionUtil;
-import uk.ac.ebi.pride.prider.repo.assay.Assay;
-import uk.ac.ebi.pride.prider.repo.assay.AssayRepository;
+import uk.ac.ebi.pride.prider.repo.assay.*;
 import uk.ac.ebi.pride.prider.repo.file.ProjectFile;
 import uk.ac.ebi.pride.prider.repo.file.ProjectFileRepository;
 import uk.ac.ebi.pride.prider.repo.instrument.Instrument;
-import uk.ac.ebi.pride.prider.repo.param.CvParam;
-import uk.ac.ebi.pride.prider.repo.project.Project;
-import uk.ac.ebi.pride.prider.repo.project.ProjectRepository;
+import uk.ac.ebi.pride.prider.repo.project.*;
 import uk.ac.ebi.pride.prider.repo.user.User;
 import uk.ac.ebi.pride.prider.repo.user.UserRepository;
 
@@ -43,24 +40,25 @@ public class ProjectLoader {
     public static final Logger logger = LoggerFactory.getLogger(ProjectLoader.class);
 
     private TransactionTemplate transactionTemplate;
+
+    @Autowired
     private UserRepository userDao;
+
+    @Autowired
     private ProjectRepository projectDao;
+
+    @Autowired
     private AssayRepository assayDao;
+
+    @Autowired
     private ProjectFileRepository projectFileDao;
 
+    @Autowired
+    private DataSource datasource;
 
-    public ProjectLoader(DataSource dataSource,
-                         UserRepository userDao,
-                         ProjectRepository projectDao,
-                         AssayRepository assayDao,
-                         ProjectFileRepository projectFileDao) {
-        Assert.notNull(dataSource, "Data source cannot be null");
-
-        this.transactionTemplate = new TransactionTemplate(new DataSourceTransactionManager(dataSource));
-        this.userDao = userDao;
-        this.projectDao = projectDao;
-        this.assayDao = assayDao;
-        this.projectFileDao = projectFileDao;
+    public ProjectLoader() {
+        Assert.notNull(datasource, "Data source cannot be null");
+        this.transactionTemplate = new TransactionTemplate(new DataSourceTransactionManager(datasource));
     }
 
     public void load(final String projectAccession, final String doi, final String submissionSummaryFile) throws ProjectLoaderException {
@@ -140,7 +138,7 @@ public class ProjectLoader {
         if (submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.COMPLETE)) {
             List<DataFile> dataFiles = submission.getDataFiles();
             for (DataFile dataFile : dataFiles) {
-                if (dataFile.isFile() && dataFile.getFileType().equals(MassSpecFileType.RESULT)) {
+                if (dataFile.isFile() && dataFile.getFileType().equals(ProjectFileType.RESULT)) {
                     assays.add(AssayFactory.makeAssay(dataFile, dataFile.getSampleMetaData()));
                 }
             }
@@ -190,30 +188,31 @@ public class ProjectLoader {
         project.setKeywords(projectMetaData.getOtherOmicsLink());
 
         // submission type
-        project.setSubmissionType(DataConversionUtil.convertSubmissionType(projectMetaData.getSubmissionType()));
+        project.setSubmissionType(projectMetaData.getSubmissionType());
 
         // experiment type
-        project.setExperimentTypes(DataConversionUtil.convertCvParams(projectMetaData.getMassSpecExperimentMethods()));
+        project.setExperimentTypes(DataConversionUtil.convertProjectExperimentTypeCvParams(project, projectMetaData.getMassSpecExperimentMethods()));
 
         // species
-        List<CvParam> samples = new ArrayList<CvParam>();
-        samples.addAll(DataConversionUtil.convertCvParams(projectMetaData.getSpecies()));
+        List<ProjectSample> samples = new ArrayList<ProjectSample>();
+        samples.addAll(DataConversionUtil.convertProjectSampleCvParams(project, projectMetaData.getSpecies()));
         project.setSamples(samples);
 
         // instrument
-        List<Param> instruments = new ArrayList<Param>();
-        instruments.addAll(DataConversionUtil.convertParams(projectMetaData.getInstruments()));
-        project.setInstruments(instruments);
+        List<Instrument> instruments = new ArrayList<Instrument>();
+        instruments.addAll(DataConversionUtil.convertProjectInstrument(projectMetaData.getInstruments()));
+        project.setInstrument(instruments);
+
 
         // modification
-        List<CvParam> ptms = new ArrayList<CvParam>();
-        ptms.addAll(DataConversionUtil.convertCvParams(projectMetaData.getModifications()));
+        List<ProjectPTM> ptms = new ArrayList<ProjectPTM>();
+        ptms.addAll(DataConversionUtil.convertProjectPTMs(project, projectMetaData.getModifications()));
         project.setPtms(ptms);
 
         // additional
-        List<Param> additionals = new ArrayList<Param>();
-        additionals.addAll(DataConversionUtil.convertParams(projectMetaData.getAdditional()));
-        project.setParams(additionals);
+        List<ProjectGroupCvParam> additionals = new ArrayList<ProjectGroupCvParam>();
+        additionals.addAll(DataConversionUtil.convertProjectGroupCvParams(project, projectMetaData.getAdditional()));
+        project.setProjectGroupCvParams(additionals);
 
         // pubmed
         project.setReferences(DataConversionUtil.convertReferences(projectMetaData.getPubmedIds()));
@@ -239,44 +238,39 @@ public class ProjectLoader {
     private void mergeAssayDetails(Project project, List<Assay> assays) {
         for (Assay assay : assays) {
             // species
-            Collection<CvParam> samples = assay.getSamples();
-            Collection<CvParam> projectSamples = project.getSamples();
-            for (CvParam sample : samples) {
-                if (!projectSamples.contains(sample)) {
-                    projectSamples.add(sample);
-                }
+            Collection<AssaySample> samples = assay.getSamples();
+            Set<ProjectSample> projectSamples = new HashSet<ProjectSample>();
+            projectSamples.addAll(project.getSamples());
+            for (AssaySample sample : samples) {
+                projectSamples.add(DataConversionUtil.convertAssaySampleToProjectSample(project, sample));
             }
+            project.setSamples(projectSamples);
 
             // instrument
-            Collection<Instrument> instruments = assay.getInstruments();
-            Collection<Param> projectInstruments = project.getInstruments();
-            for (Instrument instrument : instruments) {
-                Param model = instrument.getModel();
-                if (!projectInstruments.contains(model)) {
-                    projectInstruments.add(model);
-                }
-            }
+            Set<Instrument> projectInstruments = new HashSet<Instrument>();
+            projectInstruments.addAll(project.getInstruments());
+            projectInstruments.addAll(assay.getInstruments());
+            project.setInstrument(projectInstruments);
 
             // modifications
-            Collection<CvParam> ptms = assay.getPtms();
-            Collection<CvParam> projectPtms = project.getPtms();
-            for (CvParam ptm : ptms) {
-                if (!projectPtms.contains(ptm)) {
-                    projectPtms.add(ptm);
-                }
+            Collection<AssayPTM> ptms = assay.getPtms();
+            Set<ProjectPTM> projectPtms = new HashSet<ProjectPTM>();
+            projectPtms.addAll(project.getPtms());
+            for (AssayPTM ptm : ptms) {
+                projectPtms.add(DataConversionUtil.convertAssayPTMtoProjectPTM(project, ptm));
             }
+            project.setPtms(projectPtms);
 
             // quantifications
-            Collection<CvParam> quants = assay.getQuantificationMethods();
-            Collection<CvParam> projectQuants = project.getQuantificationMethods();
-            for (CvParam quant : quants) {
-                if (!projectQuants.contains(quant)) {
-                    projectQuants.add(quant);
-                }
+            Collection<AssayQuantificationMethod> quants = assay.getQuantificationMethods();
+            Collection<ProjectQuantificationMethod> projectQuants = new HashSet<ProjectQuantificationMethod>();
+            projectQuants.addAll(project.getQuantificationMethods());
+            for (AssayQuantificationMethod param : quants) {
+                projectQuants.add(DataConversionUtil.convertAssayQuantitationMethodToProjectQuantitationMethod(project, param));
             }
+            project.setQuantificationMethods(projectQuants);
         }
     }
-
 
     /**
      * Load assays
@@ -317,8 +311,8 @@ public class ProjectLoader {
             projectFile.setProjectId(projectId);
 
             // assay id
-            MassSpecFileType fileType = dataFile.getFileType();
-            if (fileType.equals(MassSpecFileType.RESULT)) {
+            ProjectFileType fileType = dataFile.getFileType();
+            if (fileType.equals(ProjectFileType.RESULT)) {
                 String assayAccession = dataFile.getAssayAccession();
                 Long assayId = assayIdMappings.get(assayAccession);
                 if (assayId != null) {
@@ -329,7 +323,7 @@ public class ProjectLoader {
             }
 
             // file type
-            projectFile.setFileType(DataConversionUtil.convertProjectFileType(fileType));
+            projectFile.setFileType(fileType);
 
             // file size
             File file = dataFile.getFile();
@@ -342,10 +336,9 @@ public class ProjectLoader {
             projectFile.setFilePath(file.getAbsolutePath());
 
             // persist
-            projectFileDao.saveFile(projectFile);
+            projectFileDao.save(projectFile);
         }
     }
-
 
     /**
      * Log and throw an {@code ProjectLoaderException}
@@ -357,7 +350,6 @@ public class ProjectLoader {
         logger.error(msg);
         throw new ProjectLoaderException(msg);
     }
-
 
     /**
      * {@code ProjectLoaderTransactionCallback} provides logging of exception causing the transaction failed
@@ -376,4 +368,5 @@ public class ProjectLoader {
             this.exception = exception;
         }
     }
+
 }

@@ -1,18 +1,16 @@
 package uk.ac.ebi.pride.prider.loader.util;
 
-import uk.ac.ebi.pride.data.core.InstrumentConfiguration;
+import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.data.core.Software;
 import uk.ac.ebi.pride.data.model.CvParam;
 import uk.ac.ebi.pride.data.model.Param;
-import uk.ac.ebi.pride.data.util.MassSpecFileType;
-import uk.ac.ebi.pride.data.util.SubmissionType;
-import uk.ac.ebi.pride.prider.repo.file.ProjectFile;
+import uk.ac.ebi.pride.prider.repo.assay.*;
+import uk.ac.ebi.pride.prider.repo.assay.software.SoftwareCvParam;
+import uk.ac.ebi.pride.prider.repo.assay.software.SoftwareUserParam;
 import uk.ac.ebi.pride.prider.repo.instrument.Instrument;
-import uk.ac.ebi.pride.prider.repo.project.Reference;
+import uk.ac.ebi.pride.prider.repo.project.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Convert various data model
@@ -21,14 +19,16 @@ import java.util.List;
  * @version $Id$
  */
 public final class DataConversionUtil {
+
+    private static final Logger logger = Logger.getLogger(DataConversionUtil.class);
+
     /**
      * Combine a list of strings to a single string
      *
      * @param strToCombine strings to be combined
      * @param separator    string separator
-     * @return
      */
-    public static String combineToString(List<String> strToCombine, String separator) {
+    public static String combineToString(Set<String> strToCombine, String separator) {
         StringBuilder builder = new StringBuilder();
 
         for (String s : strToCombine) {
@@ -51,7 +51,7 @@ public final class DataConversionUtil {
      * @param pubmedIds pubmed ids
      * @return a list of prider references
      */
-    public static List<Reference> convertReferences(List<String> pubmedIds) {
+    public static List<Reference> convertReferences(Set<String> pubmedIds) {
         List<Reference> references = new ArrayList<Reference>();
 
         for (String pubmedId : pubmedIds) {
@@ -63,112 +63,247 @@ public final class DataConversionUtil {
         return references;
     }
 
-    /**
-     * Convert a collection of cv params to prider cv params
-     *
-     * @param originalCvParams a collection of cv params
-     * @return a collection of cv params
-     */
-    public static List<uk.ac.ebi.pride.prider.repo.param.CvParam> convertCvParams(Collection<CvParam> originalCvParams) {
-        List<uk.ac.ebi.pride.prider.repo.param.CvParam> cvParams = new ArrayList<uk.ac.ebi.pride.prider.core.param.CvParam>();
+    public static Collection<AssaySample> convertAssaySampleCvParams(Assay assay, Set<Param> sampleParams) {
+        Collection<AssaySample> retval = new HashSet<AssaySample>();
+        retval.addAll(convertAssayCvParams(assay, AssaySample.class, sampleParams));
+        return retval;
+    }
 
-        for (CvParam originalCvParam : originalCvParams) {
-            cvParams.add(convertCvParam(originalCvParam));
+    public static Collection<AssayQuantificationMethod> convertAssayQuantitationMethodCvParams(Assay assay, Set<Param> sampleParams) {
+        Collection<AssayQuantificationMethod> retval = new HashSet<AssayQuantificationMethod>();
+        retval.addAll(convertAssayCvParams(assay, AssayQuantificationMethod.class, sampleParams));
+        return retval;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private static Collection convertAssayCvParams(Assay assay, Class clz, Set<? extends Param> sampleParams) {
+
+        try {
+            Collection<AssayCvParam> retval = new HashSet<AssayCvParam>();
+            for (Param param : sampleParams) {
+                if (param instanceof CvParam) {
+                    CvParam cvParam = (CvParam) param;
+                    uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                    //if param isn't already seen in db, store it
+                    if (repoParam == null) {
+                        CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
+                        repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                    }
+                    AssayCvParam acvParam = (AssayCvParam) clz.newInstance();
+                    acvParam.setAssay(assay);
+                    acvParam.setCvParam(repoParam);
+                    acvParam.setValue(cvParam.getValue());
+                    retval.add(acvParam);
+                } else {
+                    logger.warn("Ignored sample userParam" + param.getName() + "->" + param.getValue());
+                }
+            }
+            return retval;
+
+        } catch (InstantiationException e) {
+            //todo - better exception casting
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            //todo - better exception casting
+            throw new RuntimeException(e);
         }
 
-        return cvParams;
-    }
-
-    /**
-     * Convert a cv param to prider cv param
-     *
-     * @param originalCvParam original cv param
-     * @return prider cv param
-     */
-    public static uk.ac.ebi.pride.prider.repo.param.CvParam convertCvParam(uk.ac.ebi.pride.data.core.CvParam originalCvParam) {
-        uk.ac.ebi.pride.prider.repo.param.CvParam cvParam = new uk.ac.ebi.pride.prider.repo.param.CvParam();
-
-        cvParam.setCvLabel(originalCvParam.getCvLookupID());
-        cvParam.setAccession(originalCvParam.getAccession());
-        cvParam.setName(originalCvParam.getName());
-        cvParam.setValue(originalCvParam.getValue());
-
-        return cvParam;
     }
 
 
-    /**
-     * Convert project file type
-     *
-     * @param fileType mass spec file type
-     * @return project file type
-     */
-    public static int convertProjectFileType(MassSpecFileType fileType) {
-        switch (fileType) {
-            case RESULT:
-                return ProjectFile.RESULT_FILE_TYPE;
-            case SEARCH:
-                return ProjectFile.SEARCH_FILE_TYPE;
-            case PEAK:
-                return ProjectFile.PEAK_FILE_TYPE;
-            case RAW:
-                return ProjectFile.RAW_FILE_TYPE;
-            case QUANT:
-                return ProjectFile.QUANTIFICATION_FILE_TYPE;
-            case GEL:
-                return ProjectFile.GEL_FILE_TYPE;
-            case OTHER:
-                return ProjectFile.OTHER_FILE_TYPE;
-
-        }
-        return -1;
+    public static Collection<ProjectExperimentType> convertProjectExperimentTypeCvParams(Project project, Set<CvParam> params) {
+        Collection<ProjectExperimentType> retval = new HashSet<ProjectExperimentType>();
+        retval.addAll(convertProjectCvParams(project, ProjectExperimentType.class, params));
+        return retval;
     }
 
-
-    /**
-     * Convert instrument
-     *
-     * @param instrumentConfiguration instrument configuration
-     */
-    public static Instrument convertInstrument(InstrumentConfiguration instrumentConfiguration) {
-        Instrument instrument = new Instrument();
-
-        // todo: implement
-
-        return instrument;
+    public static Collection<ProjectSample> convertProjectSampleCvParams(Project project, Set<CvParam> params) {
+        Collection<ProjectSample> retval = new HashSet<ProjectSample>();
+        retval.addAll(convertProjectCvParams(project, ProjectSample.class, params));
+        return retval;
     }
 
-    public static uk.ac.ebi.pride.prider.repo.assay.software.Software convertSoftware(Software originalSoftware) {
-        uk.ac.ebi.pride.prider.repo.assay.software.Software software = new uk.ac.ebi.pride.prider.core.assay.Software();
-
-        software.setName(originalSoftware.getName());
-        software.setCustomization(originalSoftware.getCustomization());
-        software.setVersion(originalSoftware.getVersion());
-        List<Param> params = new ArrayList<Param>();
-        params.addAll(convertCvParams(originalSoftware.getCvParams()));
-        software.setParams(convertParams(originalSoftware.getCvParams()));
-
-        return software;
+    public static Collection<ProjectGroupCvParam> convertProjectGroupCvParams(Project project, Set<Param> params) {
+        Collection<ProjectGroupCvParam> retval = new HashSet<ProjectGroupCvParam>();
+        retval.addAll(convertProjectCvParams(project, ProjectGroupCvParam.class, params));
+        return retval;
     }
 
-    public static uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType convertSubmissionType(SubmissionType submissionType) {
+    @SuppressWarnings("unchecked")
+    private static Collection convertProjectCvParams(Project project, Class clz, Set<? extends Param> projectParams) {
 
-        switch (submissionType) {
+        try {
+            Collection<ProjectCvParam> retval = new HashSet<ProjectCvParam>();
+            for (Param param : projectParams) {
+                if (param instanceof CvParam) {
+                    CvParam cvParam = (CvParam) param;
+                    uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                    //if param isn't already seen in db, store it
+                    if (repoParam == null) {
+                        CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
+                        repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                    }
+                    ProjectCvParam projectCvParam = (ProjectCvParam) clz.newInstance();
+                    projectCvParam.setProject(project);
+                    projectCvParam.setCvParam(repoParam);
+                    projectCvParam.setValue(cvParam.getValue());
+                    retval.add(projectCvParam);
+                } else {
+                    logger.warn("Ignored project userParam" + param.getName() + "->" + param.getValue());
+                }
+            }
+            return retval;
 
-            case COMPLETE:
-                return uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType.COMPLETE;
-                break;
-            case PARTIAL:
-                return uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType.PARTIAL;
-                break;
-            case PRIDE:
-            case RAW:
-                throw new IllegalArgumentException("Unsupported submittion type for the PRIDE-R loader")
-                break;
-
-
+        } catch (InstantiationException e) {
+            //todo - better exception casting
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            //todo - better exception casting
+            throw new RuntimeException(e);
         }
 
+    }
+
+    public static Collection<uk.ac.ebi.pride.prider.repo.assay.software.Software> convertSoftware(Assay assay, Set<Software> softwares) {
+
+        Set<uk.ac.ebi.pride.prider.repo.assay.software.Software> softwareSet = new HashSet<uk.ac.ebi.pride.prider.repo.assay.software.Software>();
+        int orderIndex = 0;
+        for (Software oldSoftware : softwares) {
+            uk.ac.ebi.pride.prider.repo.assay.software.Software newSoftware = new uk.ac.ebi.pride.prider.repo.assay.software.Software();
+            newSoftware.setAssay(assay);
+            newSoftware.setName(oldSoftware.getName());
+            newSoftware.setOrder(orderIndex++);
+            newSoftware.setSoftwareCvParams(convertSoftwareCvParams(newSoftware, oldSoftware.getCvParams()));
+            newSoftware.setSoftwareUserParams(convertSoftwareUserParams(newSoftware, oldSoftware.getUserParams()));
+            newSoftware.setVersion(oldSoftware.getVersion());
+            //todo what goes in here?
+            //newSoftware.setCustomization();
+            softwareSet.add(newSoftware);
+        }
+
+        return softwareSet;
+
+    }
+
+    private static Collection<SoftwareUserParam> convertSoftwareUserParams(uk.ac.ebi.pride.prider.repo.assay.software.Software software,
+                                                                           List<uk.ac.ebi.pride.data.core.UserParam> userParams) {
+
+        Collection<SoftwareUserParam> retval = new HashSet<SoftwareUserParam>();
+        for (uk.ac.ebi.pride.data.core.UserParam userParam : userParams) {
+            SoftwareUserParam swuPavam = new SoftwareUserParam();
+            swuPavam.setName(userParam.getName());
+            swuPavam.setValue(userParam.getValue());
+            swuPavam.setSoftware(software);
+            retval.add(swuPavam);
+        }
+
+        return retval;
+
+    }
+
+    private static Collection<SoftwareCvParam> convertSoftwareCvParams(uk.ac.ebi.pride.prider.repo.assay.software.Software software,
+                                                                       List<uk.ac.ebi.pride.data.core.CvParam> cvParams) {
+
+        Collection<SoftwareCvParam> retval = new HashSet<SoftwareCvParam>();
+        for (uk.ac.ebi.pride.data.core.CvParam cvParam : cvParams) {
+
+            uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+            //if param isn't already seen in db, store it
+            if (repoParam == null) {
+                CvParamManager.getInstance().putCvParam(cvParam.getCvLookupID(), cvParam.getAccession(), cvParam.getName());
+                repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+            }
+
+            SoftwareCvParam swcvPavam = new SoftwareCvParam();
+            swcvPavam.setSoftware(software);
+            swcvPavam.setCvParam(repoParam);
+            swcvPavam.setValue(cvParam.getValue());
+            retval.add(swcvPavam);
+        }
+
+        return retval;
+
+    }
+
+    public static Collection<AssayPTM> convertAssayPTMs(Assay assay, Set<uk.ac.ebi.pride.data.core.CvParam> ptms) {
+
+        Set<AssayPTM> retval = new HashSet<AssayPTM>();
+        for (uk.ac.ebi.pride.data.core.CvParam cvParam : ptms) {
+
+            uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+            //if param isn't already seen in db, store it
+            if (repoParam == null) {
+                CvParamManager.getInstance().putCvParam(cvParam.getCvLookupID(), cvParam.getAccession(), cvParam.getName());
+                repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+            }
+
+            AssayPTM aPTM = new AssayPTM();
+            aPTM.setAssay(assay);
+            aPTM.setCvParam(repoParam);
+            retval.add(aPTM);
+
+        }
+
+        return retval;
+
+    }
+
+    public static Collection<ProjectPTM> convertProjectPTMs(Project project, Set<CvParam> ptms) {
+
+        Set<ProjectPTM> retval = new HashSet<ProjectPTM>();
+        for (CvParam cvParam : ptms) {
+
+            uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+            //if param isn't already seen in db, store it
+            if (repoParam == null) {
+                CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
+                repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+            }
+
+            ProjectPTM projectPTM = new ProjectPTM();
+            projectPTM.setProject(project);
+            projectPTM.setCvParam(repoParam);
+            projectPTM.setValue(cvParam.getValue());
+            retval.add(projectPTM);
+
+        }
+
+        return retval;
+    }
+
+    public static Collection<Instrument> convertProjectInstrument(Set<CvParam> instruments) {
+        //todo
+        return null;
+    }
+
+    public static ProjectSample convertAssaySampleToProjectSample(Project project, AssaySample sample) {
+
+        ProjectSample retval = new ProjectSample();
+        retval.setCvParam(sample.getCvParam());
+        retval.setValue(sample.getValue());
+        retval.setProject(project);
+        return retval;
+
+    }
+
+    public static ProjectPTM convertAssayPTMtoProjectPTM(Project project, AssayPTM ptm) {
+
+        ProjectPTM projectPTM = new ProjectPTM();
+        projectPTM.setProject(project);
+        projectPTM.setCvParam(ptm.getCvParam());
+        projectPTM.setValue(ptm.getValue());
+        return projectPTM;
+
+    }
+
+    public static ProjectQuantificationMethod convertAssayQuantitationMethodToProjectQuantitationMethod(Project project, AssayQuantificationMethod param) {
+
+        ProjectQuantificationMethod method = new ProjectQuantificationMethod();
+        method.setCvParam(param.getCvParam());
+        method.setValue(param.getValue());
+        method.setProject(project);
+        return method;
 
     }
 }
