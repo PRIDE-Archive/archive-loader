@@ -7,7 +7,7 @@ package uk.ac.ebi.pride.prider.loader.exception;
  * @author Rui Wang
  * @version $Id$
  */
-public class ProjectLoaderException extends Exception {
+public class ProjectLoaderException extends RuntimeException {
 
     public ProjectLoaderException() {
     }

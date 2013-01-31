@@ -4,10 +4,13 @@ import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.data.core.Software;
 import uk.ac.ebi.pride.data.model.CvParam;
 import uk.ac.ebi.pride.data.model.Param;
+import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
 import uk.ac.ebi.pride.prider.repo.assay.*;
 import uk.ac.ebi.pride.prider.repo.assay.software.SoftwareCvParam;
 import uk.ac.ebi.pride.prider.repo.assay.software.SoftwareUserParam;
-import uk.ac.ebi.pride.prider.repo.instrument.Instrument;
+import uk.ac.ebi.pride.prider.repo.instrument.InstrumentComponent;
+import uk.ac.ebi.pride.prider.repo.instrument.InstrumentComponentCvParam;
+import uk.ac.ebi.pride.prider.repo.instrument.InstrumentComponentUserParam;
 import uk.ac.ebi.pride.prider.repo.project.*;
 
 import java.util.*;
@@ -102,11 +105,9 @@ public final class DataConversionUtil {
             return retval;
 
         } catch (InstantiationException e) {
-            //todo - better exception casting
-            throw new RuntimeException(e);
+            throw new ProjectLoaderException("Error creating cv param.", e);
         } catch (IllegalAccessException e) {
-            //todo - better exception casting
-            throw new RuntimeException(e);
+            throw new ProjectLoaderException("Error creating cv param.", e);
         }
 
     }
@@ -156,11 +157,9 @@ public final class DataConversionUtil {
             return retval;
 
         } catch (InstantiationException e) {
-            //todo - better exception casting
-            throw new RuntimeException(e);
+            throw new ProjectLoaderException("Error creating cv param.", e);
         } catch (IllegalAccessException e) {
-            //todo - better exception casting
-            throw new RuntimeException(e);
+            throw new ProjectLoaderException("Error creating cv param.", e);
         }
 
     }
@@ -226,6 +225,47 @@ public final class DataConversionUtil {
 
     }
 
+    public static Collection<InstrumentComponentCvParam> convertInstrumentComponentCvParam(InstrumentComponent instrumentComponent,
+                                                                                           List<uk.ac.ebi.pride.data.core.CvParam> cvParams) {
+        Collection<InstrumentComponentCvParam> retval = new HashSet<InstrumentComponentCvParam>();
+        for (uk.ac.ebi.pride.data.core.CvParam cvParam : cvParams) {
+
+            uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+            //if param isn't already seen in db, store it
+            if (repoParam == null) {
+                CvParamManager.getInstance().putCvParam(cvParam.getCvLookupID(), cvParam.getAccession(), cvParam.getName());
+                repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+            }
+
+            InstrumentComponentCvParam iccvParam = new InstrumentComponentCvParam();
+            iccvParam.setInstrumentComponent(instrumentComponent);
+            iccvParam.setCvParam(repoParam);
+            iccvParam.setValue(cvParam.getValue());
+            retval.add(iccvParam);
+
+        }
+
+        return retval;
+    }
+
+
+    public static Collection<InstrumentComponentUserParam> convertInstrumentComponentUserParam(InstrumentComponent instrumentComponent,
+                                                                                               List<uk.ac.ebi.pride.data.core.UserParam> userParams) {
+        Collection<InstrumentComponentUserParam> retval = new HashSet<InstrumentComponentUserParam>();
+        for (uk.ac.ebi.pride.data.core.UserParam userParam : userParams) {
+
+            InstrumentComponentUserParam icuserParam = new InstrumentComponentUserParam();
+            icuserParam.setInstrumentComponent(instrumentComponent);
+            icuserParam.setName(userParam.getName());
+            icuserParam.setValue(userParam.getValue());
+            retval.add(icuserParam);
+
+        }
+
+        return retval;
+    }
+
+
     public static Collection<AssayPTM> convertAssayPTMs(Assay assay, Set<uk.ac.ebi.pride.data.core.CvParam> ptms) {
 
         Set<AssayPTM> retval = new HashSet<AssayPTM>();
@@ -272,11 +312,6 @@ public final class DataConversionUtil {
         return retval;
     }
 
-    public static Collection<Instrument> convertProjectInstrument(Set<CvParam> instruments) {
-        //todo
-        return null;
-    }
-
     public static ProjectSample convertAssaySampleToProjectSample(Project project, AssaySample sample) {
 
         ProjectSample retval = new ProjectSample();
@@ -306,4 +341,5 @@ public final class DataConversionUtil {
         return method;
 
     }
+
 }

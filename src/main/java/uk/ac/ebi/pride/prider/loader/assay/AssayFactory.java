@@ -10,11 +10,16 @@ import uk.ac.ebi.pride.data.model.DataFile;
 import uk.ac.ebi.pride.data.model.Param;
 import uk.ac.ebi.pride.data.model.SampleMetaData;
 import uk.ac.ebi.pride.data.util.MassSpecFileFormat;
+import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
 import uk.ac.ebi.pride.prider.loader.util.Constant;
+import uk.ac.ebi.pride.prider.loader.util.CvParamManager;
 import uk.ac.ebi.pride.prider.loader.util.DataConversionUtil;
 import uk.ac.ebi.pride.prider.repo.assay.Assay;
 import uk.ac.ebi.pride.prider.repo.assay.AssaySample;
+import uk.ac.ebi.pride.prider.repo.instrument.AnalyzerInstrumentComponent;
+import uk.ac.ebi.pride.prider.repo.instrument.DetectorInstrumentComponent;
 import uk.ac.ebi.pride.prider.repo.instrument.Instrument;
+import uk.ac.ebi.pride.prider.repo.instrument.SourceInstrumentComponent;
 
 import java.io.File;
 import java.util.*;
@@ -49,10 +54,20 @@ public final class AssayFactory {
         // instrument
         List<Instrument> instruments = new ArrayList<Instrument>();
         Set<Param> instrumentModels = sampleMetaData.getMetaData(SampleMetaData.Type.INSTRUMENT);
-//        for (Param instrumentModel : instrumentModels) {
-//            Instrument instrument = new Instrument();
-//            instrument.setModel(DataConversionUtil.convertParam(instrumentModel));
-//        }
+        for (Param instrumentModel : instrumentModels) {
+            //check to see if the instrument param is already in PRIDE-R
+            if (instrumentModel instanceof uk.ac.ebi.pride.data.model.CvParam) {
+                uk.ac.ebi.pride.data.model.CvParam cvParam = (uk.ac.ebi.pride.data.model.CvParam) instrumentModel;
+                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                //if param isn't already seen in db, store it
+                if (repoParam == null) {
+                    CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
+                    repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                }
+                Instrument instrument = new Instrument();
+                instrument.setCvParam(repoParam);
+            }
+        }
         assay.setInstruments(instruments);
 
         // experimental factor
@@ -87,7 +102,10 @@ public final class AssayFactory {
                         peakListFiles.add(file.getFile());
                     }
                     mzIdentMlController.addMSController(peakListFiles);
+                    dataAccessController = mzIdentMlController;
                     break;
+                default:
+                    throw new UnsupportedOperationException("Could not get a DataAccessController for format: " + format.name());
             }
 
             // get experiment metadata
@@ -129,6 +147,23 @@ public final class AssayFactory {
             // ptms
             assay.setPtms(DataConversionUtil.convertAssayPTMs(assay, resultFileScanner.getPtms()));
 
+            //merge instruments
+            if (assay.getInstruments().size() != 1) {
+                //todo - this is badness, but I can't think of a nicer way at the moment
+                //todo - to reconcile the information coming from the PX file with the information in the submission file
+                throw new ProjectLoaderException("Could not merge instruments from Assay File and PX Summary File, aborting!");
+            }
+            //the px file only contains the instrument name but not the configuration
+            //the result fiel contains the instrument configuration but not necessarily the
+            //identical instrument name. Basically, we're screwed.
+            if (!resultFileScanner.getInstruments().isEmpty()) {
+                Instrument assayInstrument = assay.getInstruments().iterator().next();
+                Instrument scanInstrument = resultFileScanner.getInstruments().iterator().next();
+                scanInstrument.setCvParam(assayInstrument.getCvParam());
+                Set<Instrument> instrumentSet = Collections.singleton(scanInstrument);
+                assay.setInstruments(instrumentSet);
+            }
+
         } finally {
             if (dataAccessController != null) {
                 dataAccessController.close();
@@ -146,11 +181,39 @@ public final class AssayFactory {
         FileScanResults resultFileScanner = new FileScanResults();
 
         // instrument
-        List<Instrument> instruments = new ArrayList<Instrument>();
+        Set<Instrument> instruments = new HashSet<Instrument>();
         Collection<InstrumentConfiguration> instrumentConfigurations = dataAccessController.getInstrumentConfigurations();
         for (InstrumentConfiguration instrumentConfiguration : instrumentConfigurations) {
-            //todo build instruments
+            Instrument instrument = new Instrument();
+            int orderIndex = 1;
+            //source
+            for (InstrumentComponent source : instrumentConfiguration.getSource()) {
+                SourceInstrumentComponent sourceInstrumentComponent = new SourceInstrumentComponent();
+                sourceInstrumentComponent.setInstrument(instrument);
+                sourceInstrumentComponent.setOrder(orderIndex++);
+                sourceInstrumentComponent.setInstrumentComponentCvParams(DataConversionUtil.convertInstrumentComponentCvParam(sourceInstrumentComponent, source.getCvParams()));
+                sourceInstrumentComponent.setInstrumentComponentUserParams(DataConversionUtil.convertInstrumentComponentUserParam(sourceInstrumentComponent, source.getUserParams()));
+            }
+            //analyzer
+            for (InstrumentComponent analyzer : instrumentConfiguration.getAnalyzer()) {
+                AnalyzerInstrumentComponent analyzerInstrumentComponent = new AnalyzerInstrumentComponent();
+                analyzerInstrumentComponent.setInstrument(instrument);
+                analyzerInstrumentComponent.setOrder(orderIndex++);
+                analyzerInstrumentComponent.setInstrumentComponentCvParams(DataConversionUtil.convertInstrumentComponentCvParam(analyzerInstrumentComponent, analyzer.getCvParams()));
+                analyzerInstrumentComponent.setInstrumentComponentUserParams(DataConversionUtil.convertInstrumentComponentUserParam(analyzerInstrumentComponent, analyzer.getUserParams()));
+            }
+            //detectpr
+            for (InstrumentComponent detector : instrumentConfiguration.getDetector()) {
+                DetectorInstrumentComponent detectorInstrumentComponent = new DetectorInstrumentComponent();
+                detectorInstrumentComponent.setInstrument(instrument);
+                detectorInstrumentComponent.setOrder(orderIndex++);
+                detectorInstrumentComponent.setInstrumentComponentCvParams(DataConversionUtil.convertInstrumentComponentCvParam(detectorInstrumentComponent, detector.getCvParams()));
+                detectorInstrumentComponent.setInstrumentComponentUserParams(DataConversionUtil.convertInstrumentComponentUserParam(detectorInstrumentComponent, detector.getUserParams()));
+            }
+            //store instrument
+            instruments.add(instrument);
         }
+        resultFileScanner.setInstruments(instruments);
 
         // software
         Set<Software> softwares = new HashSet<Software>();

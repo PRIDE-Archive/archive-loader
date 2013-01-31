@@ -199,13 +199,13 @@ public class ProjectLoader {
         project.setSamples(samples);
 
         // instrument
-        List<Instrument> instruments = new ArrayList<Instrument>();
-        instruments.addAll(DataConversionUtil.convertProjectInstrument(projectMetaData.getInstruments()));
-        project.setInstrument(instruments);
-
+        // will be done in mergeAssayDetails
+        //todo - unless the submission is partial, in which case you need to do it here
 
         // modification
         List<ProjectPTM> ptms = new ArrayList<ProjectPTM>();
+        // will be done in mergeAssayDetails
+        //todo - unless the submission is partial, in which case you need to do it here
         ptms.addAll(DataConversionUtil.convertProjectPTMs(project, projectMetaData.getModifications()));
         project.setPtms(ptms);
 
@@ -236,6 +236,7 @@ public class ProjectLoader {
      * @param assays  a collection of assays
      */
     private void mergeAssayDetails(Project project, List<Assay> assays) {
+
         for (Assay assay : assays) {
             // species
             Collection<AssaySample> samples = assay.getSamples();
