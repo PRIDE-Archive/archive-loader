@@ -1,7 +1,8 @@
 package uk.ac.ebi.pride.prider.loader.util;
 
-import org.apache.log4j.Logger;
-import uk.ac.ebi.pride.data.core.Software;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import uk.ac.ebi.pride.data.core.*;
 import uk.ac.ebi.pride.data.model.CvParam;
 import uk.ac.ebi.pride.data.model.Param;
 import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
@@ -12,6 +13,7 @@ import uk.ac.ebi.pride.prider.repo.instrument.InstrumentComponent;
 import uk.ac.ebi.pride.prider.repo.instrument.InstrumentComponentCvParam;
 import uk.ac.ebi.pride.prider.repo.instrument.InstrumentComponentUserParam;
 import uk.ac.ebi.pride.prider.repo.project.*;
+import uk.ac.ebi.pride.prider.repo.project.Reference;
 
 import java.util.*;
 
@@ -23,7 +25,7 @@ import java.util.*;
  */
 public final class DataConversionUtil {
 
-    private static final Logger logger = Logger.getLogger(DataConversionUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(DataConversionUtil.class);
 
     /**
      * Combine a list of strings to a single string
@@ -131,6 +133,13 @@ public final class DataConversionUtil {
         return retval;
     }
 
+    public static Collection<ProjectQuantificationMethod> convertProjectQuantificationMethodCvParams(Project project, Set<CvParam> params) {
+        Collection<ProjectQuantificationMethod> retval = new HashSet<ProjectQuantificationMethod>();
+        retval.addAll(convertProjectCvParams(project, ProjectQuantificationMethod.class, params));
+        return retval;
+    }
+
+
     @SuppressWarnings("unchecked")
     private static Collection convertProjectCvParams(Project project, Class clz, Set<? extends Param> projectParams) {
 
@@ -176,8 +185,7 @@ public final class DataConversionUtil {
             newSoftware.setSoftwareCvParams(convertSoftwareCvParams(newSoftware, oldSoftware.getCvParams()));
             newSoftware.setSoftwareUserParams(convertSoftwareUserParams(newSoftware, oldSoftware.getUserParams()));
             newSoftware.setVersion(oldSoftware.getVersion());
-            //todo what goes in here?
-            //newSoftware.setCustomization();
+            newSoftware.setCustomization(oldSoftware.getCustomization());
             softwareSet.add(newSoftware);
         }
 
@@ -281,6 +289,7 @@ public final class DataConversionUtil {
             AssayPTM aPTM = new AssayPTM();
             aPTM.setAssay(assay);
             aPTM.setCvParam(repoParam);
+            aPTM.setValue(cvParam.getValue());
             retval.add(aPTM);
 
         }
@@ -342,4 +351,71 @@ public final class DataConversionUtil {
 
     }
 
+    public static Collection<Contact> convertContact(Assay assay, Collection<Person> personContacts) {
+        Set<Contact> retval = new HashSet<Contact>();
+        for (Person person : personContacts) {
+
+            Contact contact = new Contact();
+            //todo - contact.setTitle(); - no value available
+            StringBuilder sb = new StringBuilder(person.getFirstname());
+            if (person.getMidInitials() != null) {
+                sb.append(" ").append(person.getMidInitials());
+            }
+            contact.setFirstName(sb.toString());
+            contact.setLastName(person.getLastname());
+            sb = new StringBuilder();
+            for (Organization org : person.getAffiliation()) {
+                sb.append(org.getMail()).append(", ");
+            }
+            //remove last 2 chars
+            String affiliation = sb.toString();
+            affiliation = affiliation.substring(0, affiliation.length() - 2);
+            contact.setAffiliation(affiliation);
+            contact.setEmail(person.getMail());
+            contact.setAssay(assay);
+            retval.add(contact);
+        }
+
+        return retval;
+    }
+
+    public static Collection<AssayGroupCvParam> convertAssayGroupCvParams(Assay assay, ParamGroup additional) {
+
+        Set<AssayGroupCvParam> retval = new HashSet<AssayGroupCvParam>();
+        for (uk.ac.ebi.pride.data.core.CvParam cvParam : additional.getCvParams()) {
+
+            uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+            //if param isn't already seen in db, store it
+            if (repoParam == null) {
+                CvParamManager.getInstance().putCvParam(cvParam.getCvLookupID(), cvParam.getAccession(), cvParam.getName());
+                repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+            }
+
+            AssayGroupCvParam agcvParam = new AssayGroupCvParam();
+            agcvParam.setAssay(assay);
+            agcvParam.setCvParam(repoParam);
+            agcvParam.setValue(cvParam.getValue());
+            retval.add(agcvParam);
+
+        }
+
+        return retval;
+    }
+
+    public static Collection<AssayUserParam> convertAssayGroupUserParams(Assay assay, ParamGroup additional) {
+
+        Set<AssayUserParam> retval = new HashSet<AssayUserParam>();
+        for (UserParam userParam : additional.getUserParams()) {
+
+            AssayUserParam auserParam = new AssayUserParam();
+            auserParam.setAssay(assay);
+            auserParam.setName(userParam.getName());
+            auserParam.setValue(userParam.getValue());
+            retval.add(auserParam);
+
+        }
+
+        return retval;
+
+    }
 }

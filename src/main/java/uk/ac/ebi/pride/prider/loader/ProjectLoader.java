@@ -10,6 +10,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.Assert;
 import uk.ac.ebi.pride.data.controller.DataAccessException;
 import uk.ac.ebi.pride.data.io.SubmissionFileParser;
+import uk.ac.ebi.pride.data.model.CvParam;
 import uk.ac.ebi.pride.data.model.DataFile;
 import uk.ac.ebi.pride.data.model.ProjectMetaData;
 import uk.ac.ebi.pride.data.model.Submission;
@@ -18,11 +19,13 @@ import uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType;
 import uk.ac.ebi.pride.prider.loader.assay.AssayFactory;
 import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
 import uk.ac.ebi.pride.prider.loader.util.Constant;
+import uk.ac.ebi.pride.prider.loader.util.CvParamManager;
 import uk.ac.ebi.pride.prider.loader.util.DataConversionUtil;
 import uk.ac.ebi.pride.prider.repo.assay.*;
 import uk.ac.ebi.pride.prider.repo.file.ProjectFile;
 import uk.ac.ebi.pride.prider.repo.file.ProjectFileRepository;
 import uk.ac.ebi.pride.prider.repo.instrument.Instrument;
+import uk.ac.ebi.pride.prider.repo.instrument.InstrumentModel;
 import uk.ac.ebi.pride.prider.repo.project.*;
 import uk.ac.ebi.pride.prider.repo.user.User;
 import uk.ac.ebi.pride.prider.repo.user.UserRepository;
@@ -101,7 +104,7 @@ public class ProjectLoader {
                     Long projectId = loadProjectMetaData(submission, projectAccession, doi, user, assays);
 
                     // load assay entry
-                    Map<String, Long> assayIdMappings = loadAssays(assays);
+                    Map<String, Long> assayIdMappings = loadAssays(assays, projectId);
 
                     // load file mappings
                     loadFileMappings(submission, projectId, assayIdMappings);
@@ -139,7 +142,7 @@ public class ProjectLoader {
             List<DataFile> dataFiles = submission.getDataFiles();
             for (DataFile dataFile : dataFiles) {
                 if (dataFile.isFile() && dataFile.getFileType().equals(ProjectFileType.RESULT)) {
-                    assays.add(AssayFactory.makeAssay(dataFile, dataFile.getSampleMetaData()));
+                    assays.add(AssayFactory.makeAssay(dataFile));
                 }
             }
         }
@@ -185,29 +188,17 @@ public class ProjectLoader {
         project.setOtherOmicsLink(projectMetaData.getOtherOmicsLink());
 
         // keywords
-        project.setKeywords(projectMetaData.getOtherOmicsLink());
+        project.setKeywords(projectMetaData.getKeywords());
 
         // submission type
         project.setSubmissionType(projectMetaData.getSubmissionType());
 
+        //submission date
+        project.setSubmissionDate(Calendar.getInstance().getTime());
+        project.setUpdateDate(project.getSubmissionDate());
+
         // experiment type
         project.setExperimentTypes(DataConversionUtil.convertProjectExperimentTypeCvParams(project, projectMetaData.getMassSpecExperimentMethods()));
-
-        // species
-        List<ProjectSample> samples = new ArrayList<ProjectSample>();
-        samples.addAll(DataConversionUtil.convertProjectSampleCvParams(project, projectMetaData.getSpecies()));
-        project.setSamples(samples);
-
-        // instrument
-        // will be done in mergeAssayDetails
-        //todo - unless the submission is partial, in which case you need to do it here
-
-        // modification
-        List<ProjectPTM> ptms = new ArrayList<ProjectPTM>();
-        // will be done in mergeAssayDetails
-        //todo - unless the submission is partial, in which case you need to do it here
-        ptms.addAll(DataConversionUtil.convertProjectPTMs(project, projectMetaData.getModifications()));
-        project.setPtms(ptms);
 
         // additional
         List<ProjectGroupCvParam> additionals = new ArrayList<ProjectGroupCvParam>();
@@ -220,13 +211,73 @@ public class ProjectLoader {
         // reanalysis px
         project.setReanalysis(DataConversionUtil.combineToString(projectMetaData.getReanalysisAccessions(), Constant.COMMA));
 
-        // load assay details
-        mergeAssayDetails(project, assays);
+        // set to private
+        project.setPublicProject(false);
+
+        // set number of assays
+        project.setNumAssays(assays.size());
+
+        // load assay details - only done for complete submissions
+        if (submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.COMPLETE)) {
+
+            mergeAssayDetails(project, assays);
+
+        } else {
+
+            //for partial submisions, these must be done here
+
+            // sample
+            List<ProjectSample> samples = new ArrayList<ProjectSample>();
+            samples.addAll(DataConversionUtil.convertProjectSampleCvParams(project, projectMetaData.getSpecies()));
+            project.setSamples(samples);
+
+            // instrument
+            List<Instrument> instruments = new ArrayList<Instrument>();
+            Set<CvParam> instrumentModels = projectMetaData.getInstruments();
+            for (CvParam cvParam : instrumentModels) {
+                //check to see if the instrument param is already in PRIDE-R
+                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                //if param isn't already seen in db, store it
+                if (repoParam == null) {
+                    CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
+                    repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                }
+                Instrument instrument = new Instrument();
+                InstrumentModel model = new InstrumentModel();
+                //instrument model is a wrapper around a cv param
+                model.setId(repoParam.getId());
+                model.setCvLabel(repoParam.getCvLabel());
+                model.setAccession(repoParam.getAccession());
+                model.setName(repoParam.getName());
+                model.setValue(repoParam.getValue());
+                instrument.setModel(model);
+                //store assay link
+                //todo - this might cause data duplication in case of identical instruments
+                //todo - across multiple assays in the scope of a single project
+                //todo - needs testing
+                instrument.setProjects(Collections.singleton(project));
+                instruments.add(instrument);
+            }
+            project.setInstrument(instruments);
+
+            // modification
+            List<ProjectPTM> ptms = new ArrayList<ProjectPTM>();
+            ptms.addAll(DataConversionUtil.convertProjectPTMs(project, projectMetaData.getModifications()));
+            project.setPtms(ptms);
+
+            // quant method
+            List<ProjectQuantificationMethod> quantificationMethods = new ArrayList<ProjectQuantificationMethod>();
+            quantificationMethods.addAll(DataConversionUtil.convertProjectQuantificationMethodCvParams(project, projectMetaData.getQuantifications()));
+            project.setQuantificationMethods(quantificationMethods);
+
+        }
 
         // load project
         projectDao.save(project);
 
-        return null;
+        //will return project PK after being persisted
+        return project.getId();
+
     }
 
     /**
@@ -249,8 +300,13 @@ public class ProjectLoader {
 
             // instrument
             Set<Instrument> projectInstruments = new HashSet<Instrument>();
-            projectInstruments.addAll(project.getInstruments());
-            projectInstruments.addAll(assay.getInstruments());
+            for (Instrument instrument : assay.getInstruments()) {
+                //todo - this might cause data duplication in case of identical instruments
+                //todo - across multiple assays in the scope of a single project
+                //todo - needs testing
+                instrument.setProjects(Collections.singleton(project));
+                projectInstruments.add(instrument);
+            }
             project.setInstrument(projectInstruments);
 
             // modifications
@@ -279,18 +335,17 @@ public class ProjectLoader {
      * @param assays a collection of assays
      * @throws ProjectLoaderException exception indicates error when loading assays
      */
-    private Map<String, Long> loadAssays(List<Assay> assays) throws ProjectLoaderException {
+    private Map<String, Long> loadAssays(List<Assay> assays, Long projectId) throws ProjectLoaderException {
         Map<String, Long> assayAccToIdMappings = new HashMap<String, Long>();
 
         for (Assay assay : assays) {
-            String accession = assay.getAccession();
-            assayDao.save(assay);
-            Long id = assay.getId();
-            if (id == null) {
-                logAndThrowException("Failed to persist assay: " + accession);
-            }
 
-            assayAccToIdMappings.put(accession, id);
+            //create link to project
+            assay.setProjectId(projectId);
+            //store to db
+            assayDao.save(assay);
+            //update mapping
+            assayAccToIdMappings.put(assay.getAccession(), assay.getId());
         }
 
         return assayAccToIdMappings;
@@ -305,9 +360,13 @@ public class ProjectLoader {
      * @throws ProjectLoaderException exception indicates error when loading file mappings
      */
     private void loadFileMappings(Submission submission, Long projectId, Map<String, Long> assayIdMappings) throws ProjectLoaderException {
+
         List<DataFile> dataFiles = submission.getDataFiles();
+
         for (DataFile dataFile : dataFiles) {
+
             ProjectFile projectFile = new ProjectFile();
+
             // project id
             projectFile.setProjectId(projectId);
 

@@ -1,25 +1,24 @@
 package uk.ac.ebi.pride.prider.loader.assay;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.ac.ebi.pride.data.controller.DataAccessController;
 import uk.ac.ebi.pride.data.controller.DataAccessException;
 import uk.ac.ebi.pride.data.controller.impl.ControllerImpl.MzIdentMLControllerImpl;
 import uk.ac.ebi.pride.data.controller.impl.ControllerImpl.MzMLControllerImpl;
 import uk.ac.ebi.pride.data.controller.impl.ControllerImpl.PrideXmlControllerImpl;
 import uk.ac.ebi.pride.data.core.*;
+import uk.ac.ebi.pride.data.core.InstrumentComponent;
 import uk.ac.ebi.pride.data.model.DataFile;
 import uk.ac.ebi.pride.data.model.Param;
 import uk.ac.ebi.pride.data.model.SampleMetaData;
 import uk.ac.ebi.pride.data.util.MassSpecFileFormat;
-import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
 import uk.ac.ebi.pride.prider.loader.util.Constant;
 import uk.ac.ebi.pride.prider.loader.util.CvParamManager;
 import uk.ac.ebi.pride.prider.loader.util.DataConversionUtil;
 import uk.ac.ebi.pride.prider.repo.assay.Assay;
 import uk.ac.ebi.pride.prider.repo.assay.AssaySample;
-import uk.ac.ebi.pride.prider.repo.instrument.AnalyzerInstrumentComponent;
-import uk.ac.ebi.pride.prider.repo.instrument.DetectorInstrumentComponent;
-import uk.ac.ebi.pride.prider.repo.instrument.Instrument;
-import uk.ac.ebi.pride.prider.repo.instrument.SourceInstrumentComponent;
+import uk.ac.ebi.pride.prider.repo.instrument.*;
 
 import java.io.File;
 import java.util.*;
@@ -34,7 +33,9 @@ import java.util.*;
  */
 public final class AssayFactory {
 
-    public static Assay makeAssay(DataFile dataFile, SampleMetaData sampleMetaData) throws DataAccessException {
+    private static final Logger logger = LoggerFactory.getLogger(AssayFactory.class);
+
+    public static Assay makeAssay(DataFile dataFile) throws DataAccessException {
         Assay assay = new Assay();
 
         // accession
@@ -42,18 +43,18 @@ public final class AssayFactory {
 
         // sample
         List<AssaySample> samples = new ArrayList<AssaySample>();
-        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.SPECIES)));
-        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.TISSUE)));
-        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.CELL_TYPE)));
-        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.DISEASE)));
+        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.SPECIES)));
+        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.TISSUE)));
+        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.CELL_TYPE)));
+        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.DISEASE)));
         assay.setSamples(samples);
 
         // quantification
-        assay.setQuantificationMethods(DataConversionUtil.convertAssayQuantitationMethodCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.QUANTIFICATION_METHOD)));
+        assay.setQuantificationMethods(DataConversionUtil.convertAssayQuantitationMethodCvParams(assay, dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.QUANTIFICATION_METHOD)));
 
         // instrument
         List<Instrument> instruments = new ArrayList<Instrument>();
-        Set<Param> instrumentModels = sampleMetaData.getMetaData(SampleMetaData.Type.INSTRUMENT);
+        Set<Param> instrumentModels = dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.INSTRUMENT);
         for (Param instrumentModel : instrumentModels) {
             //check to see if the instrument param is already in PRIDE-R
             if (instrumentModel instanceof uk.ac.ebi.pride.data.model.CvParam) {
@@ -65,16 +66,29 @@ public final class AssayFactory {
                     repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
                 }
                 Instrument instrument = new Instrument();
-                instrument.setCvParam(repoParam);
+                //instrument model is a wrapper around a cv param
+                InstrumentModel model = new InstrumentModel();
+                model.setId(repoParam.getId());
+                model.setCvLabel(repoParam.getCvLabel());
+                model.setAccession(repoParam.getAccession());
+                model.setName(repoParam.getName());
+                model.setValue(repoParam.getValue());
+                instrument.setModel(model);
+                //store assay link
+                //todo - this might cause data duplication in case of identical instruments
+                //todo - across multiple assays in the scope of a single project
+                //todo - needs testing
+                instrument.setAssays(Arrays.asList(assay));
+
             }
         }
         assay.setInstruments(instruments);
 
         // experimental factor
-        Set<Param> experimentFactor = sampleMetaData.getMetaData(SampleMetaData.Type.EXPERIMENTAL_FACTOR);
+        Set<Param> experimentFactor = dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.EXPERIMENTAL_FACTOR);
         if (!experimentFactor.isEmpty()) {
-            //todo is this sensible??
-            assay.setExperimentalFactor(experimentFactor.iterator().next().getName());
+            //do it this way because experiment factor is stored as the value of a single user param
+            assay.setExperimentalFactor(experimentFactor.iterator().next().getValue());
         }
 
         // load assay details from file
@@ -147,21 +161,30 @@ public final class AssayFactory {
             // ptms
             assay.setPtms(DataConversionUtil.convertAssayPTMs(assay, resultFileScanner.getPtms()));
 
+            //contact
+            assay.setContacts(DataConversionUtil.convertContact(assay, dataAccessController.getPersonContacts()));
+
+            //additional params
+            assay.setAssayGroupCvParams(DataConversionUtil.convertAssayGroupCvParams(assay, dataAccessController.getAdditional()));
+            assay.setAssayUserParams(DataConversionUtil.convertAssayGroupUserParams(assay, dataAccessController.getAdditional()));
+
             //merge instruments
-            if (assay.getInstruments().size() != 1) {
+            if (assay.getInstruments().size() == 1) {
                 //todo - this is badness, but I can't think of a nicer way at the moment
                 //todo - to reconcile the information coming from the PX file with the information in the submission file
-                throw new ProjectLoaderException("Could not merge instruments from Assay File and PX Summary File, aborting!");
-            }
-            //the px file only contains the instrument name but not the configuration
-            //the result fiel contains the instrument configuration but not necessarily the
-            //identical instrument name. Basically, we're screwed.
-            if (!resultFileScanner.getInstruments().isEmpty()) {
-                Instrument assayInstrument = assay.getInstruments().iterator().next();
-                Instrument scanInstrument = resultFileScanner.getInstruments().iterator().next();
-                scanInstrument.setCvParam(assayInstrument.getCvParam());
-                Set<Instrument> instrumentSet = Collections.singleton(scanInstrument);
-                assay.setInstruments(instrumentSet);
+                //todo - the px file only contains the instrument name but not the configuration
+                //todo - the result fiel contains the instrument configuration but not necessarily the
+                //todo - identical instrument name. Basically, we're screwed.
+                if (!resultFileScanner.getInstruments().isEmpty()) {
+                    Instrument assayInstrument = assay.getInstruments().iterator().next();
+                    Instrument scanInstrument = resultFileScanner.getInstruments().iterator().next();
+                    //instrument model is a wrapper around a cv param
+                    scanInstrument.setModel(assayInstrument.getModel());
+                    Set<Instrument> instrumentSet = Collections.singleton(scanInstrument);
+                    assay.setInstruments(instrumentSet);
+                }
+            } else {
+                logger.warn("Could not resolve multiple instrument configurations from the PX summary file, ignoring.");
             }
 
         } finally {
@@ -202,7 +225,7 @@ public final class AssayFactory {
                 analyzerInstrumentComponent.setInstrumentComponentCvParams(DataConversionUtil.convertInstrumentComponentCvParam(analyzerInstrumentComponent, analyzer.getCvParams()));
                 analyzerInstrumentComponent.setInstrumentComponentUserParams(DataConversionUtil.convertInstrumentComponentUserParam(analyzerInstrumentComponent, analyzer.getUserParams()));
             }
-            //detectpr
+            //detector
             for (InstrumentComponent detector : instrumentConfiguration.getDetector()) {
                 DetectorInstrumentComponent detectorInstrumentComponent = new DetectorInstrumentComponent();
                 detectorInstrumentComponent.setInstrument(instrument);
@@ -212,6 +235,7 @@ public final class AssayFactory {
             }
             //store instrument
             instruments.add(instrument);
+            //todo - instrument level additional params are not captured and not inthe pride-r schema at this time
         }
         resultFileScanner.setInstruments(instruments);
 
