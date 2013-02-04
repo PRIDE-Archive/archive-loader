@@ -8,7 +8,6 @@ import uk.ac.ebi.pride.data.controller.impl.ControllerImpl.MzIdentMLControllerIm
 import uk.ac.ebi.pride.data.controller.impl.ControllerImpl.MzMLControllerImpl;
 import uk.ac.ebi.pride.data.controller.impl.ControllerImpl.PrideXmlControllerImpl;
 import uk.ac.ebi.pride.data.core.*;
-import uk.ac.ebi.pride.data.core.InstrumentComponent;
 import uk.ac.ebi.pride.data.model.DataFile;
 import uk.ac.ebi.pride.data.model.Param;
 import uk.ac.ebi.pride.data.model.SampleMetaData;
@@ -18,7 +17,10 @@ import uk.ac.ebi.pride.prider.loader.util.CvParamManager;
 import uk.ac.ebi.pride.prider.loader.util.DataConversionUtil;
 import uk.ac.ebi.pride.prider.repo.assay.Assay;
 import uk.ac.ebi.pride.prider.repo.assay.AssaySample;
-import uk.ac.ebi.pride.prider.repo.instrument.*;
+import uk.ac.ebi.pride.prider.repo.instrument.AnalyzerInstrumentComponent;
+import uk.ac.ebi.pride.prider.repo.instrument.DetectorInstrumentComponent;
+import uk.ac.ebi.pride.prider.repo.instrument.Instrument;
+import uk.ac.ebi.pride.prider.repo.instrument.SourceInstrumentComponent;
 
 import java.io.File;
 import java.util.*;
@@ -66,14 +68,8 @@ public final class AssayFactory {
                     repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
                 }
                 Instrument instrument = new Instrument();
-                //instrument model is a wrapper around a cv param
-                InstrumentModel model = new InstrumentModel();
-                model.setId(repoParam.getId());
-                model.setCvLabel(repoParam.getCvLabel());
-                model.setAccession(repoParam.getAccession());
-                model.setName(repoParam.getName());
-                model.setValue(repoParam.getValue());
-                instrument.setModel(model);
+                instrument.setCvParam(repoParam);
+                instrument.setValue(cvParam.getValue());
                 //store assay link
                 //todo - this might cause data duplication in case of identical instruments
                 //todo - across multiple assays in the scope of a single project
@@ -166,7 +162,7 @@ public final class AssayFactory {
 
             //additional params
             assay.setAssayGroupCvParams(DataConversionUtil.convertAssayGroupCvParams(assay, dataAccessController.getAdditional()));
-            assay.setAssayUserParams(DataConversionUtil.convertAssayGroupUserParams(assay, dataAccessController.getAdditional()));
+            assay.setAssayGroupUserParams(DataConversionUtil.convertAssayGroupUserParams(assay, dataAccessController.getAdditional()));
 
             //merge instruments
             if (assay.getInstruments().size() == 1) {
@@ -179,7 +175,8 @@ public final class AssayFactory {
                     Instrument assayInstrument = assay.getInstruments().iterator().next();
                     Instrument scanInstrument = resultFileScanner.getInstruments().iterator().next();
                     //instrument model is a wrapper around a cv param
-                    scanInstrument.setModel(assayInstrument.getModel());
+                    scanInstrument.setCvParam(assayInstrument.getCvParam());
+                    scanInstrument.setValue(assayInstrument.getValue());
                     Set<Instrument> instrumentSet = Collections.singleton(scanInstrument);
                     assay.setInstruments(instrumentSet);
                 }

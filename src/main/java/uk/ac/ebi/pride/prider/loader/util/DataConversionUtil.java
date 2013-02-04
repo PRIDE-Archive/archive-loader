@@ -402,12 +402,12 @@ public final class DataConversionUtil {
         return retval;
     }
 
-    public static Collection<AssayUserParam> convertAssayGroupUserParams(Assay assay, ParamGroup additional) {
+    public static Collection<AssayGroupUserParam> convertAssayGroupUserParams(Assay assay, ParamGroup additional) {
 
-        Set<AssayUserParam> retval = new HashSet<AssayUserParam>();
+        Set<AssayGroupUserParam> retval = new HashSet<AssayGroupUserParam>();
         for (UserParam userParam : additional.getUserParams()) {
 
-            AssayUserParam auserParam = new AssayUserParam();
+            AssayGroupUserParam auserParam = new AssayGroupUserParam();
             auserParam.setAssay(assay);
             auserParam.setName(userParam.getName());
             auserParam.setValue(userParam.getValue());
