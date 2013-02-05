@@ -275,7 +275,9 @@ public class ProjectLoader {
             // species
             Collection<AssaySample> samples = assay.getSamples();
             Set<ProjectSample> projectSamples = new HashSet<ProjectSample>();
-            projectSamples.addAll(project.getSamples());
+            if (project.getSamples() != null) {
+                projectSamples.addAll(project.getSamples());
+            }
             for (AssaySample sample : samples) {
                 projectSamples.add(DataConversionUtil.convertAssaySampleToProjectSample(project, sample));
             }
@@ -295,7 +297,9 @@ public class ProjectLoader {
             // modifications
             Collection<AssayPTM> ptms = assay.getPtms();
             Set<ProjectPTM> projectPtms = new HashSet<ProjectPTM>();
-            projectPtms.addAll(project.getPtms());
+            if (project.getPtms() != null) {
+                projectPtms.addAll(project.getPtms());
+            }
             for (AssayPTM ptm : ptms) {
                 projectPtms.add(DataConversionUtil.convertAssayPTMtoProjectPTM(project, ptm));
             }
@@ -304,7 +308,9 @@ public class ProjectLoader {
             // quantifications
             Collection<AssayQuantificationMethod> quants = assay.getQuantificationMethods();
             Collection<ProjectQuantificationMethod> projectQuants = new HashSet<ProjectQuantificationMethod>();
-            projectQuants.addAll(project.getQuantificationMethods());
+            if (project.getQuantificationMethods() != null) {
+                projectQuants.addAll(project.getQuantificationMethods());
+            }
             for (AssayQuantificationMethod param : quants) {
                 projectQuants.add(DataConversionUtil.convertAssayQuantitationMethodToProjectQuantitationMethod(project, param));
             }

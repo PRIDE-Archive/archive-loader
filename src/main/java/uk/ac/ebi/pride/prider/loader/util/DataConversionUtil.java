@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import uk.ac.ebi.pride.data.core.*;
 import uk.ac.ebi.pride.data.model.CvParam;
 import uk.ac.ebi.pride.data.model.Param;
+import uk.ac.ebi.pride.prider.dataprovider.person.Title;
 import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
 import uk.ac.ebi.pride.prider.repo.assay.*;
 import uk.ac.ebi.pride.prider.repo.assay.software.SoftwareCvParam;
@@ -36,14 +37,16 @@ public final class DataConversionUtil {
     public static String combineToString(Set<String> strToCombine, String separator) {
         StringBuilder builder = new StringBuilder();
 
-        for (String s : strToCombine) {
-            builder.append(s);
-            builder.append(separator);
+        if (strToCombine != null) {
+            for (String s : strToCombine) {
+                builder.append(s);
+                builder.append(separator);
+            }
         }
 
         // remove the last the separator
         String str = builder.toString();
-        if (strToCombine.size() > 0) {
+        if (strToCombine != null && strToCombine.size() > 0) {
             str = str.substring(0, str.length() - separator.length());
         }
         return str;
@@ -58,13 +61,13 @@ public final class DataConversionUtil {
      */
     public static List<Reference> convertReferences(Set<String> pubmedIds) {
         List<Reference> references = new ArrayList<Reference>();
-
-        for (String pubmedId : pubmedIds) {
-            Reference reference = new Reference();
-            reference.setPubmedId(Integer.parseInt(pubmedId));
-            references.add(reference);
+        if (pubmedIds != null) {
+            for (String pubmedId : pubmedIds) {
+                Reference reference = new Reference();
+                reference.setPubmedId(Integer.parseInt(pubmedId));
+                references.add(reference);
+            }
         }
-
         return references;
     }
 
@@ -86,22 +89,24 @@ public final class DataConversionUtil {
 
         try {
             Collection<AssayCvParam> retval = new HashSet<AssayCvParam>();
-            for (Param param : sampleParams) {
-                if (param instanceof CvParam) {
-                    CvParam cvParam = (CvParam) param;
-                    uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
-                    //if param isn't already seen in db, store it
-                    if (repoParam == null) {
-                        CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
-                        repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+            if (sampleParams != null) {
+                for (Param param : sampleParams) {
+                    if (param instanceof CvParam) {
+                        CvParam cvParam = (CvParam) param;
+                        uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                        //if param isn't already seen in db, store it
+                        if (repoParam == null) {
+                            CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
+                            repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                        }
+                        AssayCvParam acvParam = (AssayCvParam) clz.newInstance();
+                        acvParam.setAssay(assay);
+                        acvParam.setCvParam(repoParam);
+                        acvParam.setValue(cvParam.getValue());
+                        retval.add(acvParam);
+                    } else {
+                        logger.warn("Ignored sample userParam" + param.getName() + "->" + param.getValue());
                     }
-                    AssayCvParam acvParam = (AssayCvParam) clz.newInstance();
-                    acvParam.setAssay(assay);
-                    acvParam.setCvParam(repoParam);
-                    acvParam.setValue(cvParam.getValue());
-                    retval.add(acvParam);
-                } else {
-                    logger.warn("Ignored sample userParam" + param.getName() + "->" + param.getValue());
                 }
             }
             return retval;
@@ -145,22 +150,24 @@ public final class DataConversionUtil {
 
         try {
             Collection<ProjectCvParam> retval = new HashSet<ProjectCvParam>();
-            for (Param param : projectParams) {
-                if (param instanceof CvParam) {
-                    CvParam cvParam = (CvParam) param;
-                    uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
-                    //if param isn't already seen in db, store it
-                    if (repoParam == null) {
-                        CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
-                        repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+            if (projectParams != null) {
+                for (Param param : projectParams) {
+                    if (param instanceof CvParam) {
+                        CvParam cvParam = (CvParam) param;
+                        uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                        //if param isn't already seen in db, store it
+                        if (repoParam == null) {
+                            CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
+                            repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                        }
+                        ProjectCvParam projectCvParam = (ProjectCvParam) clz.newInstance();
+                        projectCvParam.setProject(project);
+                        projectCvParam.setCvParam(repoParam);
+                        projectCvParam.setValue(cvParam.getValue());
+                        retval.add(projectCvParam);
+                    } else {
+                        logger.warn("Ignored project userParam" + param.getName() + "->" + param.getValue());
                     }
-                    ProjectCvParam projectCvParam = (ProjectCvParam) clz.newInstance();
-                    projectCvParam.setProject(project);
-                    projectCvParam.setCvParam(repoParam);
-                    projectCvParam.setValue(cvParam.getValue());
-                    retval.add(projectCvParam);
-                } else {
-                    logger.warn("Ignored project userParam" + param.getName() + "->" + param.getValue());
                 }
             }
             return retval;
@@ -177,16 +184,18 @@ public final class DataConversionUtil {
 
         Set<uk.ac.ebi.pride.prider.repo.assay.software.Software> softwareSet = new HashSet<uk.ac.ebi.pride.prider.repo.assay.software.Software>();
         int orderIndex = 0;
-        for (Software oldSoftware : softwares) {
-            uk.ac.ebi.pride.prider.repo.assay.software.Software newSoftware = new uk.ac.ebi.pride.prider.repo.assay.software.Software();
-            newSoftware.setAssay(assay);
-            newSoftware.setName(oldSoftware.getName());
-            newSoftware.setOrder(orderIndex++);
-            newSoftware.setSoftwareCvParams(convertSoftwareCvParams(newSoftware, oldSoftware.getCvParams()));
-            newSoftware.setSoftwareUserParams(convertSoftwareUserParams(newSoftware, oldSoftware.getUserParams()));
-            newSoftware.setVersion(oldSoftware.getVersion());
-            newSoftware.setCustomization(oldSoftware.getCustomization());
-            softwareSet.add(newSoftware);
+        if (softwares != null) {
+            for (Software oldSoftware : softwares) {
+                uk.ac.ebi.pride.prider.repo.assay.software.Software newSoftware = new uk.ac.ebi.pride.prider.repo.assay.software.Software();
+                newSoftware.setAssay(assay);
+                newSoftware.setName(oldSoftware.getName());
+                newSoftware.setOrder(orderIndex++);
+                newSoftware.setSoftwareCvParams(convertSoftwareCvParams(newSoftware, oldSoftware.getCvParams()));
+                newSoftware.setSoftwareUserParams(convertSoftwareUserParams(newSoftware, oldSoftware.getUserParams()));
+                newSoftware.setVersion(oldSoftware.getVersion());
+                newSoftware.setCustomization(oldSoftware.getCustomization());
+                softwareSet.add(newSoftware);
+            }
         }
 
         return softwareSet;
@@ -197,12 +206,14 @@ public final class DataConversionUtil {
                                                                            List<uk.ac.ebi.pride.data.core.UserParam> userParams) {
 
         Collection<SoftwareUserParam> retval = new HashSet<SoftwareUserParam>();
-        for (uk.ac.ebi.pride.data.core.UserParam userParam : userParams) {
-            SoftwareUserParam swuPavam = new SoftwareUserParam();
-            swuPavam.setName(userParam.getName());
-            swuPavam.setValue(userParam.getValue());
-            swuPavam.setSoftware(software);
-            retval.add(swuPavam);
+        if (userParams != null) {
+            for (uk.ac.ebi.pride.data.core.UserParam userParam : userParams) {
+                SoftwareUserParam swuPavam = new SoftwareUserParam();
+                swuPavam.setName(userParam.getName());
+                swuPavam.setValue(userParam.getValue());
+                swuPavam.setSoftware(software);
+                retval.add(swuPavam);
+            }
         }
 
         return retval;
@@ -213,20 +224,22 @@ public final class DataConversionUtil {
                                                                        List<uk.ac.ebi.pride.data.core.CvParam> cvParams) {
 
         Collection<SoftwareCvParam> retval = new HashSet<SoftwareCvParam>();
-        for (uk.ac.ebi.pride.data.core.CvParam cvParam : cvParams) {
+        if (cvParams != null) {
+            for (uk.ac.ebi.pride.data.core.CvParam cvParam : cvParams) {
 
-            uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
-            //if param isn't already seen in db, store it
-            if (repoParam == null) {
-                CvParamManager.getInstance().putCvParam(cvParam.getCvLookupID(), cvParam.getAccession(), cvParam.getName());
-                repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                //if param isn't already seen in db, store it
+                if (repoParam == null) {
+                    CvParamManager.getInstance().putCvParam(cvParam.getCvLookupID(), cvParam.getAccession(), cvParam.getName());
+                    repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                }
+
+                SoftwareCvParam swcvPavam = new SoftwareCvParam();
+                swcvPavam.setSoftware(software);
+                swcvPavam.setCvParam(repoParam);
+                swcvPavam.setValue(cvParam.getValue());
+                retval.add(swcvPavam);
             }
-
-            SoftwareCvParam swcvPavam = new SoftwareCvParam();
-            swcvPavam.setSoftware(software);
-            swcvPavam.setCvParam(repoParam);
-            swcvPavam.setValue(cvParam.getValue());
-            retval.add(swcvPavam);
         }
 
         return retval;
@@ -236,21 +249,23 @@ public final class DataConversionUtil {
     public static Collection<InstrumentComponentCvParam> convertInstrumentComponentCvParam(InstrumentComponent instrumentComponent,
                                                                                            List<uk.ac.ebi.pride.data.core.CvParam> cvParams) {
         Collection<InstrumentComponentCvParam> retval = new HashSet<InstrumentComponentCvParam>();
-        for (uk.ac.ebi.pride.data.core.CvParam cvParam : cvParams) {
+        if (cvParams != null) {
+            for (uk.ac.ebi.pride.data.core.CvParam cvParam : cvParams) {
 
-            uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
-            //if param isn't already seen in db, store it
-            if (repoParam == null) {
-                CvParamManager.getInstance().putCvParam(cvParam.getCvLookupID(), cvParam.getAccession(), cvParam.getName());
-                repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                //if param isn't already seen in db, store it
+                if (repoParam == null) {
+                    CvParamManager.getInstance().putCvParam(cvParam.getCvLookupID(), cvParam.getAccession(), cvParam.getName());
+                    repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                }
+
+                InstrumentComponentCvParam iccvParam = new InstrumentComponentCvParam();
+                iccvParam.setInstrumentComponent(instrumentComponent);
+                iccvParam.setCvParam(repoParam);
+                iccvParam.setValue(cvParam.getValue());
+                retval.add(iccvParam);
+
             }
-
-            InstrumentComponentCvParam iccvParam = new InstrumentComponentCvParam();
-            iccvParam.setInstrumentComponent(instrumentComponent);
-            iccvParam.setCvParam(repoParam);
-            iccvParam.setValue(cvParam.getValue());
-            retval.add(iccvParam);
-
         }
 
         return retval;
@@ -260,14 +275,16 @@ public final class DataConversionUtil {
     public static Collection<InstrumentComponentUserParam> convertInstrumentComponentUserParam(InstrumentComponent instrumentComponent,
                                                                                                List<uk.ac.ebi.pride.data.core.UserParam> userParams) {
         Collection<InstrumentComponentUserParam> retval = new HashSet<InstrumentComponentUserParam>();
-        for (uk.ac.ebi.pride.data.core.UserParam userParam : userParams) {
+        if (userParams != null) {
+            for (uk.ac.ebi.pride.data.core.UserParam userParam : userParams) {
 
-            InstrumentComponentUserParam icuserParam = new InstrumentComponentUserParam();
-            icuserParam.setInstrumentComponent(instrumentComponent);
-            icuserParam.setName(userParam.getName());
-            icuserParam.setValue(userParam.getValue());
-            retval.add(icuserParam);
+                InstrumentComponentUserParam icuserParam = new InstrumentComponentUserParam();
+                icuserParam.setInstrumentComponent(instrumentComponent);
+                icuserParam.setName(userParam.getName());
+                icuserParam.setValue(userParam.getValue());
+                retval.add(icuserParam);
 
+            }
         }
 
         return retval;
@@ -277,21 +294,23 @@ public final class DataConversionUtil {
     public static Collection<AssayPTM> convertAssayPTMs(Assay assay, Set<uk.ac.ebi.pride.data.core.CvParam> ptms) {
 
         Set<AssayPTM> retval = new HashSet<AssayPTM>();
-        for (uk.ac.ebi.pride.data.core.CvParam cvParam : ptms) {
+        if (ptms != null) {
+            for (uk.ac.ebi.pride.data.core.CvParam cvParam : ptms) {
 
-            uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
-            //if param isn't already seen in db, store it
-            if (repoParam == null) {
-                CvParamManager.getInstance().putCvParam(cvParam.getCvLookupID(), cvParam.getAccession(), cvParam.getName());
-                repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                //if param isn't already seen in db, store it
+                if (repoParam == null) {
+                    CvParamManager.getInstance().putCvParam(cvParam.getCvLookupID(), cvParam.getAccession(), cvParam.getName());
+                    repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                }
+
+                AssayPTM aPTM = new AssayPTM();
+                aPTM.setAssay(assay);
+                aPTM.setCvParam(repoParam);
+                aPTM.setValue(cvParam.getValue());
+                retval.add(aPTM);
+
             }
-
-            AssayPTM aPTM = new AssayPTM();
-            aPTM.setAssay(assay);
-            aPTM.setCvParam(repoParam);
-            aPTM.setValue(cvParam.getValue());
-            retval.add(aPTM);
-
         }
 
         return retval;
@@ -301,21 +320,23 @@ public final class DataConversionUtil {
     public static Collection<ProjectPTM> convertProjectPTMs(Project project, Set<CvParam> ptms) {
 
         Set<ProjectPTM> retval = new HashSet<ProjectPTM>();
-        for (CvParam cvParam : ptms) {
+        if (ptms != null) {
+            for (CvParam cvParam : ptms) {
 
-            uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
-            //if param isn't already seen in db, store it
-            if (repoParam == null) {
-                CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
-                repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                //if param isn't already seen in db, store it
+                if (repoParam == null) {
+                    CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
+                    repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                }
+
+                ProjectPTM projectPTM = new ProjectPTM();
+                projectPTM.setProject(project);
+                projectPTM.setCvParam(repoParam);
+                projectPTM.setValue(cvParam.getValue());
+                retval.add(projectPTM);
+
             }
-
-            ProjectPTM projectPTM = new ProjectPTM();
-            projectPTM.setProject(project);
-            projectPTM.setCvParam(repoParam);
-            projectPTM.setValue(cvParam.getValue());
-            retval.add(projectPTM);
-
         }
 
         return retval;
@@ -353,66 +374,98 @@ public final class DataConversionUtil {
 
     public static Collection<Contact> convertContact(Assay assay, Collection<Person> personContacts) {
         Set<Contact> retval = new HashSet<Contact>();
-        for (Person person : personContacts) {
+        if (personContacts != null) {
+            for (Person person : personContacts) {
 
-            Contact contact = new Contact();
-            //todo - contact.setTitle(); - no value available
-            StringBuilder sb = new StringBuilder(person.getFirstname());
-            if (person.getMidInitials() != null) {
-                sb.append(" ").append(person.getMidInitials());
+                Contact contact = new Contact();
+                //todo - contact.setTitle(); - no value available
+                contact.setTitle(Title.Mr);
+
+                //todo - fix ms-core API
+                if (person.getFirstname() != null && person.getLastname() != null) {
+                    StringBuilder sb = new StringBuilder(person.getFirstname());
+                    if (person.getMidInitials() != null) {
+                        sb.append(" ").append(person.getMidInitials());
+                    }
+                    contact.setFirstName(sb.toString());
+                    contact.setLastName(person.getLastname());
+                } else if (person.getName() != null) {
+
+                    //try to split the name on whitespace
+                    String[] tokens = person.getName().split("\\s+");
+                    if (tokens.length > 1) {
+                        //put everything in first name except last token
+                        String lastName = tokens[tokens.length - 1];
+                        tokens[tokens.length - 1] = "";
+                        StringBuilder sb = new StringBuilder();
+                        for (String token : tokens) {
+                            sb.append(token).append(" ");
+                        }
+                        contact.setFirstName(sb.toString().trim());
+                        contact.setLastName(lastName);
+                    } else {
+                        contact.setFirstName(tokens[0]);
+                    }
+
+                } else {
+                    throw new ProjectLoaderException("No name given for contact: " + person.toString());
+                }
+
+
+                StringBuilder sb = new StringBuilder();
+                for (Organization org : person.getAffiliation()) {
+                    sb.append(org.getMail()).append(", ");
+                }
+                //remove last 2 chars
+                String affiliation = sb.toString();
+                affiliation = affiliation.substring(0, affiliation.length() - 2);
+                //todo - fix ms-core API
+                contact.setAffiliation(affiliation);
+                contact.setEmail("//todo fixme" + person.getMail());
+                contact.setAssay(assay);
+                retval.add(contact);
             }
-            contact.setFirstName(sb.toString());
-            contact.setLastName(person.getLastname());
-            sb = new StringBuilder();
-            for (Organization org : person.getAffiliation()) {
-                sb.append(org.getMail()).append(", ");
-            }
-            //remove last 2 chars
-            String affiliation = sb.toString();
-            affiliation = affiliation.substring(0, affiliation.length() - 2);
-            contact.setAffiliation(affiliation);
-            contact.setEmail(person.getMail());
-            contact.setAssay(assay);
-            retval.add(contact);
         }
-
         return retval;
     }
 
     public static Collection<AssayGroupCvParam> convertAssayGroupCvParams(Assay assay, ParamGroup additional) {
 
         Set<AssayGroupCvParam> retval = new HashSet<AssayGroupCvParam>();
-        for (uk.ac.ebi.pride.data.core.CvParam cvParam : additional.getCvParams()) {
+        if (additional != null) {
+            for (uk.ac.ebi.pride.data.core.CvParam cvParam : additional.getCvParams()) {
 
-            uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
-            //if param isn't already seen in db, store it
-            if (repoParam == null) {
-                CvParamManager.getInstance().putCvParam(cvParam.getCvLookupID(), cvParam.getAccession(), cvParam.getName());
-                repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                //if param isn't already seen in db, store it
+                if (repoParam == null) {
+                    CvParamManager.getInstance().putCvParam(cvParam.getCvLookupID(), cvParam.getAccession(), cvParam.getName());
+                    repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                }
+
+                AssayGroupCvParam agcvParam = new AssayGroupCvParam();
+                agcvParam.setAssay(assay);
+                agcvParam.setCvParam(repoParam);
+                agcvParam.setValue(cvParam.getValue());
+                retval.add(agcvParam);
+
             }
-
-            AssayGroupCvParam agcvParam = new AssayGroupCvParam();
-            agcvParam.setAssay(assay);
-            agcvParam.setCvParam(repoParam);
-            agcvParam.setValue(cvParam.getValue());
-            retval.add(agcvParam);
-
         }
-
         return retval;
     }
 
     public static Collection<AssayGroupUserParam> convertAssayGroupUserParams(Assay assay, ParamGroup additional) {
 
         Set<AssayGroupUserParam> retval = new HashSet<AssayGroupUserParam>();
-        for (UserParam userParam : additional.getUserParams()) {
+        if (additional != null) {
+            for (UserParam userParam : additional.getUserParams()) {
 
-            AssayGroupUserParam auserParam = new AssayGroupUserParam();
-            auserParam.setAssay(assay);
-            auserParam.setName(userParam.getName());
-            auserParam.setValue(userParam.getValue());
-            retval.add(auserParam);
+                AssayGroupUserParam auserParam = new AssayGroupUserParam();
+                auserParam.setAssay(assay);
+                auserParam.setName(userParam.getName());
+                auserParam.setValue(userParam.getValue());
+                retval.add(auserParam);
 
+            }
         }
 
         return retval;

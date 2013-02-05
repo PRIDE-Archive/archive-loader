@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
+import uk.ac.ebi.pride.prider.loader.util.CvParamManager;
 import uk.ac.ebi.pride.prider.repo.assay.AssayRepository;
 import uk.ac.ebi.pride.prider.repo.file.ProjectFileRepository;
+import uk.ac.ebi.pride.prider.repo.param.CvParamRepository;
 import uk.ac.ebi.pride.prider.repo.project.ProjectRepository;
 import uk.ac.ebi.pride.prider.repo.user.UserRepository;
 
@@ -36,11 +38,15 @@ public class ProjectLoaderTest {
     private AssayRepository assayDao;
     @Autowired
     private ProjectFileRepository projectFileDao;
+    @Autowired
+    private CvParamRepository cvParamDao;
 
     @Test
     public void LoaderTest() throws Exception {
 
         ProjectLoader loader = new ProjectLoader(userDao, projectDao, assayDao, projectFileDao, transactionManager);
+        CvParamManager paramManager = CvParamManager.getInstance();
+        paramManager.setCvParamDao(cvParamDao);
         URL url = getClass().getClassLoader().getResource("px_files/submission.px");
         assertNotNull(url);
         loader.load("12345", "12345", new File(url.toURI()).getAbsolutePath());

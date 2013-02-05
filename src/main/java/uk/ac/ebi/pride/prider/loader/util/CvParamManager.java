@@ -1,6 +1,5 @@
 package uk.ac.ebi.pride.prider.loader.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import uk.ac.ebi.pride.prider.repo.param.CvParam;
 import uk.ac.ebi.pride.prider.repo.param.CvParamRepository;
 
@@ -16,7 +15,6 @@ import java.util.Map;
  */
 public class CvParamManager {
 
-    @Autowired
     private CvParamRepository cvParamDao;
 
     private Map<String, CvParam> allParams = new HashMap<String, CvParam>();
@@ -28,6 +26,15 @@ public class CvParamManager {
     }
 
     private CvParamManager() {
+    }
+
+    public void setCvParamDao(CvParamRepository cvParamDao) {
+        this.cvParamDao = cvParamDao;
+        cacheData();
+    }
+
+    private void cacheData() {
+        checkDao();
         Iterator<CvParam> iterator = cvParamDao.findAll().iterator();
         while (iterator.hasNext()) {
             CvParam param = iterator.next();
@@ -36,6 +43,7 @@ public class CvParamManager {
     }
 
     public CvParam getCvParam(String accession) {
+        checkDao();
         return allParams.get(accession);
     }
 
@@ -46,7 +54,8 @@ public class CvParamManager {
      * @return true if the param has been stored, false otherwise.
      */
     public boolean putCvParam(String cvLabel, String accession, String name) {
-        if (allParams.containsKey(accession)) {
+        checkDao();
+        if (!allParams.containsKey(accession)) {
             CvParam param = new CvParam();
             param.setAccession(accession);
             param.setCvLabel(cvLabel);
@@ -57,4 +66,11 @@ public class CvParamManager {
         }
         return false;
     }
+
+    private void checkDao() {
+        if (cvParamDao == null) {
+            throw new IllegalStateException("CvParam DAO not set!");
+        }
+    }
+
 }

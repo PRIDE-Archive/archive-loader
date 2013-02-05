@@ -1,0 +1,19 @@
+MTD	name	Richard Cote
+MTD	email	john.smith@dummy.ebi.com
+MTD	affiliation	HUPO Plasma Proteome Project
+MTD	pride_login	rcote
+MTD	title	Test PX data set
+MTD	project_description	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec massa odio, ultrices dignissim eleifend eget
+MTD	keywords	liver, human, bruker LTQ
+MTD	sample_processing_protocol	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec massa odio, ultrices dignissim eleifend eget
+MTD	data_processing_protocol	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec massa odio, ultrices dignissim eleifend eget
+MTD	experiment_type	[PRIDE, PRIDE:0000429, Shotgun proteomics, ]
+MTD	submission_type	COMPLETE
+
+FMH	file_id	file_type	file_path	file_mapping	pride_accession
+FME	0	search	/home/rcote/Desktop/example_files/mascot/Spot 14.dat
+FME	1	result	/home/rcote/Desktop/example_files/mascot/Spot 14.dat-pride.xml	0,3	1
+FME	3	raw	/home/rcote/Desktop/example_files/mascot/Spot 25.dat-report.xml.zip
+
+SMH	file_id	species	tissue	cell_type	disease	instrument	quantification	experimental_factor
+SME	1	[NEWT, 7460, Apis mellifera (Honeybee), ]	[BTO, BTO:0000089, blood, ]	[CL, CL:0000451, dendritic cell, ]	[DOID, DOID:4492, avian influenza, ]	[MS, MS:1000448, LTQ FT, ]		zoopla
