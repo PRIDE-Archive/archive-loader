@@ -75,6 +75,7 @@ public final class AssayFactory {
                 //todo - across multiple assays in the scope of a single project
                 //todo - needs testing
                 instrument.setAssays(Arrays.asList(assay));
+                instruments.add(instrument);
 
             }
         }

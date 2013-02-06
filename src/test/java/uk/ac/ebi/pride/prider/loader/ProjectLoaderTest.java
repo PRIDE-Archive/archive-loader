@@ -49,7 +49,7 @@ public class ProjectLoaderTest {
         paramManager.setCvParamDao(cvParamDao);
         URL url = getClass().getClassLoader().getResource("px_files/submission.px");
         assertNotNull(url);
-        loader.load("12345", "12345", new File(url.toURI()).getAbsolutePath());
+        loader.load("123456", "12345", new File(url.toURI()).getAbsolutePath());
 
     }
 
