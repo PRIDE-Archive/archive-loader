@@ -20,9 +20,9 @@ import uk.ac.ebi.pride.prider.loader.util.Constant;
 import uk.ac.ebi.pride.prider.loader.util.CvParamManager;
 import uk.ac.ebi.pride.prider.loader.util.DataConversionUtil;
 import uk.ac.ebi.pride.prider.repo.assay.*;
+import uk.ac.ebi.pride.prider.repo.assay.instrument.Instrument;
 import uk.ac.ebi.pride.prider.repo.file.ProjectFile;
 import uk.ac.ebi.pride.prider.repo.file.ProjectFileRepository;
-import uk.ac.ebi.pride.prider.repo.instrument.Instrument;
 import uk.ac.ebi.pride.prider.repo.project.*;
 import uk.ac.ebi.pride.prider.repo.user.User;
 import uk.ac.ebi.pride.prider.repo.user.UserRepository;
@@ -216,12 +216,12 @@ public class ProjectLoader {
             //for partial submisions, these must be done here
 
             // sample
-            List<ProjectSample> samples = new ArrayList<ProjectSample>();
+            List<ProjectSampleCvParam> samples = new ArrayList<ProjectSampleCvParam>();
             samples.addAll(DataConversionUtil.convertProjectSampleCvParams(project, projectMetaData.getSpecies()));
             project.setSamples(samples);
 
             // instrument
-            List<Instrument> instruments = new ArrayList<Instrument>();
+            List<ProjectInstrumentCvParam> instruments = new ArrayList<ProjectInstrumentCvParam>();
             Set<CvParam> instrumentModels = projectMetaData.getInstruments();
             for (CvParam cvParam : instrumentModels) {
                 //check to see if the instrument param is already in PRIDE-R
@@ -231,17 +231,13 @@ public class ProjectLoader {
                     CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
                     repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
                 }
-                Instrument instrument = new Instrument();
-                instrument.setCvParam(repoParam);
-                instrument.setValue(cvParam.getValue());
-                //store assay link
-                //todo - this might cause data duplication in case of identical instruments
-                //todo - across multiple assays in the scope of a single project
-                //todo - needs testing
-                instrument.setProjects(Collections.singleton(project));
-                instruments.add(instrument);
+                ProjectInstrumentCvParam param = new ProjectInstrumentCvParam();
+                param.setCvParam(repoParam);
+                param.setValue(cvParam.getValue());
+                param.setProject(project);
+                instruments.add(param);
             }
-            project.setInstrument(instruments);
+            project.setInstruments(instruments);
 
             // modification
             List<ProjectPTM> ptms = new ArrayList<ProjectPTM>();
@@ -249,9 +245,11 @@ public class ProjectLoader {
             project.setPtms(ptms);
 
             // quant method
-            List<ProjectQuantificationMethod> quantificationMethods = new ArrayList<ProjectQuantificationMethod>();
+            List<ProjectQuantificationMethodCvParam> quantificationMethods = new ArrayList<ProjectQuantificationMethodCvParam>();
             quantificationMethods.addAll(DataConversionUtil.convertProjectQuantificationMethodCvParams(project, projectMetaData.getQuantifications()));
             project.setQuantificationMethods(quantificationMethods);
+
+            //todo - set project software
 
         }
 
@@ -273,26 +271,29 @@ public class ProjectLoader {
 
         for (Assay assay : assays) {
             // species
-            Collection<AssaySample> samples = assay.getSamples();
-            Set<ProjectSample> projectSamples = new HashSet<ProjectSample>();
+            Collection<AssaySampleCvParam> samples = assay.getSamples();
+            Set<ProjectSampleCvParam> projectSamples = new HashSet<ProjectSampleCvParam>();
             if (project.getSamples() != null) {
                 projectSamples.addAll(project.getSamples());
             }
-            for (AssaySample sample : samples) {
+            for (AssaySampleCvParam sample : samples) {
                 projectSamples.add(DataConversionUtil.convertAssaySampleToProjectSample(project, sample));
             }
             project.setSamples(projectSamples);
 
             // instrument
-            Set<Instrument> projectInstruments = new HashSet<Instrument>();
+            Set<ProjectInstrumentCvParam> projectInstruments = new HashSet<ProjectInstrumentCvParam>();
             for (Instrument instrument : assay.getInstruments()) {
-                //todo - this might cause data duplication in case of identical instruments
-                //todo - across multiple assays in the scope of a single project
-                //todo - needs testing
-                instrument.setProjects(Collections.singleton(project));
-                projectInstruments.add(instrument);
+                ProjectInstrumentCvParam param = new ProjectInstrumentCvParam();
+                param.setCvParam(instrument.getCvParam());
+                param.setValue(instrument.getValue());
+                param.setProject(project);
+                projectInstruments.add(param);
             }
-            project.setInstrument(projectInstruments);
+            //todo - check to see if this will cause duplication
+            project.setInstruments(projectInstruments);
+            //todo - set project software
+
 
             // modifications
             Collection<AssayPTM> ptms = assay.getPtms();
@@ -306,12 +307,12 @@ public class ProjectLoader {
             project.setPtms(projectPtms);
 
             // quantifications
-            Collection<AssayQuantificationMethod> quants = assay.getQuantificationMethods();
-            Collection<ProjectQuantificationMethod> projectQuants = new HashSet<ProjectQuantificationMethod>();
+            Collection<AssayQuantificationMethodCvParam> quants = assay.getQuantificationMethods();
+            Collection<ProjectQuantificationMethodCvParam> projectQuants = new HashSet<ProjectQuantificationMethodCvParam>();
             if (project.getQuantificationMethods() != null) {
                 projectQuants.addAll(project.getQuantificationMethods());
             }
-            for (AssayQuantificationMethod param : quants) {
+            for (AssayQuantificationMethodCvParam param : quants) {
                 projectQuants.add(DataConversionUtil.convertAssayQuantitationMethodToProjectQuantitationMethod(project, param));
             }
             project.setQuantificationMethods(projectQuants);

@@ -8,11 +8,11 @@ import uk.ac.ebi.pride.data.model.Param;
 import uk.ac.ebi.pride.prider.dataprovider.person.Title;
 import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
 import uk.ac.ebi.pride.prider.repo.assay.*;
+import uk.ac.ebi.pride.prider.repo.assay.instrument.InstrumentComponent;
+import uk.ac.ebi.pride.prider.repo.assay.instrument.InstrumentComponentCvParam;
+import uk.ac.ebi.pride.prider.repo.assay.instrument.InstrumentComponentUserParam;
 import uk.ac.ebi.pride.prider.repo.assay.software.SoftwareCvParam;
 import uk.ac.ebi.pride.prider.repo.assay.software.SoftwareUserParam;
-import uk.ac.ebi.pride.prider.repo.instrument.InstrumentComponent;
-import uk.ac.ebi.pride.prider.repo.instrument.InstrumentComponentCvParam;
-import uk.ac.ebi.pride.prider.repo.instrument.InstrumentComponentUserParam;
 import uk.ac.ebi.pride.prider.repo.project.*;
 import uk.ac.ebi.pride.prider.repo.project.Reference;
 
@@ -71,15 +71,15 @@ public final class DataConversionUtil {
         return references;
     }
 
-    public static Collection<AssaySample> convertAssaySampleCvParams(Assay assay, Set<Param> sampleParams) {
-        Collection<AssaySample> retval = new HashSet<AssaySample>();
-        retval.addAll(convertAssayCvParams(assay, AssaySample.class, sampleParams));
+    public static Collection<AssaySampleCvParam> convertAssaySampleCvParams(Assay assay, Set<Param> sampleParams) {
+        Collection<AssaySampleCvParam> retval = new HashSet<AssaySampleCvParam>();
+        retval.addAll(convertAssayCvParams(assay, AssaySampleCvParam.class, sampleParams));
         return retval;
     }
 
-    public static Collection<AssayQuantificationMethod> convertAssayQuantitationMethodCvParams(Assay assay, Set<Param> sampleParams) {
-        Collection<AssayQuantificationMethod> retval = new HashSet<AssayQuantificationMethod>();
-        retval.addAll(convertAssayCvParams(assay, AssayQuantificationMethod.class, sampleParams));
+    public static Collection<AssayQuantificationMethodCvParam> convertAssayQuantitationMethodCvParams(Assay assay, Set<Param> sampleParams) {
+        Collection<AssayQuantificationMethodCvParam> retval = new HashSet<AssayQuantificationMethodCvParam>();
+        retval.addAll(convertAssayCvParams(assay, AssayQuantificationMethodCvParam.class, sampleParams));
         return retval;
     }
 
@@ -126,9 +126,9 @@ public final class DataConversionUtil {
         return retval;
     }
 
-    public static Collection<ProjectSample> convertProjectSampleCvParams(Project project, Set<CvParam> params) {
-        Collection<ProjectSample> retval = new HashSet<ProjectSample>();
-        retval.addAll(convertProjectCvParams(project, ProjectSample.class, params));
+    public static Collection<ProjectSampleCvParam> convertProjectSampleCvParams(Project project, Set<CvParam> params) {
+        Collection<ProjectSampleCvParam> retval = new HashSet<ProjectSampleCvParam>();
+        retval.addAll(convertProjectCvParams(project, ProjectSampleCvParam.class, params));
         return retval;
     }
 
@@ -138,9 +138,9 @@ public final class DataConversionUtil {
         return retval;
     }
 
-    public static Collection<ProjectQuantificationMethod> convertProjectQuantificationMethodCvParams(Project project, Set<CvParam> params) {
-        Collection<ProjectQuantificationMethod> retval = new HashSet<ProjectQuantificationMethod>();
-        retval.addAll(convertProjectCvParams(project, ProjectQuantificationMethod.class, params));
+    public static Collection<ProjectQuantificationMethodCvParam> convertProjectQuantificationMethodCvParams(Project project, Set<CvParam> params) {
+        Collection<ProjectQuantificationMethodCvParam> retval = new HashSet<ProjectQuantificationMethodCvParam>();
+        retval.addAll(convertProjectCvParams(project, ProjectQuantificationMethodCvParam.class, params));
         return retval;
     }
 
@@ -342,9 +342,9 @@ public final class DataConversionUtil {
         return retval;
     }
 
-    public static ProjectSample convertAssaySampleToProjectSample(Project project, AssaySample sample) {
+    public static ProjectSampleCvParam convertAssaySampleToProjectSample(Project project, AssaySampleCvParam sample) {
 
-        ProjectSample retval = new ProjectSample();
+        ProjectSampleCvParam retval = new ProjectSampleCvParam();
         retval.setCvParam(sample.getCvParam());
         retval.setValue(sample.getValue());
         retval.setProject(project);
@@ -362,9 +362,9 @@ public final class DataConversionUtil {
 
     }
 
-    public static ProjectQuantificationMethod convertAssayQuantitationMethodToProjectQuantitationMethod(Project project, AssayQuantificationMethod param) {
+    public static ProjectQuantificationMethodCvParam convertAssayQuantitationMethodToProjectQuantitationMethod(Project project, AssayQuantificationMethodCvParam param) {
 
-        ProjectQuantificationMethod method = new ProjectQuantificationMethod();
+        ProjectQuantificationMethodCvParam method = new ProjectQuantificationMethodCvParam();
         method.setCvParam(param.getCvParam());
         method.setValue(param.getValue());
         method.setProject(project);

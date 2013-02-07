@@ -16,11 +16,11 @@ import uk.ac.ebi.pride.prider.loader.util.Constant;
 import uk.ac.ebi.pride.prider.loader.util.CvParamManager;
 import uk.ac.ebi.pride.prider.loader.util.DataConversionUtil;
 import uk.ac.ebi.pride.prider.repo.assay.Assay;
-import uk.ac.ebi.pride.prider.repo.assay.AssaySample;
-import uk.ac.ebi.pride.prider.repo.instrument.AnalyzerInstrumentComponent;
-import uk.ac.ebi.pride.prider.repo.instrument.DetectorInstrumentComponent;
-import uk.ac.ebi.pride.prider.repo.instrument.Instrument;
-import uk.ac.ebi.pride.prider.repo.instrument.SourceInstrumentComponent;
+import uk.ac.ebi.pride.prider.repo.assay.AssaySampleCvParam;
+import uk.ac.ebi.pride.prider.repo.assay.instrument.AnalyzerInstrumentComponent;
+import uk.ac.ebi.pride.prider.repo.assay.instrument.DetectorInstrumentComponent;
+import uk.ac.ebi.pride.prider.repo.assay.instrument.Instrument;
+import uk.ac.ebi.pride.prider.repo.assay.instrument.SourceInstrumentComponent;
 
 import java.io.File;
 import java.util.*;
@@ -44,7 +44,7 @@ public final class AssayFactory {
         assay.setAccession(dataFile.getAssayAccession());
 
         // sample
-        List<AssaySample> samples = new ArrayList<AssaySample>();
+        List<AssaySampleCvParam> samples = new ArrayList<AssaySampleCvParam>();
         samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.SPECIES)));
         samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.TISSUE)));
         samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.CELL_TYPE)));
@@ -206,6 +206,9 @@ public final class AssayFactory {
         Collection<InstrumentConfiguration> instrumentConfigurations = dataAccessController.getInstrumentConfigurations();
         for (InstrumentConfiguration instrumentConfiguration : instrumentConfigurations) {
             Instrument instrument = new Instrument();
+            instrument.setSources(new ArrayList<SourceInstrumentComponent>());
+            instrument.setAnalyzers(new ArrayList<AnalyzerInstrumentComponent>());
+            instrument.setDetectors(new ArrayList<DetectorInstrumentComponent>());
             int orderIndex = 1;
             //source
             for (InstrumentComponent source : instrumentConfiguration.getSource()) {
@@ -214,6 +217,7 @@ public final class AssayFactory {
                 sourceInstrumentComponent.setOrder(orderIndex++);
                 sourceInstrumentComponent.setInstrumentComponentCvParams(DataConversionUtil.convertInstrumentComponentCvParam(sourceInstrumentComponent, source.getCvParams()));
                 sourceInstrumentComponent.setInstrumentComponentUserParams(DataConversionUtil.convertInstrumentComponentUserParam(sourceInstrumentComponent, source.getUserParams()));
+                instrument.getSources().add(sourceInstrumentComponent);
             }
             //analyzer
             for (InstrumentComponent analyzer : instrumentConfiguration.getAnalyzer()) {
@@ -222,6 +226,7 @@ public final class AssayFactory {
                 analyzerInstrumentComponent.setOrder(orderIndex++);
                 analyzerInstrumentComponent.setInstrumentComponentCvParams(DataConversionUtil.convertInstrumentComponentCvParam(analyzerInstrumentComponent, analyzer.getCvParams()));
                 analyzerInstrumentComponent.setInstrumentComponentUserParams(DataConversionUtil.convertInstrumentComponentUserParam(analyzerInstrumentComponent, analyzer.getUserParams()));
+                instrument.getAnalyzers().add(analyzerInstrumentComponent);
             }
             //detector
             for (InstrumentComponent detector : instrumentConfiguration.getDetector()) {
@@ -230,6 +235,7 @@ public final class AssayFactory {
                 detectorInstrumentComponent.setOrder(orderIndex++);
                 detectorInstrumentComponent.setInstrumentComponentCvParams(DataConversionUtil.convertInstrumentComponentCvParam(detectorInstrumentComponent, detector.getCvParams()));
                 detectorInstrumentComponent.setInstrumentComponentUserParams(DataConversionUtil.convertInstrumentComponentUserParam(detectorInstrumentComponent, detector.getUserParams()));
+                instrument.getDetectors().add(detectorInstrumentComponent);
             }
             //store instrument
             instruments.add(instrument);
