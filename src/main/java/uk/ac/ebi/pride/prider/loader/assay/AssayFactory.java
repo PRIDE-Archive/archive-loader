@@ -71,10 +71,7 @@ public final class AssayFactory {
                 instrument.setCvParam(repoParam);
                 instrument.setValue(cvParam.getValue());
                 //store assay link
-                //todo - this might cause data duplication in case of identical instruments
-                //todo - across multiple assays in the scope of a single project
-                //todo - needs testing
-                instrument.setAssays(Arrays.asList(assay));
+                instrument.setAssay(assay);
                 instruments.add(instrument);
 
             }
