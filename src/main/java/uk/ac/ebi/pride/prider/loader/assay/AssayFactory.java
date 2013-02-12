@@ -175,6 +175,7 @@ public final class AssayFactory {
                     //instrument model is a wrapper around a cv param
                     scanInstrument.setCvParam(assayInstrument.getCvParam());
                     scanInstrument.setValue(assayInstrument.getValue());
+                    scanInstrument.setAssay(assay);
                     Set<Instrument> instrumentSet = Collections.singleton(scanInstrument);
                     assay.setInstruments(instrumentSet);
                 }
@@ -263,7 +264,7 @@ public final class AssayFactory {
                 for (Modification modification : modifications) {
                     List<uk.ac.ebi.pride.data.core.CvParam> cvParams = modification.getCvParams();
                     for (uk.ac.ebi.pride.data.core.CvParam cvParam : cvParams) {
-                        if (cvParam.getCvLookupID().equalsIgnoreCase(Constant.MS) || cvParam.getCvLookupID().equalsIgnoreCase(Constant.UNIMOD)) {
+                        if (cvParam.getCvLookupID().equalsIgnoreCase(Constant.PSI_MOD) || cvParam.getCvLookupID().equalsIgnoreCase(Constant.UNIMOD)) {
                             ptms.add(cvParam);
                         }
                     }

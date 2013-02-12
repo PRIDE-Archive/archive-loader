@@ -18,7 +18,7 @@
 
     <properties>
         <prider.repo.version>0.1-SNAPSHOT</prider.repo.version>
-        <ms.data.core.api.version>0.3</ms.data.core.api.version>
+        <ms.data.core.api.version>0.4</ms.data.core.api.version>
     </properties>
 
     <dependencies>
@@ -89,6 +89,12 @@
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>oracle</groupId>
+            <artifactId>ojdbc16</artifactId>
+            <version>v11.2.0.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
