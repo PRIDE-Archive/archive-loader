@@ -214,6 +214,7 @@ public final class AssayFactory {
         Set<Software> softwares = new HashSet<Software>();
         //todo - dataProcessing params are not captured as software params
         //todo - there is a 1-1 mapping for pride XML, but how to deal with mzidentml?
+        //todo - will need to call getspectrumprotocol and getproteinprotocol on dataaccesscontroller to get params
         softwares.addAll(dataAccessController.getExperimentMetaData().getSoftwares());
         resultFileScanner.setSoftwares(softwares);
 
