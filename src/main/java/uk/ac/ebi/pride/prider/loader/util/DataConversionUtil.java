@@ -59,12 +59,18 @@ public final class DataConversionUtil {
      * @param pubmedIds pubmed ids
      * @return a list of prider references
      */
-    public static List<Reference> convertReferences(Set<String> pubmedIds) {
+    public static List<Reference> convertReferences(Project project, Set<String> pubmedIds) {
         List<Reference> references = new ArrayList<Reference>();
         if (pubmedIds != null) {
             for (String pubmedId : pubmedIds) {
                 Reference reference = new Reference();
                 reference.setPubmedId(Integer.parseInt(pubmedId));
+                ReferenceUtil.PubMedReference pubMedReference = ReferenceUtil.getPubmedReference(pubmedId);
+                if (pubMedReference != null) {
+                    reference.setReferenceLine(pubMedReference.toCitation());
+                    reference.setDoi(pubMedReference.getDOI());
+                }
+                reference.setProject(project);
                 references.add(reference);
             }
         }
@@ -137,6 +143,25 @@ public final class DataConversionUtil {
         retval.addAll(convertProjectCvParams(project, ProjectGroupCvParam.class, params));
         return retval;
     }
+
+    public static Collection<ProjectGroupUserParam> convertProjectGroupUserParams(Project project, Set<Param> additional) {
+        Collection<ProjectGroupUserParam> retval = new HashSet<ProjectGroupUserParam>();
+        if (additional != null) {
+            for (Param param : additional) {
+                //don't process cv params
+                if (param instanceof uk.ac.ebi.pride.data.model.CvParam) {
+                    continue;
+                }
+                ProjectGroupUserParam userParam = new ProjectGroupUserParam();
+                userParam.setName(param.getName());
+                userParam.setValue(param.getValue());
+                userParam.setProject(project);
+                retval.add(userParam);
+            }
+        }
+        return retval;
+    }
+
 
     public static Collection<ProjectQuantificationMethodCvParam> convertProjectQuantificationMethodCvParams(Project project, Set<CvParam> params) {
         Collection<ProjectQuantificationMethodCvParam> retval = new HashSet<ProjectQuantificationMethodCvParam>();
@@ -379,9 +404,8 @@ public final class DataConversionUtil {
 
                 Contact contact = new Contact();
                 //todo - contact.setTitle(); - no value available
-                contact.setTitle(Title.Mr);
+                contact.setTitle(Title.UNKNOWN);
 
-                //todo - fix ms-core API
                 if (person.getFirstname() != null && person.getLastname() != null) {
                     StringBuilder sb = new StringBuilder(person.getFirstname());
                     if (person.getMidInitials() != null) {
@@ -390,7 +414,6 @@ public final class DataConversionUtil {
                     contact.setFirstName(sb.toString());
                     contact.setLastName(person.getLastname());
                 } else if (person.getName() != null) {
-
                     //try to split the name on whitespace
                     String[] tokens = person.getName().split("\\s+");
                     if (tokens.length > 1) {
@@ -419,9 +442,8 @@ public final class DataConversionUtil {
                 //remove last 2 chars
                 String affiliation = sb.toString();
                 affiliation = affiliation.substring(0, affiliation.length() - 2);
-                //todo - fix ms-core API
                 contact.setAffiliation(affiliation);
-                contact.setEmail("//todo fixme" + person.getMail());
+                contact.setEmail(person.getContactInfo());
                 contact.setAssay(assay);
                 retval.add(contact);
             }
@@ -471,4 +493,5 @@ public final class DataConversionUtil {
         return retval;
 
     }
+
 }

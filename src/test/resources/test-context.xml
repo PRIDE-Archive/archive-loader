@@ -16,10 +16,10 @@
     </jdbc:embedded-database>
 
     <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">-->
-        <!--<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>-->
-        <!--<property name="url" value="jdbc:oracle:thin:@kava.ebi.ac.uk:1571:ADEV"/>-->
-        <!--<property name="username" value="olsuser"/>-->
-        <!--<property name="password" value="c0p3rnicUs"/>-->
+    <!--<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>-->
+    <!--<property name="url" value="jdbc:oracle:thin:@kava.ebi.ac.uk:1571:ADEV"/>-->
+    <!--<property name="username" value="olsuser"/>-->
+    <!--<property name="password" value="XXXXX"/>-->
     <!--</bean>-->
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">

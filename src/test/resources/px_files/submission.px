@@ -9,20 +9,23 @@ MTD	sample_processing_protocol	Lorem ipsum dolor sit amet, consectetur adipiscin
 MTD	data_processing_protocol	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec massa odio, ultrices dignissim eleifend eget
 MTD	experiment_type	[PRIDE, PRIDE:0000429, Shotgun proteomics, ]
 MTD	submission_type	COMPLETE
+MTD	pubmed_id	18632595
+MTD	additional	[,,test project user param name, test project user param value]
+MTD	additional	[RC, RC:12345, flubu, ]
 
 FMH	file_id	file_type	file_path	file_mapping	pride_accession
-FME	0	search	/home/rcote/Desktop/example_files/mascot/Spot 3.dat
-FME	1	search	/home/rcote/Desktop/example_files/mascot/Spot 14.dat
-FME	2	search	/home/rcote/Desktop/example_files/mascot/Spot 19.dat
-FME	3	search	/home/rcote/Desktop/example_files/mascot/Spot 25.dat
-FME	6	result	/home/rcote/Desktop/example_files/mascot/Spot 19.dat-pride.xml	2,10	3
-FME	4	result	/home/rcote/Desktop/example_files/mascot/Spot 3.dat-pride.xml	0,8	1
-FME	5	result	/home/rcote/Desktop/example_files/mascot/Spot 14.dat-pride.xml	1,9	2
-FME	7	result	/home/rcote/Desktop/example_files/mascot/Spot 25.dat-pride.xml	3,11	4
-FME	8	raw	/home/rcote/Desktop/example_files/mascot/Spot 3.raw.zip
-FME	9	raw	/home/rcote/Desktop/example_files/mascot/Spot 14.raw.zip
-FME	10	raw	/home/rcote/Desktop/example_files/mascot/Spot 19.raw.zip
-FME	11	raw	/home/rcote/Desktop/example_files/mascot/Spot 25.raw.zip
+FME	0	search	Spot 3.dat
+FME	1	search	Spot 14.dat
+FME	2	search	Spot 19.dat
+FME	3	search	Spot 25.dat
+FME	6	result	Spot 19.dat-pride.xml	2,10	3
+FME	4	result	Spot 3.dat-pride.xml	0,8	1
+FME	5	result	Spot 14.dat-pride.xml	1,9	2
+FME	7	result	Spot 25.dat-pride.xml	3,11	4
+FME	8	raw	Spot 3.raw.zip
+FME	9	raw	Spot 14.raw.zip
+FME	10	raw	Spot 19.raw.zip
+FME	11	raw	Spot 25.raw.zip
 
 SMH	file_id	species	tissue	cell_type	disease	instrument	quantification	experimental_factor
 SME	4	[NEWT, 7460, Apis mellifera (Honeybee), ]	[BTO, BTO:0000089, blood, ]	[CL, CL:0000451, dendritic cell, ]	[DOID, DOID:4492, avian influenza, ]	[MS, MS:1000448, LTQ FT, ]		zoopla

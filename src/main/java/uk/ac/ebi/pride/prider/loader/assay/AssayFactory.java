@@ -54,30 +54,6 @@ public final class AssayFactory {
         // quantification
         assay.setQuantificationMethods(DataConversionUtil.convertAssayQuantitationMethodCvParams(assay, dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.QUANTIFICATION_METHOD)));
 
-        // instrument
-        List<Instrument> instruments = new ArrayList<Instrument>();
-        Set<Param> instrumentModels = dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.INSTRUMENT);
-        for (Param instrumentModel : instrumentModels) {
-            //check to see if the instrument param is already in PRIDE-R
-            if (instrumentModel instanceof uk.ac.ebi.pride.data.model.CvParam) {
-                uk.ac.ebi.pride.data.model.CvParam cvParam = (uk.ac.ebi.pride.data.model.CvParam) instrumentModel;
-                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
-                //if param isn't already seen in db, store it
-                if (repoParam == null) {
-                    CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
-                    repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
-                }
-                Instrument instrument = new Instrument();
-                instrument.setCvParam(repoParam);
-                instrument.setValue(cvParam.getValue());
-                //store assay link
-                instrument.setAssay(assay);
-                instruments.add(instrument);
-
-            }
-        }
-        assay.setInstruments(instruments);
-
         // experimental factor
         Set<Param> experimentFactor = dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.EXPERIMENTAL_FACTOR);
         if (!experimentFactor.isEmpty()) {
@@ -162,26 +138,13 @@ public final class AssayFactory {
             assay.setAssayGroupCvParams(DataConversionUtil.convertAssayGroupCvParams(assay, dataAccessController.getAdditional()));
             assay.setAssayGroupUserParams(DataConversionUtil.convertAssayGroupUserParams(assay, dataAccessController.getAdditional()));
 
-            //merge instruments
-            if (assay.getInstruments().size() == 1) {
-                //todo - this is badness, but I can't think of a nicer way at the moment
-                //todo - to reconcile the information coming from the PX file with the information in the submission file
-                //todo - the px file only contains the instrument name but not the configuration
-                //todo - the result fiel contains the instrument configuration but not necessarily the
-                //todo - identical instrument name. Basically, we're screwed.
-                if (!resultFileScanner.getInstruments().isEmpty()) {
-                    Instrument assayInstrument = assay.getInstruments().iterator().next();
-                    Instrument scanInstrument = resultFileScanner.getInstruments().iterator().next();
-                    //instrument model is a wrapper around a cv param
-                    scanInstrument.setCvParam(assayInstrument.getCvParam());
-                    scanInstrument.setValue(assayInstrument.getValue());
-                    scanInstrument.setAssay(assay);
-                    Set<Instrument> instrumentSet = Collections.singleton(scanInstrument);
-                    assay.setInstruments(instrumentSet);
-                }
-            } else {
-                logger.warn("Could not resolve multiple instrument configurations from the PX summary file, ignoring.");
+            //instrument
+            Collection<Instrument> instruments = new HashSet<Instrument>();
+            for (Instrument instrument : resultFileScanner.getInstruments()) {
+                instrument.setAssay(assay);
+                instruments.add(instrument);
             }
+            assay.setInstruments(instruments);
 
         } finally {
             if (dataAccessController != null) {
@@ -204,6 +167,12 @@ public final class AssayFactory {
         Collection<InstrumentConfiguration> instrumentConfigurations = dataAccessController.getInstrumentConfigurations();
         for (InstrumentConfiguration instrumentConfiguration : instrumentConfigurations) {
             Instrument instrument = new Instrument();
+
+            //set instrument cv param
+            instrument.setCvParam(CvParamManager.getInstance().getCvParam(Constant.MS_INSTRUMENT_MODEL_AC));
+            instrument.setValue(instrumentConfiguration.getId());
+
+            //build instrument components
             instrument.setSources(new ArrayList<SourceInstrumentComponent>());
             instrument.setAnalyzers(new ArrayList<AnalyzerInstrumentComponent>());
             instrument.setDetectors(new ArrayList<DetectorInstrumentComponent>());
@@ -243,6 +212,8 @@ public final class AssayFactory {
 
         // software
         Set<Software> softwares = new HashSet<Software>();
+        //todo - dataProcessing params are not captured as software params
+        //todo - there is a 1-1 mapping for pride XML, but how to deal with mzidentml?
         softwares.addAll(dataAccessController.getExperimentMetaData().getSoftwares());
         resultFileScanner.setSoftwares(softwares);
 

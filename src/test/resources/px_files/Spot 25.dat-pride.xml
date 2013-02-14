@@ -1,907 +1,978 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ExperimentCollection version="2.1">
-<Experiment>
-<Title>Analysis of the yeast proteome using shotgun proteomics - Experiment 5</Title>
-<ShortLabel>Exp 5</ShortLabel>
-<Protocol>
-    <ProtocolName>SDS-PAGE</ProtocolName>
-    <ProtocolSteps>
-        <StepDescription>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000039" name="Organelle isolation" value="Supernatant"/>
-        </StepDescription>
-        <StepDescription>
-            <cvParam cvLabel="SEP" accession="sep:00173" name="sodium dodecyl sulfate polyacrylamide gel electrophoresis" value=""/>
-            <cvParam cvLabel="SEP" accession="sep:00163" name="silver staining" value=""/>
-            <cvParam cvLabel="SEP" accession="sep:00132" name="excised band" value=""/>
-        </StepDescription>
-        <StepDescription>
-            <cvParam cvLabel="SEP" accession="sep:00142" name="enzyme digestion" value="Trypsin"/>
-        </StepDescription>
-        <StepDescription>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000027" name="Mass spectrometry" value="IonTrap XCT Ultra"/>
-        </StepDescription>
-    </ProtocolSteps>
-</Protocol>
-<mzData version="1.05" accessionNumber="null">
-<cvLookup cvLabel="MS" fullName="PSI Mass Spectrometry Ontology" version="1.2" address="http://psidev.cvs.sourceforge.net/viewvc/*checkout*/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo"/>
-<cvLookup cvLabel="PRIDE" fullName="PRIDE Controlled Vocabulary" version="1.101" address="http://ebi-pride.googlecode.com/svn/trunk/pride-core/schema/pride_cv.obo"/>
+    <Experiment>
+        <Title>Analysis of the yeast proteome using shotgun proteomics - Experiment 5</Title>
+        <ShortLabel>Exp 5</ShortLabel>
+        <Protocol>
+            <ProtocolName>SDS-PAGE</ProtocolName>
+            <ProtocolSteps>
+                <StepDescription>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000039" name="Organelle isolation" value="Supernatant"/>
+                </StepDescription>
+                <StepDescription>
+                    <cvParam cvLabel="SEP" accession="sep:00173"
+                             name="sodium dodecyl sulfate polyacrylamide gel electrophoresis" value=""/>
+                    <cvParam cvLabel="SEP" accession="sep:00163" name="silver staining" value=""/>
+                    <cvParam cvLabel="SEP" accession="sep:00132" name="excised band" value=""/>
+                </StepDescription>
+                <StepDescription>
+                    <cvParam cvLabel="SEP" accession="sep:00142" name="enzyme digestion" value="Trypsin"/>
+                </StepDescription>
+                <StepDescription>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000027" name="Mass spectrometry"
+                             value="IonTrap XCT Ultra"/>
+                </StepDescription>
+            </ProtocolSteps>
+        </Protocol>
+        <mzData version="1.05" accessionNumber="null">
+            <cvLookup cvLabel="MS" fullName="PSI Mass Spectrometry Ontology" version="1.2"
+                      address="http://psidev.cvs.sourceforge.net/viewvc/*checkout*/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo"/>
+            <cvLookup cvLabel="PRIDE" fullName="PRIDE Controlled Vocabulary" version="1.101"
+                      address="http://ebi-pride.googlecode.com/svn/trunk/pride-core/schema/pride_cv.obo"/>
 
-<description>
-<admin>
-    <sampleName>sample</sampleName>
-    <sampleDescription comment="">
-        <cvParam cvLabel="NEWT" accession="9913" name="Bos taurus (Bovine)"/>
-        <cvParam cvLabel="BTO" accession="BTO:0000089 " name="blood"/>
-        <cvParam cvLabel="CL" accession="CL:0000451 " name="dendritic cell"/>
-    </sampleDescription>
-    <sourceFile>
-        <nameOfFile>Spot 25.dat</nameOfFile>
-        <pathToFile>/home/rcote/Desktop/example_files/mascot/Spot 25.dat</pathToFile>
-        <fileType>Mascot dat file</fileType>
-    </sourceFile>
-    <contact>
-        <name>Richard Cote</name>
-        <institution>EBI</institution>
-        <contactInfo>rcote@ebi.ac.uk</contactInfo>
-    </contact>
-</admin>
-<instrument>
-    <instrumentName>IonTrap XCT Ultra</instrumentName>
-    <source>
-        <cvParam cvLabel="MS" accession="MS:1000073" name="electrospray ionization" value=""/>
-        <cvParam cvLabel="MS" accession="MS:1000037" name="polarity" value="positive"/>
-    </source>
-    <analyzerList count="1">
-        <analyzer>
-            <cvParam cvLabel="MS" accession="MS:1000264" name="ion trap" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000024" name="final MS exponent" value="2"/>
-            <cvParam cvLabel="MS" accession="MS:1000011" name="mass resolution" value="0.6"/>
-            <cvParam cvLabel="MS" accession="MS:1000012" name="resolution measurement method" value="Full Width at Half-Maximum"/>
-            <cvParam cvLabel="MS" accession="MS:1000015" name="scan rate" value="26000"/>
-        </analyzer>
-    </analyzerList>
-    <detector>
-        <cvParam cvLabel="MS" accession="MS:1000253" name="electron multiplier" value=""/>
-    </detector>
-    <additional/>
-</instrument>
-<dataProcessing>
-    <software>
-        <name>Matrix Science Mascot</name>
-        <version>2.2.04</version>
-        <comments></comments>
-    </software>
-    <processingMethod>
-        <cvParam cvLabel="PRIDE" accession="PRIDE:0000161" name="Fragment mass tolerance setting" value="0.5 Da"/>
-        <cvParam cvLabel="PRIDE" accession="PRIDE:0000078" name="Peptide mass tolerance setting" value="80.0 ppm"/>
-        <cvParam cvLabel="PRIDE" accession="PRIDE:0000162" name="Allowed missed cleavages" value="1"/>
-        <cvParam cvLabel="MS" accession="MS:1001316" name="Mascot:SigThreshold" value="0.05"/>
-        <cvParam cvLabel="MS" accession="MS:1001758" name="Mascot:SigThresholdType" value="identity"/>
-    </processingMethod>
-</dataProcessing>
-</description>
-<spectrumList count="1">
-<spectrum id="1">
-    <spectrumDesc>
-        <spectrumSettings>
-            <spectrumInstrument msLevel="1" mzRangeStart="802.4368" mzRangeStop="3312.342"/>
-        </spectrumSettings>
-    </spectrumDesc>
-    <mzArrayBinary>
-        <data precision="64" endian="little" length="624">UB2rlH4TiUCPxTapaBuJQIzc09W9o4lAf95UpOIDikB5dvnW5xuKQB+EgHyJc4pAEATI0DHEikCaIyu/TOuKQAGHUKVGNItA8uzyrY9Li0A//WfNj8uLQEnzx7R2/IxAIAvRIXATjUCwxW6fVZONQF4vTRFgo41A6zu/KKEcjkCl+PiEbLOOQKyRXWkJJpBA9rTDXzOSkEAdrP9z+KWQQNSYEHOZ7pBA8iTpmvkRkUBr0m2JXOKRQIsZ4e1RFpJAz6Chf1I2kkCqK5/leVKSQF4PJsU3JpNAZ/D3i1lCk0ByMQbWEU6TQB2PGahcupNAmEwVjLrik0CaJmw/uSqUQM6MfjSsbpRArye6LpxylECfyf55SqKUQDI89rNo7pRAv7m/ery+lUDoE3mS1AKWQJ595UHKBpZAuYjvxJwalkCCyvj3GSuWQNPB+j8XS5ZAQbeXNOZ2lkBV9l0R7A6XQN4DdF/eVpdAWB8Pfdfel0AhPUUOAReYQBpNLsYQR5hAjs2OVD+LmEAt0Vlm0cKYQCKNCpw835lA9Z81P25HmkD+KsB3C6+aQPbsuUw975tAbRyxFt/+m0CXcr7YW1+cQBanWguT+5xAM/59xtUbnUCwWS4bvR+dQDcY6rBir51AUP7uHfX7nkCOlC2SZvagQNGQ8Sg1YqFAfNKJBEv2oUC1i2mmC0CiQMcpOpIDYKJAW9HmOEdkokCVZB2OBoCiQO8CJQVWnKJAE7ngDOafokAQJO8cavKiQHfYRGY+QKNAQKIJFDlgo0BO7KF9NICjQPj7xWyBiqNAqYWSyTE6pUBkIxCvqy6pQLxYGCKv4KlA</data>
-    </mzArrayBinary>
-    <intenArrayBinary>
-        <data precision="64" endian="little" length="624">24r9ZfcWYkAp7Q2+MENsQNlfdk+eXIpA2IFzRpRWdEAxCKwcWqdwQLraiv3liLdA7lpCPuh7b0A6I0p7wxuaQLUV+8vuhIFAO3DOiNISeUBPr5RliJN2QO58PzVe2ntAZMxdS8jbaEAj2/l+allyQBdIUPwYm29AI0p7gy+sdkBLyAc9m798QJHtfD812nFA9bnaiv0faEB7gy9MpmF8QA6+MJkqlGpA0ETY8PR6eUDF/rJ7Qse7QDsBTYQNvWhAokW28/2SY0BGlPYGX7BhQIbJVMGoymdA4zYawNuGjkBrK/aX3YuIQGPuWkI++GJAFmpN874BsEDpJjEIrCOGQEdy+Q/phWJA9P3UeOnGa0Ay5q4l5D1jQNbFbTSAuXNATRWMSqolkEDBOSNKS/S3QPJBz2a9PMZAEqW9wRdwbkCYTBWMyuyRQE0VjErq4F5AkQ96NqvMfkBF2PD0SgVrQGN/2T153HFAX5hMFYxzgkAzMzMzM3J/QGx4eqUsPHVAZapgVFJbZEBDrWnecTphQMpUwaik4XJAIR/0bFaNXkAhsHJokdVaQEvIBz2bJ5NAMCqpE9CQhUAtQxzr4n90QMGopE5AppZA3pOHhdoKoUBcj8L1qHOQQBkEVg4tMndA16NwPQo4jUBPr5RliGtpQO2ePCzUumZAldQJaCLcTkA+6Nms+lRnQDBMpgpGK3BAxty1hPwfpkB24JwRpaNqQPJBz2bV01hAQKTfvg61cEAkufyH9J1nQHGsi9tooElAR3L5D+k/VUBkXdxGA4hNQD7o2az6UFFARIts5/uJSkBDrWnecQo5QFmGONbFLTVA</data>
-    </intenArrayBinary>
-</spectrum>
-</spectrumList>
-</mzData>
-<GelFreeIdentification>
-    <Accession>58336866</Accession>
-    <Database>NCBI nr</Database>
-    <DatabaseVersion></DatabaseVersion>
-    <PeptideItem>
-        <Sequence>QLEFKR</Sequence>
-        <Start>90</Start>
-        <End>95</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="820.467693"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="N"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>LYDLAIK</Sequence>
-        <Start>289</Start>
-        <End>295</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="835.488203"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>DFAQLPR</Sequence>
-        <Start>216</Start>
-        <End>222</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="846.442132"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="I"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>AEEIMPR</Sequence>
-        <Start>358</Start>
-        <End>364</End>
-        <SpectrumReference>1</SpectrumReference>
-        <ModificationItem>
-            <ModLocation>5</ModLocation>
-            <ModAccession>MOD:00425</ModAccession>
-            <ModDatabase>MOD</ModDatabase>
-            <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
-            <ModMonoDelta>15.994919</ModMonoDelta>
+            <description>
+                <admin>
+                    <sampleName>sample</sampleName>
+                    <sampleDescription comment="">
+                        <cvParam cvLabel="NEWT" accession="9913" name="Bos taurus (Bovine)"/>
+                        <cvParam cvLabel="BTO" accession="BTO:0000089 " name="blood"/>
+                        <cvParam cvLabel="CL" accession="CL:0000451 " name="dendritic cell"/>
+                    </sampleDescription>
+                    <sourceFile>
+                        <nameOfFile>Spot 25.dat</nameOfFile>
+                        <pathToFile>/home/rcote/Desktop/example_files/mascot/Spot 25.dat</pathToFile>
+                        <fileType>Mascot dat file</fileType>
+                    </sourceFile>
+                    <contact>
+                        <name>Richard Cote</name>
+                        <institution>EBI</institution>
+                        <contactInfo>rcote@ebi.ac.uk</contactInfo>
+                    </contact>
+                </admin>
+                <instrument>
+                    <instrumentName>IonTrap XCT Ultra</instrumentName>
+                    <source>
+                        <cvParam cvLabel="MS" accession="MS:1000073" name="electrospray ionization" value=""/>
+                        <cvParam cvLabel="MS" accession="MS:1000037" name="polarity" value="positive"/>
+                        <userParam name="colour" value="blue"/>
+                    </source>
+                    <analyzerList count="1">
+                        <analyzer>
+                            <cvParam cvLabel="MS" accession="MS:1000264" name="ion trap" value=""/>
+                            <cvParam cvLabel="MS" accession="MS:1000024" name="final MS exponent" value="2"/>
+                            <cvParam cvLabel="MS" accession="MS:1000011" name="mass resolution" value="0.6"/>
+                            <cvParam cvLabel="MS" accession="MS:1000012" name="resolution measurement method"
+                                     value="Full Width at Half-Maximum"/>
+                            <cvParam cvLabel="MS" accession="MS:1000015" name="scan rate" value="26000"/>
+                        </analyzer>
+                    </analyzerList>
+                    <detector>
+                        <cvParam cvLabel="MS" accession="MS:1000253" name="electron multiplier" value=""/>
+                    </detector>
+                    <additional/>
+                </instrument>
+                <dataProcessing>
+                    <software>
+                        <name>Matrix Science Mascot</name>
+                        <version>2.2.04</version>
+                        <comments>What a nice comment!</comments>
+                    </software>
+                    <processingMethod>
+                        <cvParam cvLabel="PRIDE" accession="PRIDE:0000161" name="Fragment mass tolerance setting"
+                                 value="0.5 Da"/>
+                        <cvParam cvLabel="PRIDE" accession="PRIDE:0000078" name="Peptide mass tolerance setting"
+                                 value="80.0 ppm"/>
+                        <cvParam cvLabel="PRIDE" accession="PRIDE:0000162" name="Allowed missed cleavages" value="1"/>
+                        <cvParam cvLabel="MS" accession="MS:1001316" name="Mascot:SigThreshold" value="0.05"/>
+                        <cvParam cvLabel="MS" accession="MS:1001758" name="Mascot:SigThresholdType" value="identity"/>
+                    </processingMethod>
+                </dataProcessing>
+            </description>
+            <spectrumList count="1">
+                <spectrum id="1">
+                    <spectrumDesc>
+                        <spectrumSettings>
+                            <spectrumInstrument msLevel="1" mzRangeStart="802.4368" mzRangeStop="3312.342"/>
+                        </spectrumSettings>
+                    </spectrumDesc>
+                    <mzArrayBinary>
+                        <data precision="64" endian="little" length="624">
+                            UB2rlH4TiUCPxTapaBuJQIzc09W9o4lAf95UpOIDikB5dvnW5xuKQB+EgHyJc4pAEATI0DHEikCaIyu/TOuKQAGHUKVGNItA8uzyrY9Li0A//WfNj8uLQEnzx7R2/IxAIAvRIXATjUCwxW6fVZONQF4vTRFgo41A6zu/KKEcjkCl+PiEbLOOQKyRXWkJJpBA9rTDXzOSkEAdrP9z+KWQQNSYEHOZ7pBA8iTpmvkRkUBr0m2JXOKRQIsZ4e1RFpJAz6Chf1I2kkCqK5/leVKSQF4PJsU3JpNAZ/D3i1lCk0ByMQbWEU6TQB2PGahcupNAmEwVjLrik0CaJmw/uSqUQM6MfjSsbpRArye6LpxylECfyf55SqKUQDI89rNo7pRAv7m/ery+lUDoE3mS1AKWQJ595UHKBpZAuYjvxJwalkCCyvj3GSuWQNPB+j8XS5ZAQbeXNOZ2lkBV9l0R7A6XQN4DdF/eVpdAWB8Pfdfel0AhPUUOAReYQBpNLsYQR5hAjs2OVD+LmEAt0Vlm0cKYQCKNCpw835lA9Z81P25HmkD+KsB3C6+aQPbsuUw975tAbRyxFt/+m0CXcr7YW1+cQBanWguT+5xAM/59xtUbnUCwWS4bvR+dQDcY6rBir51AUP7uHfX7nkCOlC2SZvagQNGQ8Sg1YqFAfNKJBEv2oUC1i2mmC0CiQMcpOpIDYKJAW9HmOEdkokCVZB2OBoCiQO8CJQVWnKJAE7ngDOafokAQJO8cavKiQHfYRGY+QKNAQKIJFDlgo0BO7KF9NICjQPj7xWyBiqNAqYWSyTE6pUBkIxCvqy6pQLxYGCKv4KlA
+                        </data>
+                    </mzArrayBinary>
+                    <intenArrayBinary>
+                        <data precision="64" endian="little" length="624">
+                            24r9ZfcWYkAp7Q2+MENsQNlfdk+eXIpA2IFzRpRWdEAxCKwcWqdwQLraiv3liLdA7lpCPuh7b0A6I0p7wxuaQLUV+8vuhIFAO3DOiNISeUBPr5RliJN2QO58PzVe2ntAZMxdS8jbaEAj2/l+allyQBdIUPwYm29AI0p7gy+sdkBLyAc9m798QJHtfD812nFA9bnaiv0faEB7gy9MpmF8QA6+MJkqlGpA0ETY8PR6eUDF/rJ7Qse7QDsBTYQNvWhAokW28/2SY0BGlPYGX7BhQIbJVMGoymdA4zYawNuGjkBrK/aX3YuIQGPuWkI++GJAFmpN874BsEDpJjEIrCOGQEdy+Q/phWJA9P3UeOnGa0Ay5q4l5D1jQNbFbTSAuXNATRWMSqolkEDBOSNKS/S3QPJBz2a9PMZAEqW9wRdwbkCYTBWMyuyRQE0VjErq4F5AkQ96NqvMfkBF2PD0SgVrQGN/2T153HFAX5hMFYxzgkAzMzMzM3J/QGx4eqUsPHVAZapgVFJbZEBDrWnecTphQMpUwaik4XJAIR/0bFaNXkAhsHJokdVaQEvIBz2bJ5NAMCqpE9CQhUAtQxzr4n90QMGopE5AppZA3pOHhdoKoUBcj8L1qHOQQBkEVg4tMndA16NwPQo4jUBPr5RliGtpQO2ePCzUumZAldQJaCLcTkA+6Nms+lRnQDBMpgpGK3BAxty1hPwfpkB24JwRpaNqQPJBz2bV01hAQKTfvg61cEAkufyH9J1nQHGsi9tooElAR3L5D+k/VUBkXdxGA4hNQD7o2az6UFFARIts5/uJSkBDrWnecQo5QFmGONbFLTVA
+                        </data>
+                    </intenArrayBinary>
+                </spectrum>
+            </spectrumList>
+        </mzData>
+        <GelFreeIdentification>
+            <Accession>58336866</Accession>
+            <Database>NCBI nr</Database>
+            <DatabaseVersion></DatabaseVersion>
+            <PeptideItem>
+                <Sequence>QLEFKR</Sequence>
+                <Start>90</Start>
+                <End>95</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="820.467693"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="N"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>LYDLAIK</Sequence>
+                <Start>289</Start>
+                <End>295</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="835.488203"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>DFAQLPR</Sequence>
+                <Start>216</Start>
+                <End>222</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="846.442132"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="I"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>AEEIMPR</Sequence>
+                <Start>358</Start>
+                <End>364</End>
+                <SpectrumReference>1</SpectrumReference>
+                <ModificationItem>
+                    <ModLocation>5</ModLocation>
+                    <ModAccession>MOD:00425</ModAccession>
+                    <ModDatabase>MOD</ModDatabase>
+                    <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
+                    <ModMonoDelta>15.994919</ModMonoDelta>
+                    <additional>
+                        <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
+                    </additional>
+                </ModificationItem>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="861.412474"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="W"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>NQVVNLLK</Sequence>
+                <Start>96</Start>
+                <End>103</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="927.557962"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>LYDLAIKK</Sequence>
+                <Start>289</Start>
+                <End>296</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="963.578691"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="A"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>RNQVVNLLK</Sequence>
+                <Start>95</Start>
+                <End>103</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1083.649853"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>TDVVFVDPPR</Sequence>
+                <Start>372</Start>
+                <End>381</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1144.590368"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>TDVVFVDPPRK</Sequence>
+                <Start>372</Start>
+                <End>382</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1272.682175"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="G"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>GLTPEFIDATVK</Sequence>
+                <Start>383</Start>
+                <End>394</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1290.680906"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="T"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>EVNGQLEIGFFR</Sequence>
+                <Start>134</Start>
+                <End>145</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1408.70759"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>KGLTPEFIDATVK</Sequence>
+                <Start>382</Start>
+                <End>394</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1418.77536"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="T"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>DYLVFGNDQITDK</Sequence>
+                <Start>253</Start>
+                <End>265</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1527.710438"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="I"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>KNNVPAYDEINHK</Sequence>
+                <Start>177</Start>
+                <End>189</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1541.751031"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="G"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>IVYISCNPATMIR</Sequence>
+                <Start>400</Start>
+                <End>412</End>
+                <SpectrumReference>1</SpectrumReference>
+                <ModificationItem>
+                    <ModLocation>6</ModLocation>
+                    <ModAccession>MOD:00397</ModAccession>
+                    <ModDatabase>MOD</ModDatabase>
+                    <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
+                    <ModMonoDelta>57.021464</ModMonoDelta>
+                    <additional>
+                        <cvParam cvLabel="MOD" accession="MOD:00397" name="iodoacetamide derivatized residue"/>
+                    </additional>
+                </ModificationItem>
+                <ModificationItem>
+                    <ModLocation>11</ModLocation>
+                    <ModAccession>MOD:00425</ModAccession>
+                    <ModDatabase>MOD</ModDatabase>
+                    <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
+                    <ModMonoDelta>15.994919</ModMonoDelta>
+                    <additional>
+                        <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
+                    </additional>
+                </ModificationItem>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1553.766381"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="D"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>QGLKTDVVFVDPPR</Sequence>
+                <Start>368</Start>
+                <End>381</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1570.811846"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>KDYLVFGNDQITDK</Sequence>
+                <Start>252</Start>
+                <End>265</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1655.809189"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="I"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>KIVYISCNPATMIR</Sequence>
+                <Start>399</Start>
+                <End>412</End>
+                <SpectrumReference>1</SpectrumReference>
+                <ModificationItem>
+                    <ModLocation>7</ModLocation>
+                    <ModAccession>MOD:00397</ModAccession>
+                    <ModDatabase>MOD</ModDatabase>
+                    <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
+                    <ModMonoDelta>57.021464</ModMonoDelta>
+                    <additional>
+                        <cvParam cvLabel="MOD" accession="MOD:00397" name="iodoacetamide derivatized residue"/>
+                    </additional>
+                </ModificationItem>
+                <ModificationItem>
+                    <ModLocation>12</ModLocation>
+                    <ModAccession>MOD:00425</ModAccession>
+                    <ModDatabase>MOD</ModDatabase>
+                    <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
+                    <ModMonoDelta>15.994919</ModMonoDelta>
+                    <additional>
+                        <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
+                    </additional>
+                </ModificationItem>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1681.857663"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="D"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>DLQLFQEQGYEFDR</Sequence>
+                <Start>413</Start>
+                <End>426</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1787.809863"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="I"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>NNVPAYDEINHKGEVR</Sequence>
+                <Start>178</Start>
+                <End>193</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1854.893598"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="Y"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>ISPQSFFQINSLQTPR</Sequence>
+                <Start>273</Start>
+                <End>288</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1862.958765"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="L"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>IAAEVSQIPGVTGLILNHNPK</Sequence>
+                <Start>223</Start>
+                <End>243</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2171.200334"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>IAAEVSQIPGVTGLILNHNPKK</Sequence>
+                <Start>223</Start>
+                <End>244</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2299.146519"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="T"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>AHMDNIEVGETMASPEQTGYR</Sequence>
+                <Start>105</Start>
+                <End>125</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2336.022754"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="N"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>AHMDNIEVGETMASPEQTGYR</Sequence>
+                <Start>105</Start>
+                <End>125</End>
+                <SpectrumReference>1</SpectrumReference>
+                <ModificationItem>
+                    <ModLocation>3</ModLocation>
+                    <ModAccession>MOD:00425</ModAccession>
+                    <ModDatabase>MOD</ModDatabase>
+                    <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
+                    <ModMonoDelta>15.994919</ModMonoDelta>
+                    <additional>
+                        <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
+                    </additional>
+                </ModificationItem>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2352.006975"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="N"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>HSHDLVPLTNFFTTDPEIDR</Sequence>
+                <Start>147</Start>
+                <End>166</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2354.139106"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="V"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>AHMDNIEVGETMASPEQTGYR</Sequence>
+                <Start>105</Start>
+                <End>125</End>
+                <SpectrumReference>1</SpectrumReference>
+                <ModificationItem>
+                    <ModLocation>3</ModLocation>
+                    <ModAccession>MOD:00425</ModAccession>
+                    <ModDatabase>MOD</ModDatabase>
+                    <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
+                    <ModMonoDelta>15.994919</ModMonoDelta>
+                    <additional>
+                        <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
+                    </additional>
+                </ModificationItem>
+                <ModificationItem>
+                    <ModLocation>12</ModLocation>
+                    <ModAccession>MOD:00425</ModAccession>
+                    <ModDatabase>MOD</ModDatabase>
+                    <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
+                    <ModMonoDelta>15.994919</ModMonoDelta>
+                    <additional>
+                        <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
+                    </additional>
+                </ModificationItem>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2368.012803"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="N"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>IDPVDMFPQTPHVESVTVLER</Sequence>
+                <Start>427</Start>
+                <End>447</End>
+                <SpectrumReference>1</SpectrumReference>
+                <ModificationItem>
+                    <ModLocation>6</ModLocation>
+                    <ModAccession>MOD:00425</ModAccession>
+                    <ModDatabase>MOD</ModDatabase>
+                    <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
+                    <ModMonoDelta>15.994919</ModMonoDelta>
+                    <additional>
+                        <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
+                    </additional>
+                </ModificationItem>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2425.207252"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="T"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>KAHMDNIEVGETMASPEQTGYR</Sequence>
+                <Start>104</Start>
+                <End>125</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2464.121874"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="N"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>KAHMDNIEVGETMASPEQTGYR</Sequence>
+                <Start>104</Start>
+                <End>125</End>
+                <SpectrumReference>1</SpectrumReference>
+                <ModificationItem>
+                    <ModLocation>4</ModLocation>
+                    <ModAccession>MOD:00425</ModAccession>
+                    <ModDatabase>MOD</ModDatabase>
+                    <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
+                    <ModMonoDelta>15.994919</ModMonoDelta>
+                    <additional>
+                        <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
+                    </additional>
+                </ModificationItem>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2480.111481"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="N"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>KAHMDNIEVGETMASPEQTGYR</Sequence>
+                <Start>104</Start>
+                <End>125</End>
+                <SpectrumReference>1</SpectrumReference>
+                <ModificationItem>
+                    <ModLocation>4</ModLocation>
+                    <ModAccession>MOD:00425</ModAccession>
+                    <ModDatabase>MOD</ModDatabase>
+                    <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
+                    <ModMonoDelta>15.994919</ModMonoDelta>
+                    <additional>
+                        <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
+                    </additional>
+                </ModificationItem>
+                <ModificationItem>
+                    <ModLocation>13</ModLocation>
+                    <ModAccession>MOD:00425</ModAccession>
+                    <ModDatabase>MOD</ModDatabase>
+                    <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
+                    <ModMonoDelta>15.994919</ModMonoDelta>
+                    <additional>
+                        <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
+                    </additional>
+                </ModificationItem>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2496.102521"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="N"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
             <additional>
-                <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
+                <cvParam cvLabel="PRIDE" accession="PRIDE:0000063" name="Protein description line"
+                         value="RNA methyltransferase [Lactobacillus acidophilus NCFM]"/>
+                <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                         value=""/>
+                <cvParam cvLabel="PRIDE" accession="PRIDE:0000299" name="Submitted Protein Accession"
+                         value="gi|58336866"/>
             </additional>
-        </ModificationItem>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="861.412474"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="W"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>NQVVNLLK</Sequence>
-        <Start>96</Start>
-        <End>103</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="927.557962"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>LYDLAIKK</Sequence>
-        <Start>289</Start>
-        <End>296</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="963.578691"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="A"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>RNQVVNLLK</Sequence>
-        <Start>95</Start>
-        <End>103</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1083.649853"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>TDVVFVDPPR</Sequence>
-        <Start>372</Start>
-        <End>381</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1144.590368"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>TDVVFVDPPRK</Sequence>
-        <Start>372</Start>
-        <End>382</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1272.682175"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="G"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>GLTPEFIDATVK</Sequence>
-        <Start>383</Start>
-        <End>394</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1290.680906"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="T"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>EVNGQLEIGFFR</Sequence>
-        <Start>134</Start>
-        <End>145</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1408.70759"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="R"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>KGLTPEFIDATVK</Sequence>
-        <Start>382</Start>
-        <End>394</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1418.77536"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="T"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>DYLVFGNDQITDK</Sequence>
-        <Start>253</Start>
-        <End>265</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1527.710438"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="I"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>KNNVPAYDEINHK</Sequence>
-        <Start>177</Start>
-        <End>189</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1541.751031"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="G"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>IVYISCNPATMIR</Sequence>
-        <Start>400</Start>
-        <End>412</End>
-        <SpectrumReference>1</SpectrumReference>
-        <ModificationItem>
-            <ModLocation>6</ModLocation>
-            <ModAccession>MOD:00397</ModAccession>
-            <ModDatabase>MOD</ModDatabase>
-            <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
-            <ModMonoDelta>57.021464</ModMonoDelta>
+            <Score>241.0</Score>
+            <Threshold>80.0</Threshold>
+            <SearchEngine>Matrix Science Mascot</SearchEngine>
+        </GelFreeIdentification>
+        <GelFreeIdentification>
+            <Accession>227893050</Accession>
+            <Database>NCBI nr</Database>
+            <DatabaseVersion></DatabaseVersion>
+            <PeptideItem>
+                <Sequence>LNNISNAK</Sequence>
+                <Start>347</Start>
+                <End>354</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="873.445156"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="Y"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>NQVVNLLK</Sequence>
+                <Start>98</Start>
+                <End>105</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="927.557962"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>LYNLAIEK</Sequence>
+                <Start>291</Start>
+                <End>298</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="963.578691"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="A"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>GMEVIADAVR</Sequence>
+                <Start>330</Start>
+                <End>339</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1060.55017"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="D"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>RNQVVNLLK</Sequence>
+                <Start>97</Start>
+                <End>105</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1083.649853"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>TDVVFVDPPR</Sequence>
+                <Start>374</Start>
+                <End>383</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1144.590368"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>TDVVFVDPPRK</Sequence>
+                <Start>374</Start>
+                <End>384</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1272.682175"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="G"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>GLTPEFIDATVK</Sequence>
+                <Start>385</Start>
+                <End>396</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1290.680906"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="T"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>KGLTPEFIDATVK</Sequence>
+                <Start>384</Start>
+                <End>396</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1418.77536"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="T"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>SFFQINSLQTPR</Sequence>
+                <Start>279</Start>
+                <End>290</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1437.72481"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="L"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>ISPKSFFQINSLQTPR</Sequence>
+                <Start>275</Start>
+                <End>290</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1862.958765"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="L"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>HSHDLVPLTNFFTTDPEIDR</Sequence>
+                <Start>149</Start>
+                <End>168</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2354.139106"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="V"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>DYVVYGDDHITDQIGNLKFR</Sequence>
+                <Start>255</Start>
+                <End>274</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2368.012803"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="I"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>SFFQINSLQTPRLYNLAIEK</Sequence>
+                <Start>279</Start>
+                <End>298</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2382.168008"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="A"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>ATGEIMVILVCLHNDFVQLPR</Sequence>
+                <Start>204</Start>
+                <End>224</End>
+                <SpectrumReference>1</SpectrumReference>
+                <ModificationItem>
+                    <ModLocation>11</ModLocation>
+                    <ModAccession>MOD:00397</ModAccession>
+                    <ModDatabase>MOD</ModDatabase>
+                    <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
+                    <ModMonoDelta>57.021464</ModMonoDelta>
+                    <additional>
+                        <cvParam cvLabel="MOD" accession="MOD:00397" name="iodoacetamide derivatized residue"/>
+                    </additional>
+                </ModificationItem>
+                <additional>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                             value=""/>
+                    <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2425.207252"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="V"/>
+                    <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+                </additional>
+            </PeptideItem>
             <additional>
-                <cvParam cvLabel="MOD" accession="MOD:00397" name="iodoacetamide derivatized residue"/>
+                <cvParam cvLabel="PRIDE" accession="PRIDE:0000063" name="Protein description line"
+                         value="TrmA family tRNA (uracil-5-)-methyltransferase [Lactobacillus ultunensis DSM 16047]"/>
+                <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint"
+                         value=""/>
+                <cvParam cvLabel="PRIDE" accession="PRIDE:0000299" name="Submitted Protein Accession"
+                         value="gi|227893050"/>
             </additional>
-        </ModificationItem>
-        <ModificationItem>
-            <ModLocation>11</ModLocation>
-            <ModAccession>MOD:00425</ModAccession>
-            <ModDatabase>MOD</ModDatabase>
-            <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
-            <ModMonoDelta>15.994919</ModMonoDelta>
-            <additional>
-                <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
-            </additional>
-        </ModificationItem>
+            <Score>94.1</Score>
+            <Threshold>80.0</Threshold>
+            <SearchEngine>Matrix Science Mascot</SearchEngine>
+        </GelFreeIdentification>
         <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1553.766381"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="D"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
+            <cvParam cvLabel="PRIDE" accession="PRIDE:0000218" name="Original MS data file format 2"
+                     value="Mascot dat file"/>
+            <cvParam cvLabel="PRIDE" accession="PRIDE:0000220" name="Original MS data file format"
+                     value="Mascot dat file"/>
+            <cvParam cvLabel="PRIDE" accession="PRIDE:0000219" name="Date of search" value="2009-12-30 10:15"/>
+            <cvParam cvLabel="PRIDE" accession="PRIDE:0000175" name="XML generation software"
+                     value="PRIDE Converter Toolsuite 2.0-SNAPSHOT-${buildNumber}"/>
+            <cvParam cvLabel="MS" accession="MS:1001081" name="pmf search" value=""/>
+            <cvParam cvLabel="PRIDE" accession="PRIDE:0000097" name="Project"
+                     value="e.g. Analysis of the yeast proteome using shotgun proteomics"/>
+            <cvParam cvLabel="PRIDE" accession="PRIDE:0000040" name="Experiment description" value=""/>
+            <userParam name="Test User Param" value="Test Value"/>
         </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>QGLKTDVVFVDPPR</Sequence>
-        <Start>368</Start>
-        <End>381</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1570.811846"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>KDYLVFGNDQITDK</Sequence>
-        <Start>252</Start>
-        <End>265</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1655.809189"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="I"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>KIVYISCNPATMIR</Sequence>
-        <Start>399</Start>
-        <End>412</End>
-        <SpectrumReference>1</SpectrumReference>
-        <ModificationItem>
-            <ModLocation>7</ModLocation>
-            <ModAccession>MOD:00397</ModAccession>
-            <ModDatabase>MOD</ModDatabase>
-            <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
-            <ModMonoDelta>57.021464</ModMonoDelta>
-            <additional>
-                <cvParam cvLabel="MOD" accession="MOD:00397" name="iodoacetamide derivatized residue"/>
-            </additional>
-        </ModificationItem>
-        <ModificationItem>
-            <ModLocation>12</ModLocation>
-            <ModAccession>MOD:00425</ModAccession>
-            <ModDatabase>MOD</ModDatabase>
-            <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
-            <ModMonoDelta>15.994919</ModMonoDelta>
-            <additional>
-                <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
-            </additional>
-        </ModificationItem>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1681.857663"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="D"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>DLQLFQEQGYEFDR</Sequence>
-        <Start>413</Start>
-        <End>426</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1787.809863"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="I"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>NNVPAYDEINHKGEVR</Sequence>
-        <Start>178</Start>
-        <End>193</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1854.893598"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="Y"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>ISPQSFFQINSLQTPR</Sequence>
-        <Start>273</Start>
-        <End>288</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1862.958765"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="L"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>IAAEVSQIPGVTGLILNHNPK</Sequence>
-        <Start>223</Start>
-        <End>243</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2171.200334"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>IAAEVSQIPGVTGLILNHNPKK</Sequence>
-        <Start>223</Start>
-        <End>244</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2299.146519"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="T"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>AHMDNIEVGETMASPEQTGYR</Sequence>
-        <Start>105</Start>
-        <End>125</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2336.022754"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="N"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>AHMDNIEVGETMASPEQTGYR</Sequence>
-        <Start>105</Start>
-        <End>125</End>
-        <SpectrumReference>1</SpectrumReference>
-        <ModificationItem>
-            <ModLocation>3</ModLocation>
-            <ModAccession>MOD:00425</ModAccession>
-            <ModDatabase>MOD</ModDatabase>
-            <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
-            <ModMonoDelta>15.994919</ModMonoDelta>
-            <additional>
-                <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
-            </additional>
-        </ModificationItem>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2352.006975"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="N"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>HSHDLVPLTNFFTTDPEIDR</Sequence>
-        <Start>147</Start>
-        <End>166</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2354.139106"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="V"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>AHMDNIEVGETMASPEQTGYR</Sequence>
-        <Start>105</Start>
-        <End>125</End>
-        <SpectrumReference>1</SpectrumReference>
-        <ModificationItem>
-            <ModLocation>3</ModLocation>
-            <ModAccession>MOD:00425</ModAccession>
-            <ModDatabase>MOD</ModDatabase>
-            <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
-            <ModMonoDelta>15.994919</ModMonoDelta>
-            <additional>
-                <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
-            </additional>
-        </ModificationItem>
-        <ModificationItem>
-            <ModLocation>12</ModLocation>
-            <ModAccession>MOD:00425</ModAccession>
-            <ModDatabase>MOD</ModDatabase>
-            <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
-            <ModMonoDelta>15.994919</ModMonoDelta>
-            <additional>
-                <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
-            </additional>
-        </ModificationItem>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2368.012803"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="N"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>IDPVDMFPQTPHVESVTVLER</Sequence>
-        <Start>427</Start>
-        <End>447</End>
-        <SpectrumReference>1</SpectrumReference>
-        <ModificationItem>
-            <ModLocation>6</ModLocation>
-            <ModAccession>MOD:00425</ModAccession>
-            <ModDatabase>MOD</ModDatabase>
-            <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
-            <ModMonoDelta>15.994919</ModMonoDelta>
-            <additional>
-                <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
-            </additional>
-        </ModificationItem>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2425.207252"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="T"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>KAHMDNIEVGETMASPEQTGYR</Sequence>
-        <Start>104</Start>
-        <End>125</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2464.121874"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="N"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>KAHMDNIEVGETMASPEQTGYR</Sequence>
-        <Start>104</Start>
-        <End>125</End>
-        <SpectrumReference>1</SpectrumReference>
-        <ModificationItem>
-            <ModLocation>4</ModLocation>
-            <ModAccession>MOD:00425</ModAccession>
-            <ModDatabase>MOD</ModDatabase>
-            <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
-            <ModMonoDelta>15.994919</ModMonoDelta>
-            <additional>
-                <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
-            </additional>
-        </ModificationItem>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2480.111481"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="N"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>KAHMDNIEVGETMASPEQTGYR</Sequence>
-        <Start>104</Start>
-        <End>125</End>
-        <SpectrumReference>1</SpectrumReference>
-        <ModificationItem>
-            <ModLocation>4</ModLocation>
-            <ModAccession>MOD:00425</ModAccession>
-            <ModDatabase>MOD</ModDatabase>
-            <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
-            <ModMonoDelta>15.994919</ModMonoDelta>
-            <additional>
-                <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
-            </additional>
-        </ModificationItem>
-        <ModificationItem>
-            <ModLocation>13</ModLocation>
-            <ModAccession>MOD:00425</ModAccession>
-            <ModDatabase>MOD</ModDatabase>
-            <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
-            <ModMonoDelta>15.994919</ModMonoDelta>
-            <additional>
-                <cvParam cvLabel="MOD" accession="MOD:00425" name="monohydroxylated residue"/>
-            </additional>
-        </ModificationItem>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2496.102521"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="1"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="N"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <additional>
-        <cvParam cvLabel="PRIDE" accession="PRIDE:0000063" name="Protein description line" value="RNA methyltransferase [Lactobacillus acidophilus NCFM]"/>
-        <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-        <cvParam cvLabel="PRIDE" accession="PRIDE:0000299" name="Submitted Protein Accession" value="gi|58336866"/>
-    </additional>
-    <Score>241.0</Score>
-    <Threshold>80.0</Threshold>
-    <SearchEngine>Matrix Science Mascot</SearchEngine>
-</GelFreeIdentification>
-<GelFreeIdentification>
-    <Accession>227893050</Accession>
-    <Database>NCBI nr</Database>
-    <DatabaseVersion></DatabaseVersion>
-    <PeptideItem>
-        <Sequence>LNNISNAK</Sequence>
-        <Start>347</Start>
-        <End>354</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="873.445156"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="Y"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>NQVVNLLK</Sequence>
-        <Start>98</Start>
-        <End>105</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="927.557962"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>LYNLAIEK</Sequence>
-        <Start>291</Start>
-        <End>298</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="963.578691"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="A"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>GMEVIADAVR</Sequence>
-        <Start>330</Start>
-        <End>339</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1060.55017"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="D"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>RNQVVNLLK</Sequence>
-        <Start>97</Start>
-        <End>105</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1083.649853"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>TDVVFVDPPR</Sequence>
-        <Start>374</Start>
-        <End>383</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1144.590368"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="K"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>TDVVFVDPPRK</Sequence>
-        <Start>374</Start>
-        <End>384</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1272.682175"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="G"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>GLTPEFIDATVK</Sequence>
-        <Start>385</Start>
-        <End>396</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1290.680906"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="T"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>KGLTPEFIDATVK</Sequence>
-        <Start>384</Start>
-        <End>396</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1418.77536"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="T"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>SFFQINSLQTPR</Sequence>
-        <Start>279</Start>
-        <End>290</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1437.72481"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="L"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>ISPKSFFQINSLQTPR</Sequence>
-        <Start>275</Start>
-        <End>290</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="1862.958765"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="L"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>HSHDLVPLTNFFTTDPEIDR</Sequence>
-        <Start>149</Start>
-        <End>168</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2354.139106"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="R"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="V"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>DYVVYGDDHITDQIGNLKFR</Sequence>
-        <Start>255</Start>
-        <End>274</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2368.012803"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="I"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>SFFQINSLQTPRLYNLAIEK</Sequence>
-        <Start>279</Start>
-        <End>298</End>
-        <SpectrumReference>1</SpectrumReference>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2382.168008"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="A"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <PeptideItem>
-        <Sequence>ATGEIMVILVCLHNDFVQLPR</Sequence>
-        <Start>204</Start>
-        <End>224</End>
-        <SpectrumReference>1</SpectrumReference>
-        <ModificationItem>
-            <ModLocation>11</ModLocation>
-            <ModAccession>MOD:00397</ModAccession>
-            <ModDatabase>MOD</ModDatabase>
-            <ModDatabaseVersion>1.010.7</ModDatabaseVersion>
-            <ModMonoDelta>57.021464</ModMonoDelta>
-            <additional>
-                <cvParam cvLabel="MOD" accession="MOD:00397" name="iodoacetamide derivatized residue"/>
-            </additional>
-        </ModificationItem>
-        <additional>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-            <cvParam cvLabel="MS" accession="MS:1000040" name="m/z" value="2425.207252"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000091" name="Rank" value="2"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000065" name="Upstream flanking sequence" value="K"/>
-            <cvParam cvLabel="PRIDE" accession="PRIDE:0000066" name="Downstream flanking sequence" value="V"/>
-            <cvParam cvLabel="MS" accession="MS:1000041" name="charge state" value="1"/>
-        </additional>
-    </PeptideItem>
-    <additional>
-        <cvParam cvLabel="PRIDE" accession="PRIDE:0000063" name="Protein description line" value="TrmA family tRNA (uracil-5-)-methyltransferase [Lactobacillus ultunensis DSM 16047]"/>
-        <cvParam cvLabel="PRIDE" accession="PRIDE:0000112" name="Identified by peptide mass fingerprint" value=""/>
-        <cvParam cvLabel="PRIDE" accession="PRIDE:0000299" name="Submitted Protein Accession" value="gi|227893050"/>
-    </additional>
-    <Score>94.1</Score>
-    <Threshold>80.0</Threshold>
-    <SearchEngine>Matrix Science Mascot</SearchEngine>
-</GelFreeIdentification>
-<additional>
-    <cvParam cvLabel="PRIDE" accession="PRIDE:0000218" name="Original MS data file format" value="Mascot dat file"/>
-    <cvParam cvLabel="PRIDE" accession="PRIDE:0000219" name="Date of search" value="2009-12-30 10:15"/>
-    <cvParam cvLabel="PRIDE" accession="PRIDE:0000175" name="XML generation software" value="PRIDE Converter Toolsuite 2.0-SNAPSHOT-${buildNumber}"/>
-    <cvParam cvLabel="MS" accession="MS:1001081" name="pmf search" value=""/>
-    <cvParam cvLabel="PRIDE" accession="PRIDE:0000097" name="Project" value="e.g. Analysis of the yeast proteome using shotgun proteomics"/>
-    <cvParam cvLabel="PRIDE" accession="PRIDE:0000040" name="Experiment description" value=""/>
-</additional></Experiment>
+    </Experiment>
 </ExperimentCollection>

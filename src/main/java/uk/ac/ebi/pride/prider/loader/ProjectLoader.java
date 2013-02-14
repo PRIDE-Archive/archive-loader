@@ -8,10 +8,7 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import uk.ac.ebi.pride.data.controller.DataAccessException;
 import uk.ac.ebi.pride.data.io.SubmissionFileParser;
-import uk.ac.ebi.pride.data.model.CvParam;
-import uk.ac.ebi.pride.data.model.DataFile;
-import uk.ac.ebi.pride.data.model.ProjectMetaData;
-import uk.ac.ebi.pride.data.model.Submission;
+import uk.ac.ebi.pride.data.model.*;
 import uk.ac.ebi.pride.prider.dataprovider.file.ProjectFileType;
 import uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType;
 import uk.ac.ebi.pride.prider.loader.assay.AssayFactory;
@@ -20,7 +17,7 @@ import uk.ac.ebi.pride.prider.loader.util.Constant;
 import uk.ac.ebi.pride.prider.loader.util.CvParamManager;
 import uk.ac.ebi.pride.prider.loader.util.DataConversionUtil;
 import uk.ac.ebi.pride.prider.repo.assay.*;
-import uk.ac.ebi.pride.prider.repo.assay.instrument.Instrument;
+import uk.ac.ebi.pride.prider.repo.assay.software.Software;
 import uk.ac.ebi.pride.prider.repo.file.ProjectFile;
 import uk.ac.ebi.pride.prider.repo.file.ProjectFileRepository;
 import uk.ac.ebi.pride.prider.repo.project.*;
@@ -43,7 +40,7 @@ public class ProjectLoader {
     private ProjectRepository projectDao;
     private AssayRepository assayDao;
     private ProjectFileRepository projectFileDao;
-
+    private Project project;
 
     public ProjectLoader(UserRepository userDao, ProjectRepository projectDao, AssayRepository assayDao, ProjectFileRepository projectFileDao, PlatformTransactionManager transactionManager) {
         this.userDao = userDao;
@@ -51,6 +48,10 @@ public class ProjectLoader {
         this.assayDao = assayDao;
         this.projectFileDao = projectFileDao;
         this.transactionTemplate = new TransactionTemplate(transactionManager);
+    }
+
+    public Project getProject() {
+        return project;
     }
 
     public void load(final String projectAccession, final String doi, final String submissionSummaryFile) throws ProjectLoaderException {
@@ -149,7 +150,8 @@ public class ProjectLoader {
      * @throws ProjectLoaderException exception indicates error when loading project data
      */
     private Long loadProjectMetaData(Submission submission, String projectAccession, String doi, User submitter, List<Assay> assays) throws ProjectLoaderException {
-        Project project = new Project();
+
+        project = new Project();
 
         // project accession
         project.setAccession(projectAccession);
@@ -193,9 +195,12 @@ public class ProjectLoader {
         List<ProjectGroupCvParam> additionals = new ArrayList<ProjectGroupCvParam>();
         additionals.addAll(DataConversionUtil.convertProjectGroupCvParams(project, projectMetaData.getAdditional()));
         project.setProjectGroupCvParams(additionals);
+        List<ProjectGroupUserParam> additionalUserParams = new ArrayList<ProjectGroupUserParam>();
+        additionalUserParams.addAll(DataConversionUtil.convertProjectGroupUserParams(project, projectMetaData.getAdditional()));
+        project.setProjectGroupUserParams(additionalUserParams);
 
         // pubmed
-        project.setReferences(DataConversionUtil.convertReferences(projectMetaData.getPubmedIds()));
+        project.setReferences(DataConversionUtil.convertReferences(project, projectMetaData.getPubmedIds()));
 
         // reanalysis px
         project.setReanalysis(DataConversionUtil.combineToString(projectMetaData.getReanalysisAccessions(), Constant.COMMA));
@@ -209,6 +214,31 @@ public class ProjectLoader {
         // load assay details - only done for complete submissions
         if (submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.COMPLETE)) {
 
+            // get instrument details for each assay
+            Collection<ProjectInstrumentCvParam> instruments = new HashSet<ProjectInstrumentCvParam>();
+            for (DataFile datafile : submission.getDataFiles()) {
+                if (datafile.getFileType().equals(ProjectFileType.RESULT)) {
+                    for (Param param : datafile.getSampleMetaData().getMetaData(SampleMetaData.Type.INSTRUMENT)) {
+                        if (param instanceof CvParam) {
+                            CvParam cvParam = (CvParam) param;
+                            //check to see if the instrument param is already in PRIDE-R
+                            uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                            //if param isn't already seen in db, store it
+                            if (repoParam == null) {
+                                CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
+                                repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                            }
+                            ProjectInstrumentCvParam piCvParam = new ProjectInstrumentCvParam();
+                            piCvParam.setCvParam(repoParam);
+                            piCvParam.setValue(cvParam.getValue());
+                            piCvParam.setProject(project);
+                            instruments.add(piCvParam);
+                        }
+                    }
+                }
+            }
+            project.setInstruments(instruments);
+
             mergeAssayDetails(project, assays);
 
         } else {
@@ -220,25 +250,6 @@ public class ProjectLoader {
             samples.addAll(DataConversionUtil.convertProjectSampleCvParams(project, projectMetaData.getSpecies()));
             project.setSamples(samples);
 
-            // instrument
-            List<ProjectInstrumentCvParam> instruments = new ArrayList<ProjectInstrumentCvParam>();
-            Set<CvParam> instrumentModels = projectMetaData.getInstruments();
-            for (CvParam cvParam : instrumentModels) {
-                //check to see if the instrument param is already in PRIDE-R
-                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
-                //if param isn't already seen in db, store it
-                if (repoParam == null) {
-                    CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
-                    repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
-                }
-                ProjectInstrumentCvParam param = new ProjectInstrumentCvParam();
-                param.setCvParam(repoParam);
-                param.setValue(cvParam.getValue());
-                param.setProject(project);
-                instruments.add(param);
-            }
-            project.setInstruments(instruments);
-
             // modification
             List<ProjectPTM> ptms = new ArrayList<ProjectPTM>();
             ptms.addAll(DataConversionUtil.convertProjectPTMs(project, projectMetaData.getModifications()));
@@ -249,7 +260,7 @@ public class ProjectLoader {
             quantificationMethods.addAll(DataConversionUtil.convertProjectQuantificationMethodCvParams(project, projectMetaData.getQuantifications()));
             project.setQuantificationMethods(quantificationMethods);
 
-            //todo - set project software
+            //todo - project software not currently captured in incomplete submissions
 
         }
 
@@ -270,7 +281,8 @@ public class ProjectLoader {
     private void mergeAssayDetails(Project project, List<Assay> assays) {
 
         for (Assay assay : assays) {
-            // species
+
+            // sample params
             Collection<AssaySampleCvParam> samples = assay.getSamples();
             Set<ProjectSampleCvParam> projectSamples = new HashSet<ProjectSampleCvParam>();
             if (project.getSamples() != null) {
@@ -281,19 +293,24 @@ public class ProjectLoader {
             }
             project.setSamples(projectSamples);
 
-            // instrument
-            Set<ProjectInstrumentCvParam> projectInstruments = new HashSet<ProjectInstrumentCvParam>();
-            for (Instrument instrument : assay.getInstruments()) {
-                ProjectInstrumentCvParam param = new ProjectInstrumentCvParam();
-                param.setCvParam(instrument.getCvParam());
-                param.setValue(instrument.getValue());
-                param.setProject(project);
-                projectInstruments.add(param);
+            //softwares
+            Collection<ProjectSoftwareCvParam> projectSoftwares = new HashSet<ProjectSoftwareCvParam>();
+            if (project.getSoftware() != null) {
+                projectSoftwares.addAll(project.getSoftware());
             }
-            //todo - check to see if this will cause duplication
-            project.setInstruments(projectInstruments);
-            //todo - set project software
-
+            for (Software software : assay.getSoftwares()) {
+                ProjectSoftwareCvParam psCvParam = new ProjectSoftwareCvParam();
+                psCvParam.setCvParam(CvParamManager.getInstance().getCvParam(Constant.MS_SOFTWARE_AC));
+                StringBuilder sb = new StringBuilder();
+                sb.append(software.getName());
+                if (software.getVersion() != null) {
+                    sb.append(' ').append(software.getVersion());
+                }
+                psCvParam.setValue(sb.toString().trim());
+                psCvParam.setProject(project);
+                projectSoftwares.add(psCvParam);
+            }
+            project.setSoftware(projectSoftwares);
 
             // modifications
             Collection<AssayPTM> ptms = assay.getPtms();

@@ -40,6 +40,20 @@ public class CvParamManager {
             CvParam param = iterator.next();
             allParams.put(param.getAccession(), param);
         }
+        loadDefaultParams();
+    }
+
+    private void loadDefaultParams() {
+
+        //these params are used in the prider-loader
+        //ensure that they're already in the database
+        if (getCvParam(Constant.MS_INSTRUMENT_MODEL_AC) == null) {
+            putCvParam(Constant.MS, Constant.MS_INSTRUMENT_MODEL_AC, "instrument model");
+        }
+        if (getCvParam(Constant.MS_SOFTWARE_AC) == null) {
+            putCvParam(Constant.MS, Constant.MS_SOFTWARE_AC, "software");
+        }
+
     }
 
     public CvParam getCvParam(String accession) {
