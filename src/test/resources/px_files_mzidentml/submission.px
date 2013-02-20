@@ -1,0 +1,19 @@
+MTD	name	Richard2 Cote2
+MTD	email	john.smith@dummy.ebi.com
+MTD	affiliation	HUPO Plasma Proteome Project
+MTD	pride_login	rcote
+MTD	title	mzidentml test
+MTD	project_description	mzidentml test test description
+MTD	keywords	mzidentml test
+MTD	sample_processing_protocol	mzidentml test test sample protocol
+MTD	data_processing_protocol	mzidentml test test data protocol
+MTD	experiment_type	[PRIDE, PRIDE:0000311, SRM/MRM, ]
+MTD	submission_type	COMPLETE
+
+FMH	file_id	file_type	file_path	file_mapping	
+FME	3	peak	55merge.mgf		
+FME	4	result	55merge.mzid	3,5	
+FME	5	raw	55merge_raw.zip		
+
+SMH	file_id	species	tissue	cell_type	disease	instrument	quantification	experimental_factor
+SME	4	[NEWT, 9913, Bos taurus (Bovine), ]	[BTO, BTO:0000142, brain, ]	[CL, CL:0000081, blood cell, ]	[DOID, DOID:1319, brain cancer, ]	[MS, MS:1000447, LTQ, ]	[PRIDE, PRIDE:0000313, iTRAQ, ]	booga

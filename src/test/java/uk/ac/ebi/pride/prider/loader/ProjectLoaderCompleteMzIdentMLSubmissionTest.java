@@ -10,7 +10,6 @@ import uk.ac.ebi.pride.data.io.SubmissionFileParser;
 import uk.ac.ebi.pride.data.io.SubmissionFileWriter;
 import uk.ac.ebi.pride.data.model.DataFile;
 import uk.ac.ebi.pride.data.model.Submission;
-import uk.ac.ebi.pride.prider.dataprovider.file.ProjectFileType;
 import uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType;
 import uk.ac.ebi.pride.prider.loader.util.CvParamManager;
 import uk.ac.ebi.pride.prider.repo.assay.Assay;
@@ -27,7 +26,7 @@ import java.util.List;
  * Date: 04/02/13
  * Time: 14:43
  */
-public class ProjectLoaderCompleteSubmissionTest extends AbstractLoaderTest {
+public class ProjectLoaderCompleteMzIdentMLSubmissionTest extends AbstractLoaderTest {
 
     @Test
     public void LoaderTest() throws Exception {
@@ -35,12 +34,12 @@ public class ProjectLoaderCompleteSubmissionTest extends AbstractLoaderTest {
         ProjectLoader loader = new ProjectLoader(userDao, projectDao, assayDao, projectFileDao, transactionManager);
         CvParamManager paramManager = CvParamManager.getInstance();
         paramManager.setCvParamDao(cvParamDao);
-        loader.load("123456", "12345", submissionFile.getPath());
+        loader.load("88888", "88888", submissionFile.getPath());
 
 
-        Project loadedProject = projectDao.findByAccession("123456");
+        Project loadedProject = projectDao.findByAccession("88888");
         Assert.assertEquals("john.smith@dummy.ebi.com", loadedProject.getSubmitter().getEmail());
-        Assert.assertEquals("12345", loadedProject.getDoi());
+        Assert.assertEquals("88888", loadedProject.getDoi());
         Assert.assertEquals("Test PX data set", loadedProject.getTitle());
         Assert.assertEquals("liver, human, bruker LTQ", loadedProject.getKeywords());
         Assert.assertEquals(4, loadedProject.getNumAssays());
@@ -95,7 +94,7 @@ public class ProjectLoaderCompleteSubmissionTest extends AbstractLoaderTest {
     @Before
     public void setUp() throws Exception {
 
-        URL url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/submission.px");
+        URL url = ProjectLoaderCompleteMzIdentMLSubmissionTest.class.getClassLoader().getResource("px_files_mzidentml/submission.px");
         //copy submission file
         File file1 = new File(temporaryFolder.getRoot(), "submission.px");
         FileUtils.copyFile(new File(url.toURI()), file1);
@@ -103,17 +102,11 @@ public class ProjectLoaderCompleteSubmissionTest extends AbstractLoaderTest {
         submissionFile = new FileSystemResource(file1);
 
         //copy prideXML file as well to temporary folder
-        url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 3.dat-pride.xml");
-        file1 = new File(temporaryFolder.getRoot(), "Spot 3.dat-pride.xml");
+        url = ProjectLoaderCompleteMzIdentMLSubmissionTest.class.getClassLoader().getResource("px_files_mzidentml/55merge.mzid");
+        file1 = new File(temporaryFolder.getRoot(), "55merge.mzid");
         FileUtils.copyFile(new File(url.toURI()), file1);
-        url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 14.dat-pride.xml");
-        file1 = new File(temporaryFolder.getRoot(), "Spot 14.dat-pride.xml");
-        FileUtils.copyFile(new File(url.toURI()), file1);
-        url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 19.dat-pride.xml");
-        file1 = new File(temporaryFolder.getRoot(), "Spot 19.dat-pride.xml");
-        FileUtils.copyFile(new File(url.toURI()), file1);
-        url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 25.dat-pride.xml");
-        file1 = new File(temporaryFolder.getRoot(), "Spot 25.dat-pride.xml");
+        url = ProjectLoaderCompleteMzIdentMLSubmissionTest.class.getClassLoader().getResource("px_files_mzidentml/55merge.mgf");
+        file1 = new File(temporaryFolder.getRoot(), "55merge.mgf");
         FileUtils.copyFile(new File(url.toURI()), file1);
 
         //and update path in submission,px file to point to pride.xml file in tmp folder
@@ -127,10 +120,8 @@ public class ProjectLoaderCompleteSubmissionTest extends AbstractLoaderTest {
         List<DataFile> dataFiles = submission.getDataFiles();
         //update the prideXML file path to point to the "real" file in the tmp folder
         for (DataFile dataFile : dataFiles) {
-            if (dataFile.getFileType().equals(ProjectFileType.RESULT)) {
-                String filename = dataFile.getFile().getName();
-                dataFile.setFile(new File(temporaryFolder.getRoot(), filename));
-            }
+            String filename = dataFile.getFile().getName();
+            dataFile.setFile(new File(temporaryFolder.getRoot(), filename));
         }
         SubmissionFileWriter.write(submission, submissionFile.getFile());
     }

@@ -12,6 +12,7 @@ import uk.ac.ebi.pride.data.model.DataFile;
 import uk.ac.ebi.pride.data.model.Param;
 import uk.ac.ebi.pride.data.model.SampleMetaData;
 import uk.ac.ebi.pride.data.util.MassSpecFileFormat;
+import uk.ac.ebi.pride.prider.dataprovider.file.ProjectFileType;
 import uk.ac.ebi.pride.prider.loader.util.Constant;
 import uk.ac.ebi.pride.prider.loader.util.CvParamManager;
 import uk.ac.ebi.pride.prider.loader.util.DataConversionUtil;
@@ -83,7 +84,9 @@ public final class AssayFactory {
                     MzIdentMLControllerImpl mzIdentMlController = new MzIdentMLControllerImpl(dataFile.getFile());
                     List<File> peakListFiles = new ArrayList<File>();
                     for (DataFile file : dataFile.getFileMappings()) {
-                        peakListFiles.add(file.getFile());
+                        if (file.getFileType().equals(ProjectFileType.PEAK)) {
+                            peakListFiles.add(file.getFile());
+                        }
                     }
                     mzIdentMlController.addMSController(peakListFiles);
                     dataAccessController = mzIdentMlController;

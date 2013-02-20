@@ -4,20 +4,10 @@ import junit.framework.Assert;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.PlatformTransactionManager;
 import uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType;
 import uk.ac.ebi.pride.prider.loader.util.CvParamManager;
-import uk.ac.ebi.pride.prider.repo.assay.AssayRepository;
-import uk.ac.ebi.pride.prider.repo.file.ProjectFileRepository;
-import uk.ac.ebi.pride.prider.repo.param.CvParamRepository;
 import uk.ac.ebi.pride.prider.repo.project.Project;
-import uk.ac.ebi.pride.prider.repo.project.ProjectRepository;
-import uk.ac.ebi.pride.prider.repo.user.UserRepository;
 
 import java.io.File;
 import java.net.URL;
@@ -28,24 +18,7 @@ import java.net.URL;
  * Date: 04/02/13
  * Time: 14:43
  */
-@ContextConfiguration(locations = {"/test-context.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
-public class ProjectLoaderPartialSubmissionTest {
-
-    @Autowired
-    private PlatformTransactionManager transactionManager;
-    @Autowired
-    private UserRepository userDao;
-    @Autowired
-    private ProjectRepository projectDao;
-    @Autowired
-    private AssayRepository assayDao;
-    @Autowired
-    private ProjectFileRepository projectFileDao;
-    @Autowired
-    private CvParamRepository cvParamDao;
-
-    private FileSystemResource submissionFile;
+public class ProjectLoaderPartialSubmissionTest extends AbstractLoaderTest {
 
     @Test
     public void LoaderTest() throws Exception {
@@ -87,8 +60,7 @@ public class ProjectLoaderPartialSubmissionTest {
 
         URL url = ProjectLoaderPartialSubmissionTest.class.getClassLoader().getResource("px_files_partial/submission.px");
         //copy submission file
-        File temporaryFolder = new File(System.getProperty("java.io.tmpdir"));
-        File file1 = new File(temporaryFolder, "submission.px");
+        File file1 = new File(temporaryFolder.getRoot(), "submission.px");
         FileUtils.copyFile(new File(url.toURI()), file1);
         //use copy of original file
         submissionFile = new FileSystemResource(file1);
