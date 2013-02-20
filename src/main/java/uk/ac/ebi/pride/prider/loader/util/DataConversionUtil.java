@@ -342,6 +342,32 @@ public final class DataConversionUtil {
 
     }
 
+    public static Collection<ProjectInstrumentCvParam> convertProjectInstruments(Project project, Set<CvParam> instruments) {
+
+        Set<ProjectInstrumentCvParam> retval = new HashSet<ProjectInstrumentCvParam>();
+        if (instruments != null) {
+            for (CvParam cvParam : instruments) {
+
+                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                //if param isn't already seen in db, store it
+                if (repoParam == null) {
+                    CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
+                    repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                }
+
+                ProjectInstrumentCvParam projectInstrument = new ProjectInstrumentCvParam();
+                projectInstrument.setProject(project);
+                projectInstrument.setCvParam(repoParam);
+                projectInstrument.setValue(cvParam.getValue());
+                retval.add(projectInstrument);
+
+            }
+        }
+
+        return retval;
+
+    }
+
     public static Collection<ProjectPTM> convertProjectPTMs(Project project, Set<CvParam> ptms) {
 
         Set<ProjectPTM> retval = new HashSet<ProjectPTM>();

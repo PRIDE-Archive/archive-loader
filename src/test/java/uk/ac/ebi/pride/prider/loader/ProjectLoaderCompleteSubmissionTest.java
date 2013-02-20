@@ -39,7 +39,7 @@ import java.util.List;
  */
 @ContextConfiguration(locations = {"/test-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class ProjectLoaderTest {
+public class ProjectLoaderCompleteSubmissionTest {
 
     @Autowired
     private PlatformTransactionManager transactionManager;
@@ -122,7 +122,7 @@ public class ProjectLoaderTest {
     @Before
     public void setUp() throws Exception {
 
-        URL url = ProjectLoaderTest.class.getClassLoader().getResource("px_files/submission.px");
+        URL url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/submission.px");
         //copy submission file
         File temporaryFolder = new File(System.getProperty("java.io.tmpdir"));
         File file1 = new File(temporaryFolder, "submission.px");
@@ -131,16 +131,16 @@ public class ProjectLoaderTest {
         submissionFile = new FileSystemResource(file1);
 
         //copy prideXML file as well to temporary folder
-        url = ProjectLoaderTest.class.getClassLoader().getResource("px_files/Spot 3.dat-pride.xml");
+        url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 3.dat-pride.xml");
         file1 = new File(temporaryFolder, "Spot 3.dat-pride.xml");
         FileUtils.copyFile(new File(url.toURI()), file1);
-        url = ProjectLoaderTest.class.getClassLoader().getResource("px_files/Spot 14.dat-pride.xml");
+        url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 14.dat-pride.xml");
         file1 = new File(temporaryFolder, "Spot 14.dat-pride.xml");
         FileUtils.copyFile(new File(url.toURI()), file1);
-        url = ProjectLoaderTest.class.getClassLoader().getResource("px_files/Spot 19.dat-pride.xml");
+        url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 19.dat-pride.xml");
         file1 = new File(temporaryFolder, "Spot 19.dat-pride.xml");
         FileUtils.copyFile(new File(url.toURI()), file1);
-        url = ProjectLoaderTest.class.getClassLoader().getResource("px_files/Spot 25.dat-pride.xml");
+        url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 25.dat-pride.xml");
         file1 = new File(temporaryFolder, "Spot 25.dat-pride.xml");
         FileUtils.copyFile(new File(url.toURI()), file1);
 

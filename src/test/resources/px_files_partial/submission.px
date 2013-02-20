@@ -1,0 +1,21 @@
+MTD	name	Richard Cote
+MTD	email	john.smith@dummy.ebi.com
+MTD	affiliation	HUPO Plasma Proteome Project
+MTD	pride_login	rcote
+MTD	title	partial submission title
+MTD	project_description	partial submission project description
+MTD	keywords	partial submission keywords
+MTD	sample_processing_protocol	partial submission sample protocol
+MTD	data_processing_protocol	partial submission processing protocol
+MTD	experiment_type	[PRIDE, PRIDE:0000429, Shotgun proteomics, ]
+MTD	submission_type	PARTIAL
+MTD	reason_for_partial	partial submission experiment comment
+MTD	species	[NEWT, 7460, Apis mellifera (Honeybee), ]
+MTD	instrument	[MS, MS:1000449, LTQ Orbitrap, ]
+MTD	modification	[MOD, MOD:00696, phosphorylated residue, ]
+
+FMH	file_id	file_type	file_path	file_mapping
+FME	0	search	/home/rcote/Desktop/example_files/mascot/Spot 25.dat	1
+FME	1	raw	/home/rcote/Desktop/example_files/mascot/Spot 25.dat-report.xml.zip
+
+SMH	file_id	species	tissue	cell_type	disease	instrument	quantification	experimental_factor

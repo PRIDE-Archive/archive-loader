@@ -241,7 +241,7 @@ public class ProjectLoader {
 
             mergeAssayDetails(project, assays);
 
-        } else {
+        } else if (submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.PARTIAL)) {
 
             //for partial submisions, these must be done here
 
@@ -259,6 +259,18 @@ public class ProjectLoader {
             List<ProjectQuantificationMethodCvParam> quantificationMethods = new ArrayList<ProjectQuantificationMethodCvParam>();
             quantificationMethods.addAll(DataConversionUtil.convertProjectQuantificationMethodCvParams(project, projectMetaData.getQuantifications()));
             project.setQuantificationMethods(quantificationMethods);
+
+            // instrument
+            List<ProjectInstrumentCvParam> instruments = new ArrayList<ProjectInstrumentCvParam>();
+            instruments.addAll(DataConversionUtil.convertProjectInstruments(project, projectMetaData.getInstruments()));
+            project.setInstruments(instruments);
+
+            //reason for partial submission
+            ProjectGroupUserParam userParam = new ProjectGroupUserParam();
+            userParam.setProject(project);
+            userParam.setName(Constant.REASON_FOR_PARTIAL_SUBMISSION);
+            userParam.setValue(projectMetaData.getReasonForPartialSubmission());
+            project.getProjectGroupUserParams().add(userParam);
 
             //todo - project software not currently captured in incomplete submissions
 
