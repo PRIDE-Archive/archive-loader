@@ -457,19 +457,54 @@ public final class DataConversionUtil {
                     }
 
                 } else {
-                    throw new ProjectLoaderException("No name given for contact: " + person.toString());
+                    //can't find a proper name for the contact, ignore it
+                    logger.error("No name given for contact: " + person.toString());
+                    continue;
                 }
 
+                //email
+                String email = person.getContactInfo();
+                if (email == null || "".equals(email.trim())) {
 
+                    //contact info might be in params
+                    for (uk.ac.ebi.pride.data.core.CvParam param : person.getCvParams()) {
+                        if (param.getAccession().equals(Constant.MS_CONTACT_EMAIL_AC)) {
+                            //found it
+                            email = param.getValue();
+                            break;
+                        }
+                    }
+
+                    //can't find a proper name for the contact, ignore it
+                    if (email == null || "".equals(email.trim())) {
+                        logger.error("No email given for contact: " + person.toString());
+                        continue;
+                    }
+                }
+
+                contact.setEmail(email);
+
+                //affiliations
                 StringBuilder sb = new StringBuilder();
                 for (Organization org : person.getAffiliation()) {
-                    sb.append(org.getMail()).append(", ");
+                    if (org.getName() != null) {
+                        sb.append(org.getName()).append(", ");
+                    }
+                    if (org.getMail() != null) {
+                        sb.append(org.getMail()).append(", ");
+                    }
                 }
                 //remove last 2 chars
-                String affiliation = sb.toString();
-                affiliation = affiliation.substring(0, affiliation.length() - 2);
+                String affiliation = sb.toString().trim();
+                if (sb.length() > 0) {
+                    affiliation = affiliation.substring(0, affiliation.length() - 1);
+                }
+                if (affiliation == null || "".equals(affiliation)) {
+                    logger.error("No affiliation given for contact: " + person.toString());
+                    continue;
+                }
                 contact.setAffiliation(affiliation);
-                contact.setEmail(person.getContactInfo());
+
                 contact.setAssay(assay);
                 retval.add(contact);
             }

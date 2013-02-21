@@ -44,14 +44,26 @@
     </ContactRole>
   </Provider>
   <AuditCollection>
-    <Person id="">
+    <Person id="PERSON_DOC_OWNER" firstName="John" lastName="Doe" >
+	  <cvParam accession="MS:1000587" name="contact address" cvRef="PSI-MS" value="Nowhere Land"/>
+      <cvParam accession="MS:1000589" name="contact email" cvRef="PSI-MS" value="john.doe@nowhere.com"/>
+	  <cvParam accession="MS:1001755" name="contact phone number" cvRef="PSI-MS" value="123456798"/>
+	  <cvParam accession="MS:1000588" name="contact URL" cvRef="PSI-MS" value="http://www.flubu.com/"/>
       <Affiliation organization_ref="ORG_MSL"/>
     </Person>
-    <Person id="PERSON_DOC_OWNER" firstName="" lastName="" >
-      <Affiliation organization_ref="ORG_DOC_OWNER"/>
+    <Person id="BAD_PERSON_TEST_1" >
+	  <cvParam accession="MS:1000589" name="contact email" cvRef="PSI-MS" value="john.doe@nowhere.com"/>
+      <Affiliation organization_ref="BAD_ORG"/>
+    </Person>
+    <Person id="BAD_PERSON_TEST_2" firstName="John" lastName="Doe" >
+      <Affiliation organization_ref="BAD_ORG"/>
+    </Person>
+    <Person id="BAD_PERSON_TEST_3" firstName="John" lastName="Doe" >
+      <cvParam accession="MS:1000589" name="contact email" cvRef="PSI-MS" value="john.doe@nowhere.com"/>
+      <Affiliation organization_ref="BAD_ORG"/>
     </Person>
     <Organization id="ORG_MSL" name="Matrix Science Limited" />
-    <Organization id="ORG_DOC_OWNER" />
+    <Organization id="BAD_ORG" name="" />
   </AuditCollection>
   <SequenceCollection>
     <DBSequence id="DBSeq_1_P15288" searchDatabase_ref="SDB_SwissProt" accession="P15288" >

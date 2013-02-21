@@ -10,9 +10,9 @@ MTD	data_processing_protocol	mzidentml test test data protocol
 MTD	experiment_type	[PRIDE, PRIDE:0000311, SRM/MRM, ]
 MTD	submission_type	COMPLETE
 
-FMH	file_id	file_type	file_path	file_mapping	
-FME	3	peak	55merge.mgf		
-FME	4	result	55merge.mzid	3,5	
+FMH	file_id	file_type	file_path	file_mapping	pride_accession
+FME	3	peak	data-no-pitc-34-filter.mgf
+FME	4	result	F001261.mzid	3,5	1234
 FME	5	raw	55merge_raw.zip		
 
 SMH	file_id	species	tissue	cell_type	disease	instrument	quantification	experimental_factor

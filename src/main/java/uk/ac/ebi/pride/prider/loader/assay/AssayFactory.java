@@ -42,7 +42,11 @@ public final class AssayFactory {
         Assay assay = new Assay();
 
         // accession
-        assay.setAccession(dataFile.getAssayAccession());
+        String accession = dataFile.getAssayAccession();
+        if (accession == null || "".equals(accession.trim())) {
+            throw new IllegalStateException("Accession not set for assay: " + dataFile.getFile().getAbsolutePath());
+        }
+        assay.setAccession(accession);
 
         // sample
         List<AssaySampleCvParam> samples = new ArrayList<AssaySampleCvParam>();
@@ -223,7 +227,7 @@ public final class AssayFactory {
 
         // iterate over proteins
         Set<CvParam> ptms = new HashSet<CvParam>();
-        Set<PeptideSequence> peptideSequences = new HashSet<PeptideSequence>();
+        Set<String> peptideSequences = new HashSet<String>();
         Set<Comparable> spectrumIds = new HashSet<Comparable>();
         Collection<Comparable> proteinIds = dataAccessController.getProteinIds();
         for (Comparable proteinId : proteinIds) {
@@ -232,7 +236,7 @@ public final class AssayFactory {
                 // peptide
                 Peptide peptide = dataAccessController.getPeptideByIndex(proteinId, peptideId);
                 PeptideSequence peptideSequence = peptide.getPeptideSequence();
-                peptideSequences.add(peptideSequence);
+                peptideSequences.add(peptideSequence.getSequence());
 
                 // ptm
                 List<Modification> modifications = peptide.getModifications();
