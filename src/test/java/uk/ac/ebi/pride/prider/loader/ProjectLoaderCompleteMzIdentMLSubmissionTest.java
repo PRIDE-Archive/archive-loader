@@ -66,8 +66,8 @@ public class ProjectLoaderCompleteMzIdentMLSubmissionTest extends AbstractLoader
         Assert.assertEquals(7, assay.getProteinCount());
         Assert.assertEquals(11, assay.getPeptideCount());
         Assert.assertEquals(7, assay.getUniquePeptideCount());
-        //todo - this fails
-//        Assert.assertEquals(39, assay.getTotalSpectrumCount());
+//        todo - this fails
+        Assert.assertEquals(39, assay.getTotalSpectrumCount());
         Assert.assertEquals(11, assay.getIdentifiedSpectrumCount());
         Assert.assertEquals(0, assay.getInstruments().size());
         Assert.assertEquals(2, assay.getSoftwares().size());

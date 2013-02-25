@@ -19,7 +19,7 @@
     <!--<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>-->
     <!--<property name="url" value="jdbc:oracle:thin:@kava.ebi.ac.uk:1571:ADEV"/>-->
     <!--<property name="username" value="olsuser"/>-->
-    <!--<property name="password" value="XXXXX"/>-->
+    <!--<property name="password" value="XXXXXXX"/>-->
     <!--</bean>-->
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">

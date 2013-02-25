@@ -82,7 +82,7 @@ public class ProjectLoaderCompleteSubmissionTest extends AbstractLoaderTest {
         Assert.assertEquals(4, identifiedSpectrumCount);
         Assert.assertEquals(4, totalSpectrumCount);
         Assert.assertEquals(118, peptideCount);
-        Assert.assertEquals(103, uniquePeptideCount);
+        Assert.assertEquals(97, uniquePeptideCount);
         Assert.assertEquals(6, assayPTMs);
         Assert.assertEquals(4, instrumentCount);
         Assert.assertEquals(4, sourceCount);

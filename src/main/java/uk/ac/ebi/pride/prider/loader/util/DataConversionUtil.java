@@ -111,7 +111,7 @@ public final class DataConversionUtil {
                         acvParam.setValue(cvParam.getValue());
                         retval.add(acvParam);
                     } else {
-                        logger.warn("Ignored sample userParam" + param.getName() + "->" + param.getValue());
+                        logger.info("Ignored sample userParam " + param.getName() + "->" + param.getValue());
                     }
                 }
             }
@@ -191,7 +191,7 @@ public final class DataConversionUtil {
                         projectCvParam.setValue(cvParam.getValue());
                         retval.add(projectCvParam);
                     } else {
-                        logger.warn("Ignored project userParam" + param.getName() + "->" + param.getValue());
+                        logger.info("Ignored project userParam" + param.getName() + "->" + param.getValue());
                     }
                 }
             }
