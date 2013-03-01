@@ -13,6 +13,7 @@ import uk.ac.ebi.pride.data.model.Param;
 import uk.ac.ebi.pride.data.model.SampleMetaData;
 import uk.ac.ebi.pride.data.util.MassSpecFileFormat;
 import uk.ac.ebi.pride.prider.dataprovider.file.ProjectFileType;
+import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
 import uk.ac.ebi.pride.prider.loader.util.Constant;
 import uk.ac.ebi.pride.prider.loader.util.CvParamManager;
 import uk.ac.ebi.pride.prider.loader.util.DataConversionUtil;
@@ -47,7 +48,7 @@ public final class AssayFactory {
     public static Assay makeAssay(DataFile dataFile) throws DataAccessException {
 
         if (cvParamManager == null){
-            throw new IllegalStateException("CvParamManager not set, cannot continue!");
+            throw new ProjectLoaderException("CvParamManager not set, cannot continue!");
         }
 
         Assay assay = new Assay();
@@ -55,7 +56,7 @@ public final class AssayFactory {
         // accession
         String accession = dataFile.getAssayAccession();
         if (accession == null || "".equals(accession.trim())) {
-            throw new IllegalStateException("Accession not set for assay: " + dataFile.getFile().getAbsolutePath());
+            throw new ProjectLoaderException("Accession not set for assay: " + dataFile.getFile().getAbsolutePath());
         }
         assay.setAccession(accession);
 
@@ -107,7 +108,7 @@ public final class AssayFactory {
                     dataAccessController = mzIdentMlController;
                     break;
                 default:
-                    throw new UnsupportedOperationException("Could not get a DataAccessController for format: " + format.name());
+                    throw new ProjectLoaderException("Could not get a DataAccessController for format: " + format.name());
             }
 
             // get experiment metadata

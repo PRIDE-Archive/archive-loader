@@ -541,7 +541,7 @@ public final class DataConversionUtil {
 
     private static void checkCvParamManager(){
         if (cvParamManager == null){
-            throw new IllegalStateException("CvParamManager not set, cannot continue!");
+            throw new ProjectLoaderException("CvParamManager not set, cannot continue!");
         }
     }
 

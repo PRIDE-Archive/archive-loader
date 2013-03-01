@@ -1,5 +1,6 @@
 package uk.ac.ebi.pride.prider.loader.util;
 
+import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
 import uk.ac.ebi.pride.prider.repo.param.CvParam;
 import uk.ac.ebi.pride.prider.repo.param.CvParamRepository;
 
@@ -21,7 +22,7 @@ public class CvParamManager {
 
     public CvParamManager(CvParamRepository cvParamDao) {
         if (cvParamDao == null) {
-            throw new IllegalStateException("CvParam DAO not set!");
+            throw new ProjectLoaderException("CvParam DAO not set!");
         }
         this.cvParamDao = cvParamDao;
         cacheData();
