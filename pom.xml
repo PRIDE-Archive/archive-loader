@@ -4,7 +4,7 @@
 
     <groupId>uk.ac.ebi.pride.prider</groupId>
     <artifactId>prider-loader</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
     <url>http://www.ebi.ac.uk/pride</url>
 
@@ -15,9 +15,9 @@
     </parent>
 
     <scm>
-        <connection>scm:svn:https://svn.ebi.ac.uk/pride-repo/pride_r/prider-loader/trunk</connection>
-        <developerConnection>scm:svn:https://svn.ebi.ac.uk/pride-repo/pride_r/prider-loader/trunk</developerConnection>
-        <url>https://svn.ebi.ac.uk/pride-repo/pride_r/prider-loader/trunk</url>
+        <connection>scm:svn:https://svn.ebi.ac.uk/pride-repo/pride_r/prider-loader/tags/prider-loader-1.1</connection>
+        <developerConnection>scm:svn:https://svn.ebi.ac.uk/pride-repo/pride_r/prider-loader/tags/prider-loader-1.1</developerConnection>
+        <url>https://svn.ebi.ac.uk/pride-repo/pride_r/prider-loader/tags/prider-loader-1.1</url>
     </scm>
 
     <dependencies>
