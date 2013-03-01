@@ -38,7 +38,18 @@ public final class AssayFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(AssayFactory.class);
 
+    private static CvParamManager cvParamManager;
+
+    public static void setCvParamManager(CvParamManager cvParamManager) {
+        AssayFactory.cvParamManager = cvParamManager;
+    }
+
     public static Assay makeAssay(DataFile dataFile) throws DataAccessException {
+
+        if (cvParamManager == null){
+            throw new IllegalStateException("CvParamManager not set, cannot continue!");
+        }
+
         Assay assay = new Assay();
 
         // accession
@@ -176,7 +187,7 @@ public final class AssayFactory {
             Instrument instrument = new Instrument();
 
             //set instrument cv param
-            instrument.setCvParam(CvParamManager.getInstance().getCvParam(Constant.MS_INSTRUMENT_MODEL_AC));
+            instrument.setCvParam(cvParamManager.getCvParam(Constant.MS_INSTRUMENT_MODEL_AC));
             instrument.setValue(instrumentConfiguration.getId());
 
             //build instrument components

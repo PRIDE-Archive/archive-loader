@@ -23,9 +23,7 @@ public class ProjectLoaderPartialSubmissionTest extends AbstractLoaderTest {
     @Test
     public void LoaderTest() throws Exception {
 
-        ProjectLoader loader = new ProjectLoader(userDao, projectDao, assayDao, projectFileDao, transactionManager);
-        CvParamManager paramManager = CvParamManager.getInstance();
-        paramManager.setCvParamDao(cvParamDao);
+        ProjectLoader loader = new ProjectLoader(userDao, projectDao, assayDao, projectFileDao, transactionManager, new CvParamManager(cvParamDao));
         loader.load("456798", null, submissionFile.getPath());
 
         Project loadedProject = projectDao.findByAccession("456798");

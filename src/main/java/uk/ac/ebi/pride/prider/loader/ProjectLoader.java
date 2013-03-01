@@ -41,13 +41,19 @@ public class ProjectLoader {
     private AssayRepository assayDao;
     private ProjectFileRepository projectFileDao;
     private Project project;
+    private CvParamManager cvParamManager;
 
-    public ProjectLoader(UserRepository userDao, ProjectRepository projectDao, AssayRepository assayDao, ProjectFileRepository projectFileDao, PlatformTransactionManager transactionManager) {
+
+    public ProjectLoader(UserRepository userDao, ProjectRepository projectDao, AssayRepository assayDao, ProjectFileRepository projectFileDao, PlatformTransactionManager transactionManager, CvParamManager cvParamManager) {
         this.userDao = userDao;
         this.projectDao = projectDao;
         this.assayDao = assayDao;
         this.projectFileDao = projectFileDao;
         this.transactionTemplate = new TransactionTemplate(transactionManager);
+        this.cvParamManager = cvParamManager;
+        //set cvParamManager to other classes that will need it
+        DataConversionUtil.setCvParamManager(cvParamManager);
+        AssayFactory.setCvParamManager(cvParamManager);
     }
 
     public Project getProject() {
@@ -222,11 +228,11 @@ public class ProjectLoader {
                         if (param instanceof CvParam) {
                             CvParam cvParam = (CvParam) param;
                             //check to see if the instrument param is already in PRIDE-R
-                            uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                            uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = cvParamManager.getCvParam(cvParam.getAccession());
                             //if param isn't already seen in db, store it
                             if (repoParam == null) {
-                                CvParamManager.getInstance().putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
-                                repoParam = CvParamManager.getInstance().getCvParam(cvParam.getAccession());
+                                cvParamManager.putCvParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
+                                repoParam = cvParamManager.getCvParam(cvParam.getAccession());
                             }
                             ProjectInstrumentCvParam piCvParam = new ProjectInstrumentCvParam();
                             piCvParam.setCvParam(repoParam);
@@ -312,7 +318,7 @@ public class ProjectLoader {
             }
             for (Software software : assay.getSoftwares()) {
                 ProjectSoftwareCvParam psCvParam = new ProjectSoftwareCvParam();
-                psCvParam.setCvParam(CvParamManager.getInstance().getCvParam(Constant.MS_SOFTWARE_AC));
+                psCvParam.setCvParam(cvParamManager.getCvParam(Constant.MS_SOFTWARE_AC));
                 StringBuilder sb = new StringBuilder();
                 sb.append(software.getName());
                 if (software.getVersion() != null) {

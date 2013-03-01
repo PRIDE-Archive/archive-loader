@@ -31,9 +31,7 @@ public class ProjectLoaderCompleteMzIdentMLSubmissionTest extends AbstractLoader
     @Test
     public void LoaderTest() throws Exception {
 
-        ProjectLoader loader = new ProjectLoader(userDao, projectDao, assayDao, projectFileDao, transactionManager);
-        CvParamManager paramManager = CvParamManager.getInstance();
-        paramManager.setCvParamDao(cvParamDao);
+        ProjectLoader loader = new ProjectLoader(userDao, projectDao, assayDao, projectFileDao, transactionManager, new CvParamManager(cvParamDao));
         loader.load("88888", "88888", submissionFile.getPath());
 
         Project loadedProject = projectDao.findByAccession("88888");

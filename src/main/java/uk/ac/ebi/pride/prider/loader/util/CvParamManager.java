@@ -19,22 +19,15 @@ public class CvParamManager {
 
     private Map<String, CvParam> allParams = new HashMap<String, CvParam>();
 
-    private static CvParamManager instance = new CvParamManager();
-
-    public static CvParamManager getInstance() {
-        return instance;
-    }
-
-    private CvParamManager() {
-    }
-
-    public void setCvParamDao(CvParamRepository cvParamDao) {
+    public CvParamManager(CvParamRepository cvParamDao) {
+        if (cvParamDao == null) {
+            throw new IllegalStateException("CvParam DAO not set!");
+        }
         this.cvParamDao = cvParamDao;
         cacheData();
     }
 
     private void cacheData() {
-        checkDao();
         Iterator<CvParam> iterator = cvParamDao.findAll().iterator();
         while (iterator.hasNext()) {
             CvParam param = iterator.next();
@@ -57,7 +50,6 @@ public class CvParamManager {
     }
 
     public CvParam getCvParam(String accession) {
-        checkDao();
         return allParams.get(accession);
     }
 
@@ -68,7 +60,6 @@ public class CvParamManager {
      * @return true if the param has been stored, false otherwise.
      */
     public boolean putCvParam(String cvLabel, String accession, String name) {
-        checkDao();
         if (!allParams.containsKey(accession)) {
             CvParam param = new CvParam();
             param.setAccession(accession);
@@ -79,12 +70,6 @@ public class CvParamManager {
             return true;
         }
         return false;
-    }
-
-    private void checkDao() {
-        if (cvParamDao == null) {
-            throw new IllegalStateException("CvParam DAO not set!");
-        }
     }
 
 }
