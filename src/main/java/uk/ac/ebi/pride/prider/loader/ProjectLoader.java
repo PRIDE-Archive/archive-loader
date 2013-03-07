@@ -83,7 +83,8 @@ public class ProjectLoader {
                     }
 
                     // make sure all the assay accessions don't exist
-                    if (submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.COMPLETE)) {
+                    if (submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.COMPLETE) ||
+                            submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.PRIDE)) {
                         List<DataFile> dataFiles = submission.getDataFiles();
                         for (DataFile dataFile : dataFiles) {
                             String assayAccession = dataFile.getAssayAccession();
@@ -134,7 +135,8 @@ public class ProjectLoader {
     private List<Assay> collectAssayDetails(Submission submission) throws DataAccessException, ProjectLoaderException {
         List<Assay> assays = new ArrayList<Assay>();
 
-        if (submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.COMPLETE)) {
+        if (submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.COMPLETE) ||
+                submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.PRIDE)) {
             List<DataFile> dataFiles = submission.getDataFiles();
             for (DataFile dataFile : dataFiles) {
                 if (dataFile.isFile() && dataFile.getFileType().equals(ProjectFileType.RESULT)) {
@@ -217,8 +219,9 @@ public class ProjectLoader {
         // set number of assays
         project.setNumAssays(assays.size());
 
-        // load assay details - only done for complete submissions
-        if (submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.COMPLETE)) {
+        // load assay details - only done for complete/PRIDE submissions
+        if (submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.COMPLETE) ||
+                submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.PRIDE)) {
 
             // get instrument details for each assay
             Collection<ProjectInstrumentCvParam> instruments = new HashSet<ProjectInstrumentCvParam>();
