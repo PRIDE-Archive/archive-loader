@@ -12,9 +12,9 @@ MTD	submission_type	PRIDE
 MTD	resubmission_px	PRD000001
 
 FMH	file_id	file_type	file_path	file_mapping	pride_accession
-FME	1	result	/nfs/pride/tmp/legacy_data_move/PRD000001/PRIDE_Exp_Complete_Ac_2.xml		2
-FME	2	result	/nfs/pride/tmp/legacy_data_move/PRD000001/PRIDE_Exp_Complete_Ac_1.xml		1
-FME	3	result	/nfs/pride/tmp/legacy_data_move/PRD000001/PRIDE_Exp_Complete_Ac_3.xml		3
+FME	1	result	/nfs/pride/tmp/legacy_data_move/PRD000001/PRIDE_Exp_Complete_Ac_2.xml		2222
+FME	2	result	/nfs/pride/tmp/legacy_data_move/PRD000001/PRIDE_Exp_Complete_Ac_1.xml		2221
+FME	3	result	/nfs/pride/tmp/legacy_data_move/PRD000001/PRIDE_Exp_Complete_Ac_3.xml		2223
 FME	4	result	/nfs/pride/tmp/legacy_data_move/PRD000001/PRIDE_Exp_Complete_Ac_1643.xml		1643
 FME	5	result	/nfs/pride/tmp/legacy_data_move/PRD000001/PRIDE_Exp_Complete_Ac_1644.xml		1644
 
