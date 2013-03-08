@@ -47,7 +47,7 @@ public final class AssayFactory {
 
     public static Assay makeAssay(DataFile dataFile) throws DataAccessException {
 
-        if (cvParamManager == null){
+        if (cvParamManager == null) {
             throw new ProjectLoaderException("CvParamManager not set, cannot continue!");
         }
 
@@ -89,6 +89,8 @@ public final class AssayFactory {
 
         // pride xml controller
         DataAccessController dataAccessController = null;
+
+        logger.warn("Reading datafile: " + dataFile.getFile().getAbsolutePath());
 
         try {
             MassSpecFileFormat format = MassSpecFileFormat.checkFormat(dataFile.getFile());
@@ -179,6 +181,7 @@ public final class AssayFactory {
      * Scan result file for statistics
      */
     private static FileScanResults scanResultFile(DataFile dataFile, DataAccessController dataAccessController) throws DataAccessException {
+
         FileScanResults resultFileScanner = new FileScanResults();
 
         // instrument
@@ -262,8 +265,10 @@ public final class AssayFactory {
                 }
 
                 // spectrum
-                Spectrum spectrum = peptide.getSpectrumIdentification().getSpectrum();
-                spectrumIds.add(spectrum.getId());
+                if (peptide.getSpectrumIdentification() != null && peptide.getSpectrumIdentification().getSpectrum() != null) {
+                    Spectrum spectrum = peptide.getSpectrumIdentification().getSpectrum();
+                    spectrumIds.add(spectrum.getId());
+                }
 
                 if (peptide.getFragmentation() != null && peptide.getFragmentation().size() > 0) {
                     resultFileScanner.setMs2Annotation(true);
@@ -296,6 +301,7 @@ public final class AssayFactory {
         }
 
         return resultFileScanner;
+
     }
 
     /**

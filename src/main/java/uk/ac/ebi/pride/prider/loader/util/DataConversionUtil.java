@@ -27,7 +27,7 @@ import java.util.*;
 public final class DataConversionUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(DataConversionUtil.class);
-    
+
     private static CvParamManager cvParamManager;
 
     public static void setCvParamManager(CvParamManager cvParamManager) {
@@ -431,7 +431,7 @@ public final class DataConversionUtil {
 
                 } else {
                     //can't find a proper name for the contact, ignore it
-                    logger.error("No name given for contact: " + person.toString());
+                    logger.warn("No name given for contact: " + person.toString());
                     continue;
                 }
 
@@ -450,7 +450,7 @@ public final class DataConversionUtil {
 
                     //can't find a proper name for the contact, ignore it
                     if (email == null || "".equals(email.trim())) {
-                        logger.error("No email given for contact: " + person.toString());
+                        logger.warn("No email given for contact: " + person.toString());
                         continue;
                     }
                 }
@@ -473,7 +473,7 @@ public final class DataConversionUtil {
                     affiliation = affiliation.substring(0, affiliation.length() - 1);
                 }
                 if (affiliation == null || "".equals(affiliation)) {
-                    logger.error("No affiliation given for contact: " + person.toString());
+                    logger.warn("No affiliation given for contact: " + person.toString());
                     continue;
                 }
                 contact.setAffiliation(affiliation);
@@ -539,8 +539,8 @@ public final class DataConversionUtil {
 
     }
 
-    private static void checkCvParamManager(){
-        if (cvParamManager == null){
+    private static void checkCvParamManager() {
+        if (cvParamManager == null) {
             throw new ProjectLoaderException("CvParamManager not set, cannot continue!");
         }
     }
