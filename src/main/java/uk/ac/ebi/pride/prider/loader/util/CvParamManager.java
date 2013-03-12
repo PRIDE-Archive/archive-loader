@@ -2,9 +2,6 @@ package uk.ac.ebi.pride.prider.loader.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
 import uk.ac.ebi.pride.prider.repo.param.CvParam;
 import uk.ac.ebi.pride.prider.repo.param.CvParamRepository;
@@ -67,17 +64,21 @@ public class CvParamManager {
      *
      * @return true if the param has been stored, false otherwise.
      */
-    @Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     public boolean putCvParam(String cvLabel, String accession, String name) {
         if (!allParams.containsKey(accession)) {
-            CvParam param = new CvParam();
-            param.setAccession(accession);
-            param.setCvLabel(cvLabel);
-            param.setName(name);
-            cvParamDao.save(param);
-            logger.warn("Storing cv param: " + accession);
-            allParams.put(accession, param);
-            return true;
+            try {
+                CvParam param = new CvParam();
+                param.setAccession(accession);
+                param.setCvLabel(cvLabel);
+                param.setName(name);
+                cvParamDao.save(param);
+                logger.warn("Storing cv param: " + accession);
+                allParams.put(accession, param);
+                return true;
+            } catch (RuntimeException e) {
+                logger.error("Error saving param: " + e.getMessage(), e);
+                throw e;
+            }
         }
         return false;
     }
