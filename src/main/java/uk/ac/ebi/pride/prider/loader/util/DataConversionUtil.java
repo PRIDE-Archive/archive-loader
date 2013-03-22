@@ -427,6 +427,8 @@ public final class DataConversionUtil {
                         contact.setLastName(lastName);
                     } else {
                         contact.setFirstName(tokens[0]);
+                        //set to blank string so that db doesn't barf
+                        contact.setLastName(" ");
                     }
 
                 } else {

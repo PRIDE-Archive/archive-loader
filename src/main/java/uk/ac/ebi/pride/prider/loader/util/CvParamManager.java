@@ -65,6 +65,17 @@ public class CvParamManager {
      * @return true if the param has been stored, false otherwise.
      */
     public boolean putCvParam(String cvLabel, String accession, String name) {
+
+        if (cvLabel == null) {
+            throw new IllegalArgumentException("CV LABEL cannot be null to store cv param");
+        }
+        if (accession == null) {
+            throw new IllegalArgumentException("ACCESSION cannot be null to store cv param");
+        }
+        if (name == null) {
+            throw new IllegalArgumentException("NAME cannot be null to store cv param");
+        }
+
         if (!allParams.containsKey(accession)) {
             try {
                 CvParam param = new CvParam();
