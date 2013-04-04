@@ -59,20 +59,20 @@ public class CvParamManager {
     }
 
     /**
-     * If a param isn't already loaded from the database, it is new and will be stored. If it alraedy exists,
+     * If a param isn't already loaded from the database, it is new and will be stored. If it already exists,
      * nothing happens.
      *
      * @return true if the param has been stored, false otherwise.
      */
     public boolean putCvParam(String cvLabel, String accession, String name) {
 
-        if (cvLabel == null) {
+        if (cvLabel == null || "".equals(cvLabel.trim())) {
             throw new IllegalArgumentException("CV LABEL cannot be null to store cv param");
         }
-        if (accession == null) {
+        if (accession == null || "".equals(accession.trim())) {
             throw new IllegalArgumentException("ACCESSION cannot be null to store cv param");
         }
-        if (name == null) {
+        if (name == null || "".equals(name.trim())) {
             throw new IllegalArgumentException("NAME cannot be null to store cv param");
         }
 

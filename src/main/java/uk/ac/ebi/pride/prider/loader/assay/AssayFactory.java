@@ -79,13 +79,15 @@ public final class AssayFactory {
         }
 
         // load assay details from file
-        loadAssayDetailsFromFile(assay, dataFile);
-
-        return assay;
+        boolean success = loadAssayDetailsFromFile(assay, dataFile);
+        if (success)
+            return assay;
+        else
+            return null;
     }
 
 
-    private static Assay loadAssayDetailsFromFile(Assay assay, DataFile dataFile) throws DataAccessException {
+    private static boolean loadAssayDetailsFromFile(Assay assay, DataFile dataFile) throws DataAccessException {
 
         // pride xml controller
         DataAccessController dataAccessController = null;
@@ -94,6 +96,11 @@ public final class AssayFactory {
 
         try {
             MassSpecFileFormat format = MassSpecFileFormat.checkFormat(dataFile.getFile());
+            if (format == null) {
+                logger.error("CheckFormat returned null for assay file: " + dataFile.getFile().getAbsolutePath());
+                return false;
+            }
+
             switch (format) {
                 case PRIDE:
                     dataAccessController = new PrideXmlControllerImpl(dataFile.getFile());
@@ -174,7 +181,7 @@ public final class AssayFactory {
         }
 
 
-        return assay;
+        return true;
     }
 
     /**

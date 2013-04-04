@@ -140,7 +140,10 @@ public class ProjectLoader {
             List<DataFile> dataFiles = submission.getDataFiles();
             for (DataFile dataFile : dataFiles) {
                 if (dataFile.isFile() && dataFile.getFileType().equals(ProjectFileType.RESULT)) {
-                    assays.add(AssayFactory.makeAssay(dataFile));
+                    Assay assay = AssayFactory.makeAssay(dataFile);
+                    if (assay != null) {
+                        assays.add(assay);
+                    }
                 }
             }
         }
