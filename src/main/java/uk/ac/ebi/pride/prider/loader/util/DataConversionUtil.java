@@ -8,6 +8,7 @@ import uk.ac.ebi.pride.data.model.Param;
 import uk.ac.ebi.pride.prider.dataprovider.person.Title;
 import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
 import uk.ac.ebi.pride.prider.repo.assay.*;
+import uk.ac.ebi.pride.prider.repo.assay.Contact;
 import uk.ac.ebi.pride.prider.repo.assay.instrument.InstrumentComponent;
 import uk.ac.ebi.pride.prider.repo.assay.instrument.InstrumentComponentCvParam;
 import uk.ac.ebi.pride.prider.repo.assay.instrument.InstrumentComponentUserParam;

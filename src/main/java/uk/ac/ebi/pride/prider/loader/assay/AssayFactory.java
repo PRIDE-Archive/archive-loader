@@ -160,11 +160,11 @@ public final class AssayFactory {
             assay.setPtms(DataConversionUtil.convertAssayPTMs(assay, resultFileScanner.getPtms()));
 
             //contact
-            assay.setContacts(DataConversionUtil.convertContact(assay, dataAccessController.getPersonContacts()));
+            assay.setContacts(DataConversionUtil.convertContact(assay, dataAccessController.getExperimentMetaData().getPersons()));
 
             //additional params
-            assay.setAssayGroupCvParams(DataConversionUtil.convertAssayGroupCvParams(assay, dataAccessController.getAdditional()));
-            assay.setAssayGroupUserParams(DataConversionUtil.convertAssayGroupUserParams(assay, dataAccessController.getAdditional()));
+            assay.setAssayGroupCvParams(DataConversionUtil.convertAssayGroupCvParams(assay, dataAccessController.getExperimentMetaData().getAdditional()));
+            assay.setAssayGroupUserParams(DataConversionUtil.convertAssayGroupUserParams(assay, dataAccessController.getExperimentMetaData().getAdditional()));
 
             //instrument
             Collection<Instrument> instruments = new HashSet<Instrument>();
@@ -193,49 +193,54 @@ public final class AssayFactory {
 
         // instrument
         Set<Instrument> instruments = new HashSet<Instrument>();
-        Collection<InstrumentConfiguration> instrumentConfigurations = dataAccessController.getInstrumentConfigurations();
-        for (InstrumentConfiguration instrumentConfiguration : instrumentConfigurations) {
-            Instrument instrument = new Instrument();
+        //check to see if we have instrument configurations in the result file to scan
+        //this isn't always present
+        if (dataAccessController.getMzGraphMetaData() != null) {
 
-            //set instrument cv param
-            instrument.setCvParam(cvParamManager.getCvParam(Constant.MS_INSTRUMENT_MODEL_AC));
-            instrument.setValue(instrumentConfiguration.getId());
+            Collection<InstrumentConfiguration> instrumentConfigurations = dataAccessController.getMzGraphMetaData().getInstrumentConfigurations();
+            for (InstrumentConfiguration instrumentConfiguration : instrumentConfigurations) {
+                Instrument instrument = new Instrument();
 
-            //build instrument components
-            instrument.setSources(new ArrayList<SourceInstrumentComponent>());
-            instrument.setAnalyzers(new ArrayList<AnalyzerInstrumentComponent>());
-            instrument.setDetectors(new ArrayList<DetectorInstrumentComponent>());
-            int orderIndex = 1;
-            //source
-            for (InstrumentComponent source : instrumentConfiguration.getSource()) {
-                SourceInstrumentComponent sourceInstrumentComponent = new SourceInstrumentComponent();
-                sourceInstrumentComponent.setInstrument(instrument);
-                sourceInstrumentComponent.setOrder(orderIndex++);
-                sourceInstrumentComponent.setInstrumentComponentCvParams(DataConversionUtil.convertInstrumentComponentCvParam(sourceInstrumentComponent, source.getCvParams()));
-                sourceInstrumentComponent.setInstrumentComponentUserParams(DataConversionUtil.convertInstrumentComponentUserParam(sourceInstrumentComponent, source.getUserParams()));
-                instrument.getSources().add(sourceInstrumentComponent);
+                //set instrument cv param
+                instrument.setCvParam(cvParamManager.getCvParam(Constant.MS_INSTRUMENT_MODEL_AC));
+                instrument.setValue(instrumentConfiguration.getId());
+
+                //build instrument components
+                instrument.setSources(new ArrayList<SourceInstrumentComponent>());
+                instrument.setAnalyzers(new ArrayList<AnalyzerInstrumentComponent>());
+                instrument.setDetectors(new ArrayList<DetectorInstrumentComponent>());
+                int orderIndex = 1;
+                //source
+                for (InstrumentComponent source : instrumentConfiguration.getSource()) {
+                    SourceInstrumentComponent sourceInstrumentComponent = new SourceInstrumentComponent();
+                    sourceInstrumentComponent.setInstrument(instrument);
+                    sourceInstrumentComponent.setOrder(orderIndex++);
+                    sourceInstrumentComponent.setInstrumentComponentCvParams(DataConversionUtil.convertInstrumentComponentCvParam(sourceInstrumentComponent, source.getCvParams()));
+                    sourceInstrumentComponent.setInstrumentComponentUserParams(DataConversionUtil.convertInstrumentComponentUserParam(sourceInstrumentComponent, source.getUserParams()));
+                    instrument.getSources().add(sourceInstrumentComponent);
+                }
+                //analyzer
+                for (InstrumentComponent analyzer : instrumentConfiguration.getAnalyzer()) {
+                    AnalyzerInstrumentComponent analyzerInstrumentComponent = new AnalyzerInstrumentComponent();
+                    analyzerInstrumentComponent.setInstrument(instrument);
+                    analyzerInstrumentComponent.setOrder(orderIndex++);
+                    analyzerInstrumentComponent.setInstrumentComponentCvParams(DataConversionUtil.convertInstrumentComponentCvParam(analyzerInstrumentComponent, analyzer.getCvParams()));
+                    analyzerInstrumentComponent.setInstrumentComponentUserParams(DataConversionUtil.convertInstrumentComponentUserParam(analyzerInstrumentComponent, analyzer.getUserParams()));
+                    instrument.getAnalyzers().add(analyzerInstrumentComponent);
+                }
+                //detector
+                for (InstrumentComponent detector : instrumentConfiguration.getDetector()) {
+                    DetectorInstrumentComponent detectorInstrumentComponent = new DetectorInstrumentComponent();
+                    detectorInstrumentComponent.setInstrument(instrument);
+                    detectorInstrumentComponent.setOrder(orderIndex++);
+                    detectorInstrumentComponent.setInstrumentComponentCvParams(DataConversionUtil.convertInstrumentComponentCvParam(detectorInstrumentComponent, detector.getCvParams()));
+                    detectorInstrumentComponent.setInstrumentComponentUserParams(DataConversionUtil.convertInstrumentComponentUserParam(detectorInstrumentComponent, detector.getUserParams()));
+                    instrument.getDetectors().add(detectorInstrumentComponent);
+                }
+                //store instrument
+                instruments.add(instrument);
+                //todo - instrument level additional params are not captured and not inthe pride-r schema at this time
             }
-            //analyzer
-            for (InstrumentComponent analyzer : instrumentConfiguration.getAnalyzer()) {
-                AnalyzerInstrumentComponent analyzerInstrumentComponent = new AnalyzerInstrumentComponent();
-                analyzerInstrumentComponent.setInstrument(instrument);
-                analyzerInstrumentComponent.setOrder(orderIndex++);
-                analyzerInstrumentComponent.setInstrumentComponentCvParams(DataConversionUtil.convertInstrumentComponentCvParam(analyzerInstrumentComponent, analyzer.getCvParams()));
-                analyzerInstrumentComponent.setInstrumentComponentUserParams(DataConversionUtil.convertInstrumentComponentUserParam(analyzerInstrumentComponent, analyzer.getUserParams()));
-                instrument.getAnalyzers().add(analyzerInstrumentComponent);
-            }
-            //detector
-            for (InstrumentComponent detector : instrumentConfiguration.getDetector()) {
-                DetectorInstrumentComponent detectorInstrumentComponent = new DetectorInstrumentComponent();
-                detectorInstrumentComponent.setInstrument(instrument);
-                detectorInstrumentComponent.setOrder(orderIndex++);
-                detectorInstrumentComponent.setInstrumentComponentCvParams(DataConversionUtil.convertInstrumentComponentCvParam(detectorInstrumentComponent, detector.getCvParams()));
-                detectorInstrumentComponent.setInstrumentComponentUserParams(DataConversionUtil.convertInstrumentComponentUserParam(detectorInstrumentComponent, detector.getUserParams()));
-                instrument.getDetectors().add(detectorInstrumentComponent);
-            }
-            //store instrument
-            instruments.add(instrument);
-            //todo - instrument level additional params are not captured and not inthe pride-r schema at this time
         }
         resultFileScanner.setInstruments(instruments);
 
