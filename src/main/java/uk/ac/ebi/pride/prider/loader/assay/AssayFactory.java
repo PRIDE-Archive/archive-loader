@@ -41,6 +41,8 @@ public final class AssayFactory {
 
     private static CvParamManager cvParamManager;
 
+    private static boolean isPrideXmlAssay = true;
+
     public static void setCvParamManager(CvParamManager cvParamManager) {
         AssayFactory.cvParamManager = cvParamManager;
     }
@@ -104,6 +106,7 @@ public final class AssayFactory {
             switch (format) {
                 case PRIDE:
                     dataAccessController = new PrideXmlControllerImpl(dataFile.getFile());
+                    isPrideXmlAssay = true;
                     break;
                 case MZIDENTML:
                     MzIdentMLControllerImpl mzIdentMlController = new MzIdentMLControllerImpl(dataFile.getFile());
@@ -115,8 +118,10 @@ public final class AssayFactory {
                     }
                     mzIdentMlController.addMSController(peakListFiles);
                     dataAccessController = mzIdentMlController;
+                    isPrideXmlAssay = false;
                     break;
                 default:
+                    isPrideXmlAssay = false;
                     throw new ProjectLoaderException("Could not get a DataAccessController for format: " + format.name());
             }
 
@@ -291,22 +296,24 @@ public final class AssayFactory {
         resultFileScanner.setNumberOfIdentifiedSpectra(spectrumIds.size());
         resultFileScanner.setPtms(ptms);
 
-        // check chromatogram
-        List<DataFile> fileMappings = dataFile.getFileMappings();
-        for (DataFile fileMapping : fileMappings) {
-            MassSpecFileFormat fileFormat = MassSpecFileFormat.checkFormat(fileMapping.getFile());
-            if (MassSpecFileFormat.MZML.equals(fileFormat)) {
-                MzMLControllerImpl mzMLController = null;
-                try {
-                    mzMLController = new MzMLControllerImpl(dataFile.getFile());
-                    if (mzMLController.hasChromatogram()) {
-                        resultFileScanner.setChromatogram(true);
-                        mzMLController.close();
-                        break;
-                    }
-                } finally {
-                    if (mzMLController != null) {
-                        mzMLController.close();
+        // check chromatogram - only for non-pridexml submissions
+        if (!isPrideXmlAssay) {
+            List<DataFile> fileMappings = dataFile.getFileMappings();
+            for (DataFile fileMapping : fileMappings) {
+                MassSpecFileFormat fileFormat = MassSpecFileFormat.checkFormat(fileMapping.getFile());
+                if (MassSpecFileFormat.MZML.equals(fileFormat)) {
+                    MzMLControllerImpl mzMLController = null;
+                    try {
+                        mzMLController = new MzMLControllerImpl(dataFile.getFile());
+                        if (mzMLController.hasChromatogram()) {
+                            resultFileScanner.setChromatogram(true);
+                            mzMLController.close();
+                            break;
+                        }
+                    } finally {
+                        if (mzMLController != null) {
+                            mzMLController.close();
+                        }
                     }
                 }
             }

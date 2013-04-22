@@ -1,7 +1,7 @@
 MTD	name	Richard2 Cote2
 MTD	email	john.smith@dummy.ebi.com
 MTD	affiliation	HUPO Plasma Proteome Project
-MTD	pride_login	rcote
+MTD	pride_login	john.smith@dummy.ebi.com
 MTD	title	mzidentml test
 MTD	project_description	mzidentml test test description
 MTD	keywords	mzidentml test

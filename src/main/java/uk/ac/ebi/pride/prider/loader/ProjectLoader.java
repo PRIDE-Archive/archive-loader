@@ -72,9 +72,10 @@ public class ProjectLoader {
                     Submission submission = SubmissionFileParser.parse(new File(submissionSummaryFile));
 
                     // login as a PRIDE-R user
-                    User user = userDao.findByEmail(submission.getProjectMetaData().getContact().getEmail());
+                    //this corresponds to the pride_login field in the px summary file
+                    User user = userDao.findByEmail(submission.getProjectMetaData().getContact().getUserName());
                     if (user == null) {
-                        logAndThrowException("Failed to identify a existing user: " + submission.getProjectMetaData().getContact().getEmail());
+                        logAndThrowException("Failed to identify a existing user: " + submission.getProjectMetaData().getContact().getUserName());
                     }
 
                     // make sure project accession doesn't exist
