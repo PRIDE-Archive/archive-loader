@@ -78,7 +78,7 @@ public class ReferenceUtil {
             }
 
         } catch (Exception e) {
-            throw new SubmissionLoaderException("Error retrieving pubmed citation for " + pubmedId, e);
+            throw new IllegalStateException("Error retrieving pubmed citation for " + pubmedId, e);
         }
 
     }

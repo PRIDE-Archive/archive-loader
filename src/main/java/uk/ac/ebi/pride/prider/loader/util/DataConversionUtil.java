@@ -6,7 +6,6 @@ import uk.ac.ebi.pride.data.core.*;
 import uk.ac.ebi.pride.data.model.CvParam;
 import uk.ac.ebi.pride.data.model.Param;
 import uk.ac.ebi.pride.prider.dataprovider.person.Title;
-import uk.ac.ebi.pride.prider.loader.exception.SubmissionLoaderException;
 import uk.ac.ebi.pride.prider.repo.assay.*;
 import uk.ac.ebi.pride.prider.repo.assay.Contact;
 import uk.ac.ebi.pride.prider.repo.assay.instrument.InstrumentComponent;
@@ -114,9 +113,9 @@ public final class DataConversionUtil {
             return retval;
 
         } catch (InstantiationException e) {
-            throw new SubmissionLoaderException("Error creating cv param.", e);
+            throw new IllegalStateException("Error creating cv param.", e);
         } catch (IllegalAccessException e) {
-            throw new SubmissionLoaderException("Error creating cv param.", e);
+            throw new IllegalStateException("Error creating cv param.", e);
         }
 
     }
@@ -198,9 +197,9 @@ public final class DataConversionUtil {
             return retval;
 
         } catch (InstantiationException e) {
-            throw new SubmissionLoaderException("Error creating cv param.", e);
+            throw new IllegalStateException("Error creating cv param.", e);
         } catch (IllegalAccessException e) {
-            throw new SubmissionLoaderException("Error creating cv param.", e);
+            throw new IllegalStateException("Error creating cv param.", e);
         }
 
     }
