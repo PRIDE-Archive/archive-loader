@@ -2,12 +2,12 @@ package uk.ac.ebi.pride.prider.loader.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
+import uk.ac.ebi.pride.prider.loader.exception.SubmissionLoaderException;
 import uk.ac.ebi.pride.prider.repo.param.CvParam;
 import uk.ac.ebi.pride.prider.repo.param.CvParamRepository;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -26,36 +26,31 @@ public class CvParamManager {
 
     public CvParamManager(CvParamRepository cvParamDao) {
         if (cvParamDao == null) {
-            throw new ProjectLoaderException("CvParam DAO not set!");
+            throw new SubmissionLoaderException("CvParam DAO not set!");
         }
         this.cvParamDao = cvParamDao;
         cacheData();
     }
 
     private void cacheData() {
-        Iterator<CvParam> iterator = cvParamDao.findAll().iterator();
-        while (iterator.hasNext()) {
-            CvParam param = iterator.next();
+        for (CvParam param : cvParamDao.findAll()) {
             allParams.put(param.getAccession(), param);
         }
-        loadDefaultParams();
-    }
-
-    private void loadDefaultParams() {
-
-        //these params are used in the prider-loader
-        //ensure that they're already in the database
-        if (getCvParam(Constant.MS_INSTRUMENT_MODEL_AC) == null) {
-            putCvParam(Constant.MS, Constant.MS_INSTRUMENT_MODEL_AC, "instrument model");
-        }
-        if (getCvParam(Constant.MS_SOFTWARE_AC) == null) {
-            putCvParam(Constant.MS, Constant.MS_SOFTWARE_AC, "software");
-        }
-
     }
 
     public CvParam getCvParam(String accession) {
         return allParams.get(accession);
+    }
+
+    public void persistCvParams(Collection<CvParam> cvParams) {
+        for (CvParam cvParam : cvParams) {
+            CvParam persistedCvParam = getCvParam(cvParam.getAccession());
+            if (persistedCvParam != null) {
+                cvParam.setId(persistedCvParam.getId());
+            } else {
+                putCvParam(cvParam);
+            }
+        }
     }
 
     /**
@@ -64,7 +59,11 @@ public class CvParamManager {
      *
      * @return true if the param has been stored, false otherwise.
      */
-    public boolean putCvParam(String cvLabel, String accession, String name) {
+    public void putCvParam(CvParam cvParam) {
+
+        String accession = cvParam.getAccession();
+        String name = cvParam.getName();
+        String cvLabel = cvParam.getCvLabel();
 
         if (cvLabel == null || "".equals(cvLabel.trim())) {
             throw new IllegalArgumentException("CV LABEL cannot be null to store cv param");
@@ -78,20 +77,14 @@ public class CvParamManager {
 
         if (!allParams.containsKey(accession)) {
             try {
-                CvParam param = new CvParam();
-                param.setAccession(accession);
-                param.setCvLabel(cvLabel);
-                param.setName(name);
-                cvParamDao.save(param);
+                cvParamDao.save(cvParam);
                 logger.warn("Storing cv param: " + accession);
-                allParams.put(accession, param);
-                return true;
+                allParams.put(accession, cvParam);
             } catch (RuntimeException e) {
                 logger.error("Error saving param: " + e.getMessage(), e);
                 throw e;
             }
         }
-        return false;
     }
 
 }

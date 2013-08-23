@@ -10,7 +10,6 @@ import uk.ac.ebi.pride.data.io.SubmissionFileWriter;
 import uk.ac.ebi.pride.data.model.DataFile;
 import uk.ac.ebi.pride.data.model.Submission;
 import uk.ac.ebi.pride.prider.dataprovider.file.ProjectFileType;
-import uk.ac.ebi.pride.prider.loader.util.CvParamManager;
 
 import java.io.File;
 import java.net.URL;
@@ -25,10 +24,10 @@ import java.util.List;
 public class ProjectLoaderLegacyPRIDETest extends AbstractLoaderTest {
 
     @Test
-    public void LoaderTest() throws Exception {
+    public void submissionPersistenceIsComplete() throws Exception {
 
-        ProjectLoader loader = new ProjectLoader(userDao, projectDao, assayDao, projectFileDao, transactionManager, new CvParamManager(cvParamDao));
-        loader.load("1234563", "12342345", submissionFile.getPath());
+//        SubmissionLoader loader = new SubmissionLoader(userDao, projectDao, assayDao, projectFileDao, transactionManager, new CvParamManager(cvParamDao));
+//        loader.load("1234563", "12342345", submissionFile.getPath());
 
 
 //        Project loadedProject = projectDao.findByAccession("123456");

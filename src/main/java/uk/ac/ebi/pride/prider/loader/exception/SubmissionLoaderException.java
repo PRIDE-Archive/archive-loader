@@ -7,20 +7,20 @@ package uk.ac.ebi.pride.prider.loader.exception;
  * @author Rui Wang
  * @version $Id$
  */
-public class ProjectLoaderException extends RuntimeException {
+public class SubmissionLoaderException extends RuntimeException {
 
-    public ProjectLoaderException() {
+    public SubmissionLoaderException() {
     }
 
-    public ProjectLoaderException(String message) {
+    public SubmissionLoaderException(String message) {
         super(message);
     }
 
-    public ProjectLoaderException(String message, Throwable cause) {
+    public SubmissionLoaderException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ProjectLoaderException(Throwable cause) {
+    public SubmissionLoaderException(Throwable cause) {
         super(cause);
     }
 }

@@ -5,12 +5,19 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.FileSystemResource;
+import uk.ac.ebi.pride.data.io.SubmissionFileParser;
+import uk.ac.ebi.pride.data.model.Submission;
 import uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType;
-import uk.ac.ebi.pride.prider.loader.util.CvParamManager;
+import uk.ac.ebi.pride.prider.loader.file.Pride3FileFinder;
+import uk.ac.ebi.pride.prider.repo.assay.Assay;
+import uk.ac.ebi.pride.prider.repo.file.ProjectFile;
 import uk.ac.ebi.pride.prider.repo.project.Project;
+import uk.ac.ebi.pride.prider.repo.user.User;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,10 +28,23 @@ import java.net.URL;
 public class ProjectLoaderPartialSubmissionTest extends AbstractLoaderTest {
 
     @Test
-    public void LoaderTest() throws Exception {
+    public void submissionPersistenceIsComplete() throws Exception {
 
-        ProjectLoader loader = new ProjectLoader(userDao, projectDao, assayDao, projectFileDao, transactionManager, new CvParamManager(cvParamDao));
-        loader.load("456798", null, submissionFile.getPath());
+        Submission submission = SubmissionFileParser.parse(submissionFile.getFile());
+
+        SubmissionLoader loader = new SubmissionLoader(projectDao, assayDao, projectFileDao, cvParamDao, transactionManager);
+
+        String filePath = submissionFile.getFile().getAbsolutePath().replace(submissionFile.getFilename(), "");
+        File rootPath = new File(filePath);
+        SubmissionMaker maker = new SubmissionMaker(new Pride3FileFinder(rootPath));
+        List<Assay> assaysToPersist = maker.makeAssays(submission);
+
+        User submitterToPersist = userDao.findByEmail("john.smith@dummy.ebi.com");
+        Project project = maker.makeProject("456798", null, submitterToPersist, submission, assaysToPersist);
+
+        Map<ProjectFile,String> projectFiles = maker.makeFiles(submission);
+
+        loader.persistSubmission(project, assaysToPersist, projectFiles);
 
         Project loadedProject = projectDao.findByAccession("456798");
         Assert.assertEquals("john.smith@dummy.ebi.com", loadedProject.getSubmitter().getEmail());
@@ -39,8 +59,7 @@ public class ProjectLoaderPartialSubmissionTest extends AbstractLoaderTest {
         Assert.assertEquals(1, loadedProject.getPtms().size());
         Assert.assertEquals(0, loadedProject.getReferences().size());
         Assert.assertEquals("Shotgun proteomics", loadedProject.getExperimentTypes().iterator().next().getName());
-        Assert.assertEquals(1, loadedProject.getProjectGroupUserParams().size());
-        Assert.assertEquals("partial submission experiment comment", loadedProject.getProjectGroupUserParams().iterator().next().getValue());
+        Assert.assertEquals(0, loadedProject.getProjectGroupUserParams().size());
         Assert.assertEquals(1, loadedProject.getSamples().size());
         Assert.assertEquals("7460", loadedProject.getSamples().iterator().next().getAccession());
         Assert.assertEquals(1, loadedProject.getExperimentTypes().size());

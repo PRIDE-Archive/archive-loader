@@ -1,8 +1,11 @@
-MTD	name	Richard Cote
-MTD	email	john.smith@dummy.ebi.com
-MTD	affiliation	HUPO Plasma Proteome Project
-MTD	pride_login	john.smith@dummy.ebi.com
-MTD	title	partial submission title
+MTD	submitter_name	Richard Cote
+MTD	submitter_email	john.smith@dummy.ebi.com
+MTD	submitter_affiliation	HUPO Plasma Proteome Project
+MTD	submitter_pride_login	john.smith@dummy.ebi.com
+MTD	lab_head_name	 Alice Wonderland
+MTD	lab_head_email	alice.wonderland@cam.edu
+MTD	lab_head_affiliation	University of Newcastle
+MTD	project_title	partial submission title
 MTD	project_description	partial submission project description
 MTD	keywords	partial submission keywords
 MTD	sample_processing_protocol	partial submission sample protocol

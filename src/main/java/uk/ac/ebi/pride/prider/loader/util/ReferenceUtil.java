@@ -3,7 +3,7 @@ package uk.ac.ebi.pride.prider.loader.util;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
+import uk.ac.ebi.pride.prider.loader.exception.SubmissionLoaderException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class ReferenceUtil {
 
-    public static PubMedReference getPubmedReference(String pubmedId) throws ProjectLoaderException {
+    public static PubMedReference getPubmedReference(String pubmedId) throws SubmissionLoaderException {
 
         try {
             //try and connect to ncbi
@@ -78,7 +78,7 @@ public class ReferenceUtil {
             }
 
         } catch (Exception e) {
-            throw new ProjectLoaderException("Error retrieving pubmed citation for " + pubmedId, e);
+            throw new SubmissionLoaderException("Error retrieving pubmed citation for " + pubmedId, e);
         }
 
     }

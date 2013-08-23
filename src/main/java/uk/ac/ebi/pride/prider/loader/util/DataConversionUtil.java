@@ -6,7 +6,7 @@ import uk.ac.ebi.pride.data.core.*;
 import uk.ac.ebi.pride.data.model.CvParam;
 import uk.ac.ebi.pride.data.model.Param;
 import uk.ac.ebi.pride.prider.dataprovider.person.Title;
-import uk.ac.ebi.pride.prider.loader.exception.ProjectLoaderException;
+import uk.ac.ebi.pride.prider.loader.exception.SubmissionLoaderException;
 import uk.ac.ebi.pride.prider.repo.assay.*;
 import uk.ac.ebi.pride.prider.repo.assay.Contact;
 import uk.ac.ebi.pride.prider.repo.assay.instrument.InstrumentComponent;
@@ -28,13 +28,6 @@ import java.util.*;
 public final class DataConversionUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(DataConversionUtil.class);
-
-    private static CvParamManager cvParamManager;
-
-    public static void setCvParamManager(CvParamManager cvParamManager) {
-        DataConversionUtil.cvParamManager = cvParamManager;
-    }
-
     /**
      * Combine a list of strings to a single string
      *
@@ -84,13 +77,13 @@ public final class DataConversionUtil {
         return references;
     }
 
-    public static Collection<AssaySampleCvParam> convertAssaySampleCvParams(Assay assay, Set<Param> sampleParams) {
+    public static Collection<AssaySampleCvParam> convertAssaySampleCvParams(Assay assay, Set<CvParam> sampleParams) {
         Collection<AssaySampleCvParam> retval = new HashSet<AssaySampleCvParam>();
         retval.addAll(convertAssayCvParams(assay, AssaySampleCvParam.class, sampleParams));
         return retval;
     }
 
-    public static Collection<AssayQuantificationMethodCvParam> convertAssayQuantitationMethodCvParams(Assay assay, Set<Param> sampleParams) {
+    public static Collection<AssayQuantificationMethodCvParam> convertAssayQuantitationMethodCvParams(Assay assay, Set<CvParam> sampleParams) {
         Collection<AssayQuantificationMethodCvParam> retval = new HashSet<AssayQuantificationMethodCvParam>();
         retval.addAll(convertAssayCvParams(assay, AssayQuantificationMethodCvParam.class, sampleParams));
         return retval;
@@ -106,7 +99,7 @@ public final class DataConversionUtil {
                 for (Param param : sampleParams) {
                     if (param instanceof CvParam) {
                         CvParam cvParam = (CvParam) param;
-                        uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = queryOrCreateParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
+                        uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = createCvParam(cvParam);
 
                         AssayCvParam acvParam = (AssayCvParam) clz.newInstance();
                         acvParam.setAssay(assay);
@@ -121,11 +114,19 @@ public final class DataConversionUtil {
             return retval;
 
         } catch (InstantiationException e) {
-            throw new ProjectLoaderException("Error creating cv param.", e);
+            throw new SubmissionLoaderException("Error creating cv param.", e);
         } catch (IllegalAccessException e) {
-            throw new ProjectLoaderException("Error creating cv param.", e);
+            throw new SubmissionLoaderException("Error creating cv param.", e);
         }
 
+    }
+
+    private static uk.ac.ebi.pride.prider.repo.param.CvParam createCvParam(CvParam cvParam) {
+        uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = new uk.ac.ebi.pride.prider.repo.param.CvParam();
+        repoParam.setCvLabel(cvParam.getCvLabel());
+        repoParam.setAccession(cvParam.getAccession());
+        repoParam.setName(cvParam.getName());
+        return repoParam;
     }
 
 
@@ -182,7 +183,7 @@ public final class DataConversionUtil {
                 for (Param param : projectParams) {
                     if (param instanceof CvParam) {
                         CvParam cvParam = (CvParam) param;
-                        uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = queryOrCreateParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
+                        uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = createCvParam(cvParam);
 
                         ProjectCvParam projectCvParam = (ProjectCvParam) clz.newInstance();
                         projectCvParam.setProject(project);
@@ -197,9 +198,9 @@ public final class DataConversionUtil {
             return retval;
 
         } catch (InstantiationException e) {
-            throw new ProjectLoaderException("Error creating cv param.", e);
+            throw new SubmissionLoaderException("Error creating cv param.", e);
         } catch (IllegalAccessException e) {
-            throw new ProjectLoaderException("Error creating cv param.", e);
+            throw new SubmissionLoaderException("Error creating cv param.", e);
         }
 
     }
@@ -251,7 +252,7 @@ public final class DataConversionUtil {
         if (cvParams != null) {
             for (uk.ac.ebi.pride.data.core.CvParam cvParam : cvParams) {
 
-                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = queryOrCreateParam(cvParam.getCvLookupID(), cvParam.getAccession(), cvParam.getName());
+                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = createCvParam(cvParam);
 
                 SoftwareCvParam swcvPavam = new SoftwareCvParam();
                 swcvPavam.setSoftware(software);
@@ -265,13 +266,21 @@ public final class DataConversionUtil {
 
     }
 
+    private static uk.ac.ebi.pride.prider.repo.param.CvParam createCvParam(uk.ac.ebi.pride.data.core.CvParam cvParam) {
+        uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = new uk.ac.ebi.pride.prider.repo.param.CvParam();
+        repoParam.setCvLabel(cvParam.getCvLookupID());
+        repoParam.setName(cvParam.getName());
+        repoParam.setAccession(cvParam.getAccession());
+        return repoParam;
+    }
+
     public static Collection<InstrumentComponentCvParam> convertInstrumentComponentCvParam(InstrumentComponent instrumentComponent,
                                                                                            List<uk.ac.ebi.pride.data.core.CvParam> cvParams) {
         Collection<InstrumentComponentCvParam> retval = new HashSet<InstrumentComponentCvParam>();
         if (cvParams != null) {
             for (uk.ac.ebi.pride.data.core.CvParam cvParam : cvParams) {
 
-                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = queryOrCreateParam(cvParam.getCvLookupID(), cvParam.getAccession(), cvParam.getName());
+                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = createCvParam(cvParam);
 
                 InstrumentComponentCvParam iccvParam = new InstrumentComponentCvParam();
                 iccvParam.setInstrumentComponent(instrumentComponent);
@@ -311,7 +320,7 @@ public final class DataConversionUtil {
         if (ptms != null) {
             for (uk.ac.ebi.pride.data.core.CvParam cvParam : ptms) {
 
-                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = queryOrCreateParam(cvParam.getCvLookupID(), cvParam.getAccession(), cvParam.getName());
+                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = createCvParam(cvParam);
 
                 AssayPTM aPTM = new AssayPTM();
                 aPTM.setAssay(assay);
@@ -332,7 +341,7 @@ public final class DataConversionUtil {
         if (instruments != null) {
             for (CvParam cvParam : instruments) {
 
-                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = queryOrCreateParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
+                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = createCvParam(cvParam);
 
                 ProjectInstrumentCvParam projectInstrument = new ProjectInstrumentCvParam();
                 projectInstrument.setProject(project);
@@ -353,7 +362,7 @@ public final class DataConversionUtil {
         if (ptms != null) {
             for (CvParam cvParam : ptms) {
 
-                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = queryOrCreateParam(cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName());
+                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = createCvParam(cvParam);
 
                 ProjectPTM projectPTM = new ProjectPTM();
                 projectPTM.setProject(project);
@@ -494,7 +503,7 @@ public final class DataConversionUtil {
         if (additional != null) {
             for (uk.ac.ebi.pride.data.core.CvParam cvParam : additional.getCvParams()) {
 
-                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = queryOrCreateParam(cvParam.getCvLookupID(), cvParam.getAccession(), cvParam.getName());
+                uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = createCvParam(cvParam);
 
                 AssayGroupCvParam agcvParam = new AssayGroupCvParam();
                 agcvParam.setAssay(assay);
@@ -526,26 +535,83 @@ public final class DataConversionUtil {
 
     }
 
-    private static uk.ac.ebi.pride.prider.repo.param.CvParam queryOrCreateParam(String cvLabel, String accession, String name) {
-        //make sure it's properly set
-        checkCvParamManager();
+//    private static uk.ac.ebi.pride.prider.repo.param.CvParam queryOrCreateParam(String cvLabel, String accession, String name) {
+//        //make sure it's properly set
+//        checkCvParamManager();
+//
+//        //query to see if already exists
+//        uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = cvParamManager.getCvParam(accession);
+//
+//        //if param isn't already seen in db, store it
+//        if (repoParam == null) {
+//            cvParamManager.putCvParam(cvLabel, accession, name);
+//            repoParam = cvParamManager.getCvParam(accession);
+//        }
+//        return repoParam;
+//
+//    }
+//
+//    private static void checkCvParamManager() {
+//        if (cvParamManager == null) {
+//            throw new ProjectLoaderException("CvParamManager not set, cannot continue!");
+//        }
+//    }
 
-        //query to see if already exists
-        uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = cvParamManager.getCvParam(accession);
+    public static Collection<ProjectTag> convertProjectTags(Project project, Set<String> tags) {
+        List<ProjectTag> projectTags = new ArrayList<ProjectTag>();
 
-        //if param isn't already seen in db, store it
-        if (repoParam == null) {
-            cvParamManager.putCvParam(cvLabel, accession, name);
-            repoParam = cvParamManager.getCvParam(accession);
+        for (String tag : tags) {
+            ProjectTag projectTag = new ProjectTag();
+            projectTag.setProject(project);
+            projectTag.setTag(tag);
+            projectTags.add(projectTag);
         }
-        return repoParam;
 
+        return projectTags;
     }
 
-    private static void checkCvParamManager() {
-        if (cvParamManager == null) {
-            throw new ProjectLoaderException("CvParamManager not set, cannot continue!");
-        }
-    }
+    public static LabHead convertLabHead(Project project, uk.ac.ebi.pride.data.model.Contact labHeadContact) {
+        LabHead labHead = new LabHead();
 
+        labHead.setProject(project);
+
+        // default title for lab head is Dr
+        labHead.setTitle(Title.Dr);
+
+        //try to split the name on whitespace
+        String[] tokens = labHeadContact.getName().split("\\s+");
+        if (tokens.length > 1) {
+            //put everything in first name except last token
+            String lastName = tokens[tokens.length - 1];
+            tokens[tokens.length - 1] = "";
+            StringBuilder sb = new StringBuilder();
+            for (String token : tokens) {
+                sb.append(token).append(" ");
+            }
+            labHead.setFirstName(sb.toString().trim());
+            labHead.setLastName(lastName);
+        } else {
+            labHead.setFirstName(tokens[0]);
+            //set to blank string so that db doesn't barf
+            labHead.setLastName(" ");
+        }
+
+
+        //email
+        String email = labHeadContact.getEmail();
+        if (email == null || "".equals(email.trim())) {
+            logger.warn("No email given for labHead: " + labHeadContact.toString());
+        }
+
+        labHead.setEmail(email);
+
+        //affiliations
+        String affiliation = labHeadContact.getAffiliation();
+        if (affiliation == null || "".equals(affiliation)) {
+            logger.warn("No affiliation given for labHead: " + labHeadContact.toString());
+        }
+        labHead.setAffiliation(affiliation);
+
+        return labHead;
+    }
 }

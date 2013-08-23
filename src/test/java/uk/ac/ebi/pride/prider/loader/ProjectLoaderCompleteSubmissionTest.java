@@ -12,14 +12,17 @@ import uk.ac.ebi.pride.data.model.DataFile;
 import uk.ac.ebi.pride.data.model.Submission;
 import uk.ac.ebi.pride.prider.dataprovider.file.ProjectFileType;
 import uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType;
-import uk.ac.ebi.pride.prider.loader.util.CvParamManager;
+import uk.ac.ebi.pride.prider.loader.file.Pride3FileFinder;
 import uk.ac.ebi.pride.prider.repo.assay.Assay;
 import uk.ac.ebi.pride.prider.repo.assay.instrument.Instrument;
+import uk.ac.ebi.pride.prider.repo.file.ProjectFile;
 import uk.ac.ebi.pride.prider.repo.project.Project;
+import uk.ac.ebi.pride.prider.repo.user.User;
 
 import java.io.File;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,10 +33,23 @@ import java.util.List;
 public class ProjectLoaderCompleteSubmissionTest extends AbstractLoaderTest {
 
     @Test
-    public void LoaderTest() throws Exception {
+    public void submissionPersistenceIsComplete() throws Exception {
 
-        ProjectLoader loader = new ProjectLoader(userDao, projectDao, assayDao, projectFileDao, transactionManager, new CvParamManager(cvParamDao));
-        loader.load("123456", "12345", submissionFile.getPath());
+        Submission submission = SubmissionFileParser.parse(submissionFile.getFile());
+
+        SubmissionLoader loader = new SubmissionLoader(projectDao, assayDao, projectFileDao, cvParamDao, transactionManager);
+
+        String filePath = submissionFile.getFile().getAbsolutePath().replace(submissionFile.getFilename(), "");
+        File rootPath = new File(filePath);
+        SubmissionMaker maker = new SubmissionMaker(new Pride3FileFinder(rootPath));
+        List<Assay> assaysToPersist = maker.makeAssays(submission);
+
+        User submitterToPersist = userDao.findByEmail("john.smith@dummy.ebi.com");
+        Project project = maker.makeProject("123456", "12345", submitterToPersist, submission, assaysToPersist);
+
+        Map<ProjectFile,String> projectFiles = maker.makeFiles(submission);
+
+        loader.persistSubmission(project, assaysToPersist, projectFiles);
 
 
         Project loadedProject = projectDao.findByAccession("123456");

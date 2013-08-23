@@ -20,6 +20,14 @@
         <url>https://svn.ebi.ac.uk/pride-repo/pride_r/prider-loader/trunk</url>
     </scm>
 
+    <properties>
+        <prider.repo.version>0.1.8-SNAPSHOT</prider.repo.version>
+        <prider.data.provider.api.version>1.1.1-SNAPSHOT</prider.data.provider.api.version>
+        <px.submission.core.version>1.12-SNAPSHOT</px.submission.core.version>
+        <ms.data.core.api.version>0.11.6</ms.data.core.api.version>
+    </properties>
+
+
     <dependencies>
 
         <!-- Spring framework -->
@@ -48,27 +56,27 @@
         <dependency>
             <groupId>uk.ac.ebi.pride.prider</groupId>
             <artifactId>prider-repo</artifactId>
-            <version>0.1.3</version>
+            <version>${prider.repo.version}</version>
         </dependency>
 
         <dependency>
             <groupId>uk.ac.ebi.pride.prider</groupId>
             <artifactId>prider-data-provider-api</artifactId>
-            <version>1.0</version>
+            <version>${prider.data.provider.api.version}</version>
         </dependency>
 
         <!-- PX submission core-->
         <dependency>
             <groupId>uk.ac.ebi.pride</groupId>
             <artifactId>px-submission-core</artifactId>
-            <version>1.8</version>
+            <version>${px.submission.core.version}</version>
         </dependency>
 
         <!-- ms data core api -->
         <dependency>
             <groupId>uk.ac.ebi.pride</groupId>
             <artifactId>ms-data-core-api</artifactId>
-            <version>0.11.1</version>
+            <version>${ms.data.core.api.version}</version>
         </dependency>
 
         <!-- HSQLDB for integration testing -->
@@ -77,17 +85,11 @@
             <artifactId>hsqldb</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- oracle jdbc driver -->
         <dependency>
-            <groupId>oracle</groupId>
-            <artifactId>ojdbc16</artifactId>
-            <version>v11.2.0.3</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.1</version>
-            <scope>test</scope>
+            <groupId>com.oracle</groupId>
+            <artifactId>oracle-thin</artifactId>
         </dependency>
     </dependencies>
 
@@ -105,26 +107,7 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>

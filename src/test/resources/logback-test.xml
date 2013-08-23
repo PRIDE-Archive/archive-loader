@@ -14,9 +14,9 @@
         </encoder>
     </appender>
 
-    <logger name="uk.ac.ebi.pride.prider.core" level="debug"/>
-    <logger name="org.springframework" level="info"/>
-    <logger name="org.springframework.beans" level="info"/>
+    <logger name="uk.ac.ebi.pride.prider.core" level="error"/>
+    <logger name="org.springframework" level="error"/>
+    <logger name="org.springframework.beans" level="error"/>
 
     <root level="warn">
         <appender-ref ref="console"/>
