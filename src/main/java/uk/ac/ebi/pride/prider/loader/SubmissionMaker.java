@@ -182,10 +182,15 @@ public class SubmissionMaker {
 
         // lab head
         Contact labHeadContact = projectMetaData.getLabHeadContact();
-        LabHead labHead = DataConversionUtil.convertLabHead(project, labHeadContact);
-        List<LabHead> labHeads = new ArrayList<LabHead>();
-        labHeads.add(labHead);
-        project.setLabHeads(labHeads);
+        if (labHeadContact.getName() != null &&
+            labHeadContact.getEmail() != null &&
+            labHeadContact.getAffiliation() != null) {
+
+            LabHead labHead = DataConversionUtil.convertLabHead(project, labHeadContact);
+            List<LabHead> labHeads = new ArrayList<LabHead>();
+            labHeads.add(labHead);
+            project.setLabHeads(labHeads);
+        }
 
         // project title
         project.setTitle(projectMetaData.getProjectTitle());
@@ -311,7 +316,7 @@ public class SubmissionMaker {
      * @param submission submission object
      * @return a map of assay accession to project files
      */
-    public Map<ProjectFile, String> makeFiles(final Submission submission) {
+    public Map<ProjectFile, String> makeFiles(final Submission submission) throws IOException {
         Map<ProjectFile, String> projectFiles = new HashMap<ProjectFile, String>();
 
         List<DataFile> dataFiles = submission.getDataFiles();
@@ -325,7 +330,8 @@ public class SubmissionMaker {
 
             // file size
             File file = dataFile.getFile();
-            projectFile.setFileSize(file.length());
+            File realFile = fileFinder.find(file);
+            projectFile.setFileSize(realFile.length());
 
             // file name
             projectFile.setFileName(file.getName());
