@@ -129,6 +129,31 @@ public class ProjectLoaderCompleteSubmissionTest extends AbstractLoaderTest {
         url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 25.dat-pride.xml");
         file1 = new File(temporaryFolder.getRoot(), "Spot 25.dat-pride.xml");
         FileUtils.copyFile(new File(url.toURI()), file1);
+        url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 3.dat");
+        file1 = new File(temporaryFolder.getRoot(), "Spot 3.dat");
+        FileUtils.copyFile(new File(url.toURI()), file1);
+        url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 14.dat");
+        file1 = new File(temporaryFolder.getRoot(), "Spot 14.dat");
+        FileUtils.copyFile(new File(url.toURI()), file1);
+        url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 19.dat");
+        file1 = new File(temporaryFolder.getRoot(), "Spot 19.dat");
+        FileUtils.copyFile(new File(url.toURI()), file1);
+        url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 25.dat");
+        file1 = new File(temporaryFolder.getRoot(), "Spot 25.dat");
+        FileUtils.copyFile(new File(url.toURI()), file1);
+        url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 3.raw.zip");
+        file1 = new File(temporaryFolder.getRoot(), "Spot 3.raw.zip");
+        FileUtils.copyFile(new File(url.toURI()), file1);
+        url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 14.raw.zip");
+        file1 = new File(temporaryFolder.getRoot(), "Spot 14.raw.zip");
+        FileUtils.copyFile(new File(url.toURI()), file1);
+        url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 19.raw.zip");
+        file1 = new File(temporaryFolder.getRoot(), "Spot 19.raw.zip");
+        FileUtils.copyFile(new File(url.toURI()), file1);
+        url = ProjectLoaderCompleteSubmissionTest.class.getClassLoader().getResource("px_files/Spot 25.raw.zip");
+        file1 = new File(temporaryFolder.getRoot(), "Spot 25.raw.zip");
+        FileUtils.copyFile(new File(url.toURI()), file1);
+
 
         //and update path in submission,px file to point to pride.xml file in tmp folder
         updatePrideXMLFilePath(submissionFile);

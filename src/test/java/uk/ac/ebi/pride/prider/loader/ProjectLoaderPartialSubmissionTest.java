@@ -79,6 +79,17 @@ public class ProjectLoaderPartialSubmissionTest extends AbstractLoaderTest {
         //copy submission file
         File file1 = new File(temporaryFolder.getRoot(), "submission.px");
         FileUtils.copyFile(new File(url.toURI()), file1);
+
+        url = ProjectLoaderPartialSubmissionTest.class.getClassLoader().getResource("px_files_partial/Spot 25.dat");
+        //copy submission file
+        file1 = new File(temporaryFolder.getRoot(), "Spot 25.dat");
+        FileUtils.copyFile(new File(url.toURI()), file1);
+
+        url = ProjectLoaderPartialSubmissionTest.class.getClassLoader().getResource("px_files_partial/Spot 25.dat-report.xml.zip");
+        //copy submission file
+        file1 = new File(temporaryFolder.getRoot(), "Spot 25.dat-report.xml.zip");
+        FileUtils.copyFile(new File(url.toURI()), file1);
+
         //use copy of original file
         submissionFile = new FileSystemResource(file1);
 

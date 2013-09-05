@@ -183,8 +183,8 @@ public class SubmissionMaker {
         // lab head
         Contact labHeadContact = projectMetaData.getLabHeadContact();
         if (labHeadContact.getName() != null &&
-            labHeadContact.getEmail() != null &&
-            labHeadContact.getAffiliation() != null) {
+                labHeadContact.getEmail() != null &&
+                labHeadContact.getAffiliation() != null) {
 
             LabHead labHead = DataConversionUtil.convertLabHead(project, labHeadContact);
             List<LabHead> labHeads = new ArrayList<LabHead>();
@@ -339,13 +339,32 @@ public class SubmissionMaker {
             // file source
             projectFile.setFileSource(ProjectFileSource.SUBMITTED);
 
-            String assayAccession = dataFile.getAssayAccession();
-            if (assayAccession != null && "".equals(assayAccession)) {
-                assayAccession = null;
-            }
+            String assayAccession = getAssayAccession(dataFile, dataFiles);
             projectFiles.put(projectFile, assayAccession);
+
         }
 
         return projectFiles;
+    }
+
+    private String getAssayAccession(DataFile dataFile, List<DataFile> dataFiles) {
+        String assayAccession = null;
+
+        if (dataFile.getFileType().equals(ProjectFileType.RESULT)) {
+            assayAccession = dataFile.getAssayAccession();
+        } else {
+            for (DataFile data : dataFiles) {
+                if (data.getFileMappings().contains(dataFile)
+                        && data.getFileType().equals(ProjectFileType.RESULT)) {
+                    assayAccession = data.getAssayAccession();
+                }
+            }
+        }
+
+        if ("".equals(assayAccession)) {
+            assayAccession = null;
+        }
+
+        return assayAccession;
     }
 }

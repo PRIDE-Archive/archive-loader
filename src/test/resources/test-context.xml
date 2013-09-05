@@ -18,7 +18,7 @@
     <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">-->
     <!--<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>-->
     <!--<property name="url" value="jdbc:oracle:thin:@brem.ebi.ac.uk:1531:PRIDEPRO"/>-->
-    <!--<property name="username" value="pridexml"/>-->
+    <!--<property name="username" value="pride"/>-->
     <!--<property name="password" value="pride"/>-->
     <!--</bean>-->
 

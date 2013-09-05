@@ -53,6 +53,8 @@ public class ProjectLoaderCompleteMzIdentMLSubmissionTest extends AbstractLoader
 
         checkAssays(loadedProject);
 
+        checkFiles(loadedProject);
+
     }
 
     private Project checkProject() {
@@ -206,6 +208,16 @@ public class ProjectLoaderCompleteMzIdentMLSubmissionTest extends AbstractLoader
         assertEquals("john.doe@nowhere.com", contact.getEmail());
     }
 
+    private void checkFiles(Project loadedProject) {
+        List<ProjectFile> projectFiles = projectFileDao.findAllByProjectId(loadedProject.getId());
+
+        assertEquals(3, projectFiles.size());
+
+        for (ProjectFile projectFile : projectFiles) {
+            assertTrue(projectFile.getAssayId() != null);
+        }
+    }
+
     @Before
     public void setUp() throws Exception {
 
@@ -220,8 +232,13 @@ public class ProjectLoaderCompleteMzIdentMLSubmissionTest extends AbstractLoader
         url = ProjectLoaderCompleteMzIdentMLSubmissionTest.class.getClassLoader().getResource("px_files_mzidentml/F001261.mzid");
         file1 = new File(temporaryFolder.getRoot(), "F001261.mzid");
         FileUtils.copyFile(new File(url.toURI()), file1);
+
         url = ProjectLoaderCompleteMzIdentMLSubmissionTest.class.getClassLoader().getResource("px_files_mzidentml/data-no-pitc-34-filter.mgf");
         file1 = new File(temporaryFolder.getRoot(), "data-no-pitc-34-filter.mgf");
+        FileUtils.copyFile(new File(url.toURI()), file1);
+
+        url = ProjectLoaderCompleteMzIdentMLSubmissionTest.class.getClassLoader().getResource("px_files_mzidentml/55merge_raw.zip");
+        file1 = new File(temporaryFolder.getRoot(), "55merge_raw.zip");
         FileUtils.copyFile(new File(url.toURI()), file1);
     }
 }
