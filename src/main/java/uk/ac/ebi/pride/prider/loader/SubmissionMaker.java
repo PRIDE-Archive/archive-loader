@@ -82,17 +82,19 @@ public class SubmissionMaker {
 
         // sample
         List<AssaySampleCvParam> samples = new ArrayList<AssaySampleCvParam>();
-        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.SPECIES)));
-        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.TISSUE)));
-        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.CELL_TYPE)));
-        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.DISEASE)));
+        SampleMetaData sampleMetaData = dataFile.getSampleMetaData();
+        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.SPECIES)));
+        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.TISSUE)));
+        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.CELL_TYPE)));
+        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.DISEASE)));
         assay.setSamples(samples);
 
         // quantification
-        assay.setQuantificationMethods(DataConversionUtil.convertAssayQuantitationMethodCvParams(assay, dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.QUANTIFICATION_METHOD)));
+        Set<uk.ac.ebi.pride.data.model.CvParam> quantification = sampleMetaData.getMetaData(SampleMetaData.Type.QUANTIFICATION_METHOD);
+        assay.setQuantificationMethods(DataConversionUtil.convertAssayQuantitationMethodCvParams(assay, quantification));
 
         // experimental factor
-        Set<uk.ac.ebi.pride.data.model.CvParam> experimentFactor = dataFile.getSampleMetaData().getMetaData(SampleMetaData.Type.EXPERIMENTAL_FACTOR);
+        Set<uk.ac.ebi.pride.data.model.CvParam> experimentFactor = sampleMetaData.getMetaData(SampleMetaData.Type.EXPERIMENTAL_FACTOR);
         if (!experimentFactor.isEmpty()) {
             //do it this way because experiment factor is stored as the value of a single user param
             assay.setExperimentalFactor(experimentFactor.iterator().next().getValue());
