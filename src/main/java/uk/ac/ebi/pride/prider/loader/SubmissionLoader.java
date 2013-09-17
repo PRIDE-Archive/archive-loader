@@ -20,7 +20,6 @@ import uk.ac.ebi.pride.prider.repo.project.Project;
 import uk.ac.ebi.pride.prider.repo.project.ProjectRepository;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,7 +51,7 @@ public class SubmissionLoader {
 
 
     public void persistSubmission(final Project project,
-                                  final List<Assay> assays,
+                                  final Collection<Assay> assays,
                                   final Map<ProjectFile, String> projectFiles) {
         // create a new transaction call object
         ProjectLoaderTransactionCallback<Boolean> transactionCallback = new ProjectLoaderTransactionCallback<Boolean>() {
@@ -94,7 +93,7 @@ public class SubmissionLoader {
     }
 
     private void persistAssays(final Project project,
-                               final List<Assay> assays) {
+                               final Collection<Assay> assays) {
         for (Assay assay : assays) {
             Long id = project.getId();
             assay.setProjectId(id);
@@ -121,7 +120,7 @@ public class SubmissionLoader {
     }
 
     private void persistFiles(final Project project,
-                              final List<Assay> assays,
+                              final Collection<Assay> assays,
                               final Map<ProjectFile, String> projectFiles) {
 
         for (Map.Entry<ProjectFile, String> projectFileEntry : projectFiles.entrySet()) {
@@ -139,7 +138,7 @@ public class SubmissionLoader {
         }
     }
 
-    private Long getAssayId(String assayAccession, List<Assay> assays) {
+    private Long getAssayId(String assayAccession, Collection<Assay> assays) {
         for (Assay assay : assays) {
             if (assay.getAccession().equals(assayAccession)) {
                 return assay.getId();

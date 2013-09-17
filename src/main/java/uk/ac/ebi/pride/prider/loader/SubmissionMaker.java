@@ -48,23 +48,18 @@ public class SubmissionMaker {
      * Generate a list of assays based on a given submission and its internal file path
      *
      * @param submission submission object
-     * @return a list of assays
+     * @return a map of assay to data file id from the submission summary file
      * @throws IOException error while reading the result files
      */
     public List<Assay> makeAssays(final Submission submission) throws IOException {
         List<Assay> assays = new ArrayList<Assay>();
 
-        if (submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.COMPLETE) ||
-                submission.getProjectMetaData().getSubmissionType().equals(SubmissionType.PRIDE)) {
+        SubmissionType submissionType = submission.getProjectMetaData().getSubmissionType();
+        if (submissionType.equals(SubmissionType.COMPLETE) || submissionType.equals(SubmissionType.PRIDE)) {
             List<DataFile> dataFiles = submission.getDataFiles();
             for (DataFile dataFile : dataFiles) {
                 if (dataFile.isFile() && dataFile.getFileType().equals(ProjectFileType.RESULT)) {
                     Assay assay = makeAssay(dataFile);
-                    File resultFile = fileFinder.find(dataFile.getFile());
-                    MassSpecFileFormat fileFormat = MassSpecFileFormat.checkFormat(resultFile);
-                    AssayFileScanner assayFileScanner = AssayFileScannerFactory.getInstance().getAssayFileScanner(fileFormat, fileFinder);
-                    AssayFileSummary fileSummary = assayFileScanner.scan(assay, dataFile);
-                    enrichAssay(assay, fileSummary);
                     assays.add(assay);
                 }
             }
@@ -73,7 +68,17 @@ public class SubmissionMaker {
         return assays;
     }
 
-    private static Assay makeAssay(DataFile dataFile) throws DataAccessException, IOException {
+    public Assay makeAssay(DataFile dataFile) throws IOException {
+        Assay assay = initAssay(dataFile);
+        File resultFile = fileFinder.find(dataFile.getFile());
+        MassSpecFileFormat fileFormat = MassSpecFileFormat.checkFormat(resultFile);
+        AssayFileScanner assayFileScanner = AssayFileScannerFactory.getInstance().getAssayFileScanner(fileFormat, fileFinder);
+        AssayFileSummary fileSummary = assayFileScanner.scan(assay, dataFile);
+        enrichAssay(assay, fileSummary);
+        return assay;
+    }
+
+    private static Assay initAssay(DataFile dataFile) throws DataAccessException, IOException {
         Assay assay = new Assay();
 
         // accession
