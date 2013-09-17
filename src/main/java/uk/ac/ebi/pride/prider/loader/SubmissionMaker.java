@@ -280,22 +280,25 @@ public class SubmissionMaker {
                 projectSoftwares.addAll(project.getSoftware());
             }
 
-            for (Software software : assay.getSoftwares()) {
-                ProjectSoftwareCvParam psCvParam = new ProjectSoftwareCvParam();
-                CvParam softwareCvParam = new CvParam();
-                softwareCvParam.setCvLabel(Constant.MS);
-                softwareCvParam.setName(Constant.MS_SOFTWARE_NAME);
-                softwareCvParam.setAccession(Constant.MS_SOFTWARE_AC);
-                psCvParam.setCvParam(softwareCvParam);
+            Collection<Software> softwares = assay.getSoftwares();
+            if (softwares != null) {
+                for (Software software : softwares) {
+                    ProjectSoftwareCvParam psCvParam = new ProjectSoftwareCvParam();
+                    CvParam softwareCvParam = new CvParam();
+                    softwareCvParam.setCvLabel(Constant.MS);
+                    softwareCvParam.setName(Constant.MS_SOFTWARE_NAME);
+                    softwareCvParam.setAccession(Constant.MS_SOFTWARE_AC);
+                    psCvParam.setCvParam(softwareCvParam);
 
-                StringBuilder sb = new StringBuilder();
-                sb.append(software.getName());
-                if (software.getVersion() != null) {
-                    sb.append(' ').append(software.getVersion());
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(software.getName());
+                    if (software.getVersion() != null) {
+                        sb.append(' ').append(software.getVersion());
+                    }
+                    psCvParam.setValue(sb.toString().trim());
+                    psCvParam.setProject(project);
+                    projectSoftwares.add(psCvParam);
                 }
-                psCvParam.setValue(sb.toString().trim());
-                psCvParam.setProject(project);
-                projectSoftwares.add(psCvParam);
             }
             project.setSoftware(projectSoftwares);
 
