@@ -1,2 +1,2 @@
 -- password is johnsmith
-INSERT INTO users VALUES (11111,'john.smith@dummy.ebi.com', '$2a$10$Zf1AEQW1Blw7e4Dt.y3Bne5flAXs.R69AbBdCqcv0h8Cv7Y6Ycatq','Mr', 'john', 'smith', 'EBI', TO_DATE('2010-04-29', 'YYYY-MM-DD'), TO_DATE('2010-04-30', 'YYYY-MM-DD'));
+INSERT INTO pride_users VALUES (11111,'john.smith@dummy.ebi.com', '$2a$10$Zf1AEQW1Blw7e4Dt.y3Bne5flAXs.R69AbBdCqcv0h8Cv7Y6Ycatq','Mr', 'john', 'smith', 'EBI', TO_DATE('2010-04-29', 'YYYY-MM-DD'), TO_DATE('2010-04-30', 'YYYY-MM-DD'));
