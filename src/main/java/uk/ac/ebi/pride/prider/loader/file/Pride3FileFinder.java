@@ -24,7 +24,7 @@ public class Pride3FileFinder implements FileFinder {
 
     @Override
     public File find(File file) throws IOException {
-        if (FileUtil.isGzipped(file) || FileUtil.isZipped(file)) {
+        if (FileUtil.isGzipped(file)) {
             String decompressedFileName = FileUtil.getDecompressedFileName(file);
             File foundFile = findFileByName(decompressedFileName);
             if (foundFile != null) {
