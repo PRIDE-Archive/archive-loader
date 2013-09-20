@@ -100,7 +100,7 @@ public class SubmissionMaker {
 
         // experimental factor
         Set<uk.ac.ebi.pride.data.model.CvParam> experimentFactor = sampleMetaData.getMetaData(SampleMetaData.Type.EXPERIMENTAL_FACTOR);
-        if (!experimentFactor.isEmpty()) {
+        if (experimentFactor != null && !experimentFactor.isEmpty()) {
             //do it this way because experiment factor is stored as the value of a single user param
             assay.setExperimentalFactor(experimentFactor.iterator().next().getValue());
         }
