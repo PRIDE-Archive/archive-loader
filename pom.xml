@@ -21,9 +21,9 @@
     </scm>
 
     <properties>
-        <prider.repo.version>0.1.9-SNAPSHOT</prider.repo.version>
-        <prider.data.provider.api.version>1.1.1-SNAPSHOT</prider.data.provider.api.version>
-        <px.submission.core.version>1.12-SNAPSHOT</px.submission.core.version>
+        <prider.repo.version>0.1.9</prider.repo.version>
+        <prider.data.provider.api.version>1.1.1</prider.data.provider.api.version>
+        <px.submission.core.version>1.13</px.submission.core.version>
         <ms.data.core.api.version>0.11.7</ms.data.core.api.version>
     </properties>
 
