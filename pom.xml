@@ -24,7 +24,7 @@
         <prider.repo.version>0.1.10</prider.repo.version>
         <prider.data.provider.api.version>1.1.2</prider.data.provider.api.version>
         <px.submission.core.version>1.13</px.submission.core.version>
-        <ms.data.core.api.version>0.11.7</ms.data.core.api.version>
+        <ms.data.core.api.version>0.11.8</ms.data.core.api.version>
     </properties>
 
 
