@@ -187,5 +187,8 @@ public class ReferenceUtil {
         }
     }
 
-
+    public static void main(String[] args) {
+        PubMedReference pubmedReference = ReferenceUtil.getPubmedReference(args[0]);
+        System.out.println(pubmedReference.toCitation());
+    }
 }
