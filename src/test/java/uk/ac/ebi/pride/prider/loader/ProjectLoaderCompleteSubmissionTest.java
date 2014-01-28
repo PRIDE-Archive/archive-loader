@@ -12,6 +12,8 @@ import uk.ac.ebi.pride.data.model.DataFile;
 import uk.ac.ebi.pride.data.model.Submission;
 import uk.ac.ebi.pride.prider.dataprovider.file.ProjectFileType;
 import uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType;
+import uk.ac.ebi.pride.prider.loader.assay.AssayFileScanner;
+import uk.ac.ebi.pride.prider.loader.assay.AssayFileSummary;
 import uk.ac.ebi.pride.prider.loader.file.Pride3FileFinder;
 import uk.ac.ebi.pride.prider.repo.assay.Assay;
 import uk.ac.ebi.pride.prider.repo.assay.instrument.Instrument;
@@ -21,6 +23,7 @@ import uk.ac.ebi.pride.prider.repo.user.User;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -41,8 +44,11 @@ public class ProjectLoaderCompleteSubmissionTest extends AbstractLoaderTest {
 
         String filePath = submissionFile.getFile().getAbsolutePath().replace(submissionFile.getFilename(), "");
         File rootPath = new File(filePath);
-        SubmissionMaker maker = new SubmissionMaker(new Pride3FileFinder(rootPath));
-        List<Assay> assaysToPersist = maker.makeAssays(submission);
+        Pride3FileFinder fileFinder = new Pride3FileFinder(rootPath);
+        SubmissionMaker maker = new SubmissionMaker(fileFinder);
+        AssayFileScanner assayFileScanner = new AssayFileScanner(fileFinder);
+        Collection<AssayFileSummary> assayFileSummaries = assayFileScanner.scan(submission);
+        List<Assay> assaysToPersist = maker.makeAssays(assayFileSummaries);
 
         User submitterToPersist = userDao.findByEmail("john.smith@dummy.ebi.com");
         Project project = maker.makeProject("123456", "12345", submitterToPersist, submission, assaysToPersist);

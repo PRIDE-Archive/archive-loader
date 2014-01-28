@@ -5,6 +5,8 @@ import uk.ac.ebi.pride.data.io.SubmissionFileParser;
 import uk.ac.ebi.pride.data.model.DataFile;
 import uk.ac.ebi.pride.data.model.Submission;
 import uk.ac.ebi.pride.prider.dataprovider.file.ProjectFileType;
+import uk.ac.ebi.pride.prider.loader.assay.AssayFileScanner;
+import uk.ac.ebi.pride.prider.loader.assay.AssayFileSummary;
 import uk.ac.ebi.pride.prider.loader.file.Pride3FileFinder;
 import uk.ac.ebi.pride.prider.repo.assay.Assay;
 
@@ -23,14 +25,17 @@ public class ManuelSubmissionMakerRunner {
         long start = System.currentTimeMillis();
 
         // scan for assay statistics
-        SubmissionMaker submissionMaker = new SubmissionMaker(new Pride3FileFinder(submissionDirectory.getAbsoluteFile()));
+        Pride3FileFinder fileFinder = new Pride3FileFinder(submissionDirectory.getAbsoluteFile());
+        SubmissionMaker submissionMaker = new SubmissionMaker(fileFinder);
 
         // read submission
         Submission submission = SubmissionFileParser.parse(new File(args[0] + "/submission.px"));
 
         for (DataFile dataFile : submission.getDataFiles()) {
             if (dataFile.getFileType().equals(ProjectFileType.RESULT)) {
-                Assay assay = submissionMaker.makeAssay(dataFile);
+                AssayFileScanner assayFileScanner = new AssayFileScanner(fileFinder);
+                AssayFileSummary assayFileSummary = assayFileScanner.scan(dataFile);
+                Assay assay = submissionMaker.makeAssay(assayFileSummary);
                 System.out.println("Protein count: " + assay.getProteinCount());
                 System.out.println("Peptide count: " + assay.getPeptideCount());
             }

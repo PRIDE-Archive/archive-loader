@@ -8,6 +8,7 @@ import org.springframework.core.io.FileSystemResource;
 import uk.ac.ebi.pride.data.io.SubmissionFileParser;
 import uk.ac.ebi.pride.data.model.Submission;
 import uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType;
+import uk.ac.ebi.pride.prider.loader.assay.AssayFileScanner;
 import uk.ac.ebi.pride.prider.loader.file.Pride3FileFinder;
 import uk.ac.ebi.pride.prider.repo.assay.Assay;
 import uk.ac.ebi.pride.prider.repo.file.ProjectFile;
@@ -36,8 +37,10 @@ public class ProjectLoaderPartialSubmissionTest extends AbstractLoaderTest {
 
         String filePath = submissionFile.getFile().getAbsolutePath().replace(submissionFile.getFilename(), "");
         File rootPath = new File(filePath);
-        SubmissionMaker maker = new SubmissionMaker(new Pride3FileFinder(rootPath));
-        List<Assay> assaysToPersist = maker.makeAssays(submission);
+        Pride3FileFinder fileFinder = new Pride3FileFinder(rootPath);
+        SubmissionMaker maker = new SubmissionMaker(fileFinder);
+        AssayFileScanner assayFileScanner = new AssayFileScanner(fileFinder);
+        List<Assay> assaysToPersist = maker.makeAssays(assayFileScanner.scan(submission));
 
         User submitterToPersist = userDao.findByEmail("john.smith@dummy.ebi.com");
         Project project = maker.makeProject("456798", null, submitterToPersist, submission, assaysToPersist);
@@ -69,7 +72,6 @@ public class ProjectLoaderPartialSubmissionTest extends AbstractLoaderTest {
         Assert.assertEquals(1, loadedProject.getPtms().size());
         Assert.assertEquals("phosphorylated residue", loadedProject.getPtms().iterator().next().getName());
         Assert.assertEquals(0, loadedProject.getSoftware().size());
-
     }
 
     @Before
@@ -92,9 +94,6 @@ public class ProjectLoaderPartialSubmissionTest extends AbstractLoaderTest {
         //copy submission file
         file1 = new File(temporaryFolder.getRoot(), "Spot 25.dat-report.xml.zip");
         FileUtils.copyFile(new File(url.toURI()), file1);
-
-
-
     }
 
 }

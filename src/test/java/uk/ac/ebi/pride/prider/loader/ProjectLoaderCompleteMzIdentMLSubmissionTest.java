@@ -8,6 +8,8 @@ import uk.ac.ebi.pride.data.io.SubmissionFileParser;
 import uk.ac.ebi.pride.data.model.Submission;
 import uk.ac.ebi.pride.prider.dataprovider.person.Title;
 import uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType;
+import uk.ac.ebi.pride.prider.loader.assay.AssayFileScanner;
+import uk.ac.ebi.pride.prider.loader.assay.AssayFileSummary;
 import uk.ac.ebi.pride.prider.loader.file.Pride3FileFinder;
 import uk.ac.ebi.pride.prider.repo.assay.Assay;
 import uk.ac.ebi.pride.prider.repo.assay.Contact;
@@ -38,8 +40,11 @@ public class ProjectLoaderCompleteMzIdentMLSubmissionTest extends AbstractLoader
 
         String filePath = submissionFile.getFile().getAbsolutePath().replace(submissionFile.getFilename(), "");
         File rootPath = new File(filePath);
-        SubmissionMaker maker = new SubmissionMaker(new Pride3FileFinder(rootPath));
-        List<Assay> assaysToPersist = maker.makeAssays(submission);
+        Pride3FileFinder fileFinder = new Pride3FileFinder(rootPath);
+        SubmissionMaker maker = new SubmissionMaker(fileFinder);
+        AssayFileScanner assayFileScanner = new AssayFileScanner(fileFinder);
+        Collection<AssayFileSummary> assayFileSummaries = assayFileScanner.scan(submission);
+        List<Assay> assaysToPersist = maker.makeAssays(assayFileSummaries);
 
         User submitterToPersist = userDao.findByEmail("john.smith@dummy.ebi.com");
         Project project = maker.makeProject("88888", "88888", submitterToPersist, submission, assaysToPersist);

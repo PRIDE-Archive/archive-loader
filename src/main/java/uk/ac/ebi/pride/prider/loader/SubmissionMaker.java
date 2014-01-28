@@ -1,20 +1,16 @@
 package uk.ac.ebi.pride.prider.loader;
 
-import uk.ac.ebi.pride.data.controller.DataAccessException;
-import uk.ac.ebi.pride.data.model.*;
-import uk.ac.ebi.pride.data.util.MassSpecFileFormat;
+import uk.ac.ebi.pride.data.model.Contact;
+import uk.ac.ebi.pride.data.model.DataFile;
+import uk.ac.ebi.pride.data.model.ProjectMetaData;
+import uk.ac.ebi.pride.data.model.Submission;
 import uk.ac.ebi.pride.prider.dataprovider.file.ProjectFileSource;
 import uk.ac.ebi.pride.prider.dataprovider.file.ProjectFileType;
-import uk.ac.ebi.pride.prider.dataprovider.project.SubmissionType;
-import uk.ac.ebi.pride.prider.loader.assay.AssayFileScanner;
-import uk.ac.ebi.pride.prider.loader.assay.AssayFileScannerFactory;
 import uk.ac.ebi.pride.prider.loader.assay.AssayFileSummary;
 import uk.ac.ebi.pride.prider.loader.file.FileFinder;
 import uk.ac.ebi.pride.prider.loader.util.Constant;
 import uk.ac.ebi.pride.prider.loader.util.DataConversionUtil;
-import uk.ac.ebi.pride.prider.repo.assay.Assay;
-import uk.ac.ebi.pride.prider.repo.assay.AssayPTM;
-import uk.ac.ebi.pride.prider.repo.assay.AssaySampleCvParam;
+import uk.ac.ebi.pride.prider.repo.assay.*;
 import uk.ac.ebi.pride.prider.repo.assay.instrument.Instrument;
 import uk.ac.ebi.pride.prider.repo.assay.software.Software;
 import uk.ac.ebi.pride.prider.repo.file.ProjectFile;
@@ -47,68 +43,43 @@ public class SubmissionMaker {
     /**
      * Generate a list of assays based on a given submission and its internal file path
      *
-     * @param submission submission object
+     * @param assayFileSummaries a collection of assay file summaries
      * @return a map of assay to data file id from the submission summary file
      * @throws IOException error while reading the result files
      */
-    public List<Assay> makeAssays(final Submission submission) throws IOException {
+    public List<Assay> makeAssays(final Collection<AssayFileSummary> assayFileSummaries) {
         List<Assay> assays = new ArrayList<Assay>();
 
-        SubmissionType submissionType = submission.getProjectMetaData().getSubmissionType();
-        if (submissionType.equals(SubmissionType.COMPLETE) || submissionType.equals(SubmissionType.PRIDE)) {
-            List<DataFile> dataFiles = submission.getDataFiles();
-            for (DataFile dataFile : dataFiles) {
-                if (dataFile.isFile() && dataFile.getFileType().equals(ProjectFileType.RESULT)) {
-                    Assay assay = makeAssay(dataFile);
-                    assays.add(assay);
-                }
-            }
+        for (AssayFileSummary assayFileSummary : assayFileSummaries) {
+            Assay assay = makeAssay(assayFileSummary);
+            assays.add(assay);
         }
 
         return assays;
     }
 
-    public Assay makeAssay(DataFile dataFile) throws IOException {
-        Assay assay = initAssay(dataFile);
-        File resultFile = fileFinder.find(dataFile.getFile());
-        MassSpecFileFormat fileFormat = MassSpecFileFormat.checkFormat(resultFile);
-        AssayFileScanner assayFileScanner = AssayFileScannerFactory.getInstance().getAssayFileScanner(fileFormat, fileFinder);
-        AssayFileSummary fileSummary = assayFileScanner.scan(assay, dataFile);
-        enrichAssay(assay, fileSummary);
-        return assay;
-    }
-
-    private static Assay initAssay(DataFile dataFile) throws DataAccessException, IOException {
+    public Assay makeAssay(final AssayFileSummary assayFileSummary) {
         Assay assay = new Assay();
 
         // accession
-        String accession = dataFile.getAssayAccession();
+        String accession = assayFileSummary.getAccession();
         assay.setAccession(accession);
 
         // sample
-        List<AssaySampleCvParam> samples = new ArrayList<AssaySampleCvParam>();
-        SampleMetaData sampleMetaData = dataFile.getSampleMetaData();
-        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.SPECIES)));
-        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.TISSUE)));
-        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.CELL_TYPE)));
-        samples.addAll(DataConversionUtil.convertAssaySampleCvParams(assay, sampleMetaData.getMetaData(SampleMetaData.Type.DISEASE)));
+        Set<AssaySampleCvParam> samples = assayFileSummary.getSamples();
+        for (AssaySampleCvParam sample : samples) {
+            sample.setAssay(assay);
+        }
         assay.setSamples(samples);
 
         // quantification
-        Set<uk.ac.ebi.pride.data.model.CvParam> quantification = sampleMetaData.getMetaData(SampleMetaData.Type.QUANTIFICATION_METHOD);
-        assay.setQuantificationMethods(DataConversionUtil.convertAssayQuantitationMethodCvParams(assay, quantification));
-
-        // experimental factor
-        Set<uk.ac.ebi.pride.data.model.CvParam> experimentFactor = sampleMetaData.getMetaData(SampleMetaData.Type.EXPERIMENTAL_FACTOR);
-        if (experimentFactor != null && !experimentFactor.isEmpty()) {
-            //do it this way because experiment factor is stored as the value of a single user param
-            assay.setExperimentalFactor(experimentFactor.iterator().next().getValue());
+        Set<AssayQuantificationMethodCvParam> quantificationMethods = assayFileSummary.getQuantificationMethods();
+        for (AssayQuantificationMethodCvParam quantificationMethod : quantificationMethods) {
+            quantificationMethod.setAssay(assay);
         }
+        assay.setQuantificationMethods(quantificationMethods);
 
-        return assay;
-    }
-
-    private void enrichAssay(Assay assay, AssayFileSummary assayFileSummary) {
+        assay.setExperimentalFactor(assayFileSummary.getExperimentalFactor());
 
         // set assay title
         assay.setTitle(assayFileSummary.getName());
@@ -138,17 +109,39 @@ public class SubmissionMaker {
         assay.setChromatogram(assayFileSummary.hasChromatogram());
 
         // softwares
-        assay.setSoftwares(DataConversionUtil.convertSoftware(assay, assayFileSummary.getSoftwares()));
+        Set<Software> softwares = assayFileSummary.getSoftwares();
+        for (Software software : softwares) {
+            software.setAssay(assay);
+        }
+        assay.setSoftwares(softwares);
 
         // ptms
-        assay.setPtms(DataConversionUtil.convertAssayPTMs(assay, assayFileSummary.getPtms()));
+        Set<AssayPTM> ptms = assayFileSummary.getPtms();
+        for (AssayPTM ptm : ptms) {
+            ptm.setAssay(assay);
+        }
+        assay.setPtms(ptms);
 
         //contact
-        assay.setContacts(DataConversionUtil.convertContact(assay, assayFileSummary.getContacts()));
+        Set<uk.ac.ebi.pride.prider.repo.assay.Contact> contacts = assayFileSummary.getContacts();
+        for (uk.ac.ebi.pride.prider.repo.assay.Contact contact : contacts) {
+            contact.setAssay(assay);
+        }
+        assay.setContacts(contacts);
 
         //additional params
-        assay.setAssayGroupCvParams(DataConversionUtil.convertAssayGroupCvParams(assay, assayFileSummary.getAdditional()));
-        assay.setAssayGroupUserParams(DataConversionUtil.convertAssayGroupUserParams(assay, assayFileSummary.getAdditional()));
+        Set<AssayGroupCvParam> cvParams = assayFileSummary.getCvParams();
+        for (AssayGroupCvParam cvParam : cvParams) {
+            cvParam.setAssay(assay);
+        }
+        assay.setAssayGroupCvParams(cvParams);
+
+
+        Set<AssayGroupUserParam> userParams = assayFileSummary.getUserParams();
+        for (AssayGroupUserParam userParam : userParams) {
+            userParam.setAssay(assay);
+        }
+        assay.setAssayGroupUserParams(userParams);
 
         //instrument
         Collection<Instrument> instruments = new HashSet<Instrument>();
@@ -157,6 +150,8 @@ public class SubmissionMaker {
             instruments.add(instrument);
         }
         assay.setInstruments(instruments);
+
+        return assay;
     }
 
     /**

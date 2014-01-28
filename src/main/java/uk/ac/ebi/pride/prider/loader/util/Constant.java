@@ -16,4 +16,6 @@ public final class Constant {
 
     public static final String MS_SOFTWARE_NAME = "software";
     public static final String MS_INSTRUMENT_MODEL_NAME = "instrument model";
+
+    public static final double MZ_OUTLIER = 4;
 }

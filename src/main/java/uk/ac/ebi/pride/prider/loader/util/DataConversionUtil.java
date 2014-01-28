@@ -76,21 +76,21 @@ public final class DataConversionUtil {
         return references;
     }
 
-    public static Collection<AssaySampleCvParam> convertAssaySampleCvParams(Assay assay, Set<CvParam> sampleParams) {
+    public static Collection<AssaySampleCvParam> convertAssaySampleCvParams(Set<CvParam> sampleParams) {
         Collection<AssaySampleCvParam> retval = new HashSet<AssaySampleCvParam>();
-        retval.addAll(convertAssayCvParams(assay, AssaySampleCvParam.class, sampleParams));
+        retval.addAll(convertAssayCvParams(AssaySampleCvParam.class, sampleParams));
         return retval;
     }
 
-    public static Collection<AssayQuantificationMethodCvParam> convertAssayQuantitationMethodCvParams(Assay assay, Set<CvParam> sampleParams) {
+    public static Collection<AssayQuantificationMethodCvParam> convertAssayQuantitationMethodCvParams(Set<CvParam> sampleParams) {
         Collection<AssayQuantificationMethodCvParam> retval = new HashSet<AssayQuantificationMethodCvParam>();
-        retval.addAll(convertAssayCvParams(assay, AssayQuantificationMethodCvParam.class, sampleParams));
+        retval.addAll(convertAssayCvParams(AssayQuantificationMethodCvParam.class, sampleParams));
         return retval;
     }
 
 
     @SuppressWarnings("unchecked")
-    private static Collection convertAssayCvParams(Assay assay, Class clz, Set<? extends Param> sampleParams) {
+    private static Collection convertAssayCvParams(Class clz, Set<? extends Param> sampleParams) {
 
         try {
             Collection<AssayCvParam> retval = new HashSet<AssayCvParam>();
@@ -101,7 +101,6 @@ public final class DataConversionUtil {
                         uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = createCvParam(cvParam);
 
                         AssayCvParam acvParam = (AssayCvParam) clz.newInstance();
-                        acvParam.setAssay(assay);
                         acvParam.setCvParam(repoParam);
                         acvParam.setValue(cvParam.getValue());
                         retval.add(acvParam);
@@ -204,14 +203,13 @@ public final class DataConversionUtil {
 
     }
 
-    public static Collection<uk.ac.ebi.pride.prider.repo.assay.software.Software> convertSoftware(Assay assay, Set<Software> softwares) {
+    public static Collection<uk.ac.ebi.pride.prider.repo.assay.software.Software> convertSoftware(Set<Software> softwares) {
 
         Set<uk.ac.ebi.pride.prider.repo.assay.software.Software> softwareSet = new HashSet<uk.ac.ebi.pride.prider.repo.assay.software.Software>();
         int orderIndex = 0;
         if (softwares != null) {
             for (Software oldSoftware : softwares) {
                 uk.ac.ebi.pride.prider.repo.assay.software.Software newSoftware = new uk.ac.ebi.pride.prider.repo.assay.software.Software();
-                newSoftware.setAssay(assay);
                 newSoftware.setName(oldSoftware.getName());
                 newSoftware.setOrder(orderIndex++);
                 newSoftware.setSoftwareCvParams(convertSoftwareCvParams(newSoftware, oldSoftware.getCvParams()));
@@ -313,7 +311,7 @@ public final class DataConversionUtil {
     }
 
 
-    public static Collection<AssayPTM> convertAssayPTMs(Assay assay, Set<uk.ac.ebi.pride.data.core.CvParam> ptms) {
+    public static Collection<AssayPTM> convertAssayPTMs(Set<uk.ac.ebi.pride.data.core.CvParam> ptms) {
 
         Set<AssayPTM> retval = new HashSet<AssayPTM>();
         if (ptms != null) {
@@ -322,7 +320,6 @@ public final class DataConversionUtil {
                 uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = createCvParam(cvParam);
 
                 AssayPTM aPTM = new AssayPTM();
-                aPTM.setAssay(assay);
                 aPTM.setCvParam(repoParam);
                 aPTM.setValue(cvParam.getValue());
                 retval.add(aPTM);
@@ -405,7 +402,7 @@ public final class DataConversionUtil {
 
     }
 
-    public static Collection<Contact> convertContact(Assay assay, Collection<Person> personContacts) {
+    public static Collection<Contact> convertContact(Collection<Person> personContacts) {
         Set<Contact> retval = new HashSet<Contact>();
         if (personContacts != null) {
             for (Person person : personContacts) {
@@ -483,20 +480,19 @@ public final class DataConversionUtil {
                 if (sb.length() > 0) {
                     affiliation = affiliation.substring(0, affiliation.length() - 1);
                 }
-                if (affiliation == null || "".equals(affiliation)) {
+                if ("".equals(affiliation)) {
                     logger.warn("No affiliation given for contact: " + person.toString());
                     continue;
                 }
                 contact.setAffiliation(affiliation);
 
-                contact.setAssay(assay);
                 retval.add(contact);
             }
         }
         return retval;
     }
 
-    public static Collection<AssayGroupCvParam> convertAssayGroupCvParams(Assay assay, ParamGroup additional) {
+    public static Collection<AssayGroupCvParam> convertAssayGroupCvParams(ParamGroup additional) {
 
         Set<AssayGroupCvParam> retval = new HashSet<AssayGroupCvParam>();
         if (additional != null) {
@@ -505,7 +501,6 @@ public final class DataConversionUtil {
                 uk.ac.ebi.pride.prider.repo.param.CvParam repoParam = createCvParam(cvParam);
 
                 AssayGroupCvParam agcvParam = new AssayGroupCvParam();
-                agcvParam.setAssay(assay);
                 agcvParam.setCvParam(repoParam);
                 agcvParam.setValue(cvParam.getValue());
                 retval.add(agcvParam);
@@ -515,14 +510,13 @@ public final class DataConversionUtil {
         return retval;
     }
 
-    public static Collection<AssayGroupUserParam> convertAssayGroupUserParams(Assay assay, ParamGroup additional) {
+    public static Collection<AssayGroupUserParam> convertAssayGroupUserParams(ParamGroup additional) {
 
         Set<AssayGroupUserParam> retval = new HashSet<AssayGroupUserParam>();
         if (additional != null) {
             for (UserParam userParam : additional.getUserParams()) {
 
                 AssayGroupUserParam auserParam = new AssayGroupUserParam();
-                auserParam.setAssay(assay);
                 auserParam.setName(userParam.getName());
                 auserParam.setValue(userParam.getValue());
                 retval.add(auserParam);
