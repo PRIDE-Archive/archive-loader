@@ -242,6 +242,9 @@ public class SubmissionMaker {
         // set to private
         project.setPublicProject(false);
 
+        // set change status
+        project.setChanged(false);
+
         // set number of assays
         project.setNumAssays(assays.size());
 
