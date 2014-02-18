@@ -147,7 +147,6 @@ public class AssayFileScanner {
         }
     }
 
-
     private boolean getMzMLSummary(AssayFileSummary fileSummary, File mappedFile) {
         MzMLControllerImpl mzMLController = null;
         try {
@@ -317,9 +316,11 @@ public class AssayFileScanner {
         Set<Comparable> spectrumIds = new HashSet<Comparable>();
         double errorPSMCount = 0.0;
         double totalPSMCount = 0.0;
+        long count = 0;
 
         Collection<Comparable> proteinIds = dataAccessController.getProteinIds();
         for (Comparable proteinId : proteinIds) {
+            count ++;
             Collection<Comparable> peptideIds = dataAccessController.getPeptideIds(proteinId);
             for (Comparable peptideId : peptideIds) {
                 totalPSMCount++;
@@ -380,6 +381,10 @@ public class AssayFileScanner {
                     fileSummary.setMs2Annotation(true);
                 }
             }
+
+            if (count % 500 == 0) {
+                logger.info("Scanned " + count+ " entries of proteins from file : " + fileSummary.getId());
+            }
         }
 
         fileSummary.setNumberOfUniquePeptides(peptideSequences.size());
@@ -402,7 +407,10 @@ public class AssayFileScanner {
             case PRIDE:
                 return new PrideXmlControllerImpl(file);
             case MZIDENTML:
-                MzIdentMLControllerImpl mzIdentMlController = new MzIdentMLControllerImpl(file);
+                long length = file.length();
+                boolean lessThanLimit = length <= 1024*1024*1024;
+                logger.info("Loading mzIdentML in memory: " + lessThanLimit + " for " + file.getAbsolutePath());
+                MzIdentMLControllerImpl mzIdentMlController = new MzIdentMLControllerImpl(file, lessThanLimit);
 
                 List<File> peakListFiles = new ArrayList<File>();
                 for (DataFile df : dataFile.getFileMappings()) {
