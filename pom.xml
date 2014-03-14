@@ -23,8 +23,7 @@
     <properties>
         <prider.repo.version>0.1.12</prider.repo.version>
         <prider.data.provider.api.version>1.1.2</prider.data.provider.api.version>
-        <px.submission.core.version>1.14</px.submission.core.version>
-        <ms.data.core.api.version>0.11.14</ms.data.core.api.version>
+        <apache.commons.io.version>2.4</apache.commons.io.version>
     </properties>
 
 
@@ -65,25 +64,17 @@
             <version>${prider.data.provider.api.version}</version>
         </dependency>
 
-        <!-- PX submission core-->
-        <dependency>
-            <groupId>uk.ac.ebi.pride</groupId>
-            <artifactId>px-submission-core</artifactId>
-            <version>${px.submission.core.version}</version>
-        </dependency>
-
-        <!-- ms data core api -->
-        <dependency>
-            <groupId>uk.ac.ebi.pride</groupId>
-            <artifactId>ms-data-core-api</artifactId>
-            <version>${ms.data.core.api.version}</version>
-        </dependency>
-
         <!-- HSQLDB for integration testing -->
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${apache.commons.io.version}</version>
         </dependency>
 
         <!-- oracle jdbc driver -->
