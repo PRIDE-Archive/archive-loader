@@ -1,4 +1,4 @@
-package uk.ac.ebi.pride.prider.loader.param;
+package uk.ac.ebi.pride.archive.loader.param;
 
 import uk.ac.ebi.pride.prider.repo.param.CvParam;
 
