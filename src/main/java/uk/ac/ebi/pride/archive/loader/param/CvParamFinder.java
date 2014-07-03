@@ -1,6 +1,6 @@
 package uk.ac.ebi.pride.archive.loader.param;
 
-import uk.ac.ebi.pride.prider.repo.param.CvParam;
+import uk.ac.ebi.pride.archive.repo.param.CvParam;
 
 import java.util.Collection;
 

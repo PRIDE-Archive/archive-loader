@@ -1,4 +1,4 @@
-package uk.ac.ebi.pride.prider.loader.exception;
+package uk.ac.ebi.pride.archive.loader.exception;
 
 /**
  * {@code ProjectLoadingException} will be thrown if there is an exception during the

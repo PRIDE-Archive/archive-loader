@@ -1,10 +1,11 @@
-package uk.ac.ebi.pride.prider.loader.param;
+package uk.ac.ebi.pride.archive.loader.param;
 
-import uk.ac.ebi.pride.prider.repo.assay.*;
-import uk.ac.ebi.pride.prider.repo.assay.instrument.*;
-import uk.ac.ebi.pride.prider.repo.assay.software.Software;
-import uk.ac.ebi.pride.prider.repo.assay.software.SoftwareCvParam;
-import uk.ac.ebi.pride.prider.repo.param.CvParam;
+
+import uk.ac.ebi.pride.archive.repo.assay.*;
+import uk.ac.ebi.pride.archive.repo.assay.instrument.*;
+import uk.ac.ebi.pride.archive.repo.assay.software.Software;
+import uk.ac.ebi.pride.archive.repo.assay.software.SoftwareCvParam;
+import uk.ac.ebi.pride.archive.repo.param.CvParam;
 
 import java.util.ArrayList;
 import java.util.Collection;

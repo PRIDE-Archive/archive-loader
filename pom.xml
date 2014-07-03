@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>uk.ac.ebi.pride.prider</groupId>
-    <artifactId>prider-loader</artifactId>
+    <groupId>uk.ac.ebi.pride.archive</groupId>
+    <artifactId>archive-loader</artifactId>
     <version>1.27-SNAPSHOT</version>
     <packaging>jar</packaging>
     <url>http://www.ebi.ac.uk/pride</url>
@@ -15,14 +15,14 @@
     </parent>
 
     <scm>
-        <connection>scm:svn:https://svn.ebi.ac.uk/pride-repo/pride_r/prider-loader/trunk</connection>
-        <developerConnection>scm:svn:https://svn.ebi.ac.uk/pride-repo/pride_r/prider-loader/trunk</developerConnection>
-        <url>https://svn.ebi.ac.uk/pride-repo/pride_r/prider-loader/trunk</url>
+        <connection>scm:svn:https://svn.ebi.ac.uk/pride-repo/pride_r/archive-loader/trunk</connection>
+        <developerConnection>scm:svn:https://svn.ebi.ac.uk/pride-repo/pride_r/archive-loader/trunk</developerConnection>
+        <url>https://svn.ebi.ac.uk/pride-repo/pride_r/archive-loader/trunk</url>
     </scm>
 
     <properties>
-        <prider.repo.version>0.1.12</prider.repo.version>
-        <prider.data.provider.api.version>1.1.2</prider.data.provider.api.version>
+        <archive.repo.version>0.1.17-SNAPSHOT</archive.repo.version>
+        <archive.data.provider.api.version>2.0.1-SNAPSHOT</archive.data.provider.api.version>
         <apache.commons.io.version>2.4</apache.commons.io.version>
     </properties>
 
@@ -53,15 +53,15 @@
 
         <!-- PRIDE-R core-->
         <dependency>
-            <groupId>uk.ac.ebi.pride.prider</groupId>
-            <artifactId>prider-repo</artifactId>
-            <version>${prider.repo.version}</version>
+            <groupId>uk.ac.ebi.pride.archive</groupId>
+            <artifactId>archive-repo</artifactId>
+            <version>${archive.repo.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>uk.ac.ebi.pride.prider</groupId>
-            <artifactId>prider-data-provider-api</artifactId>
-            <version>${prider.data.provider.api.version}</version>
+            <groupId>uk.ac.ebi.pride.archive</groupId>
+            <artifactId>archive-data-provider-api</artifactId>
+            <version>${archive.data.provider.api.version}</version>
         </dependency>
 
         <!-- HSQLDB for integration testing -->

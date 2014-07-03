@@ -1,10 +1,10 @@
-package uk.ac.ebi.pride.prider.loader.util;
+package uk.ac.ebi.pride.archive.loader.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ebi.pride.prider.loader.exception.SubmissionLoaderException;
-import uk.ac.ebi.pride.prider.repo.param.CvParam;
-import uk.ac.ebi.pride.prider.repo.param.CvParamRepository;
+import uk.ac.ebi.pride.archive.loader.exception.SubmissionLoaderException;
+import uk.ac.ebi.pride.archive.repo.param.CvParam;
+import uk.ac.ebi.pride.archive.repo.param.CvParamRepository;
 
 import java.util.Collection;
 import java.util.HashMap;

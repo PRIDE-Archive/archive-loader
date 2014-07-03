@@ -1,4 +1,4 @@
-package uk.ac.ebi.pride.prider.loader;
+package uk.ac.ebi.pride.archive.loader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,18 +6,18 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
-import uk.ac.ebi.pride.prider.loader.exception.SubmissionLoaderException;
-import uk.ac.ebi.pride.prider.loader.param.AssayCvParamFinder;
-import uk.ac.ebi.pride.prider.loader.param.ProjectCvParamFinder;
-import uk.ac.ebi.pride.prider.loader.util.CvParamManager;
-import uk.ac.ebi.pride.prider.repo.assay.Assay;
-import uk.ac.ebi.pride.prider.repo.assay.AssayRepository;
-import uk.ac.ebi.pride.prider.repo.file.ProjectFile;
-import uk.ac.ebi.pride.prider.repo.file.ProjectFileRepository;
-import uk.ac.ebi.pride.prider.repo.param.CvParam;
-import uk.ac.ebi.pride.prider.repo.param.CvParamRepository;
-import uk.ac.ebi.pride.prider.repo.project.Project;
-import uk.ac.ebi.pride.prider.repo.project.ProjectRepository;
+import uk.ac.ebi.pride.archive.loader.exception.SubmissionLoaderException;
+import uk.ac.ebi.pride.archive.loader.param.AssayCvParamFinder;
+import uk.ac.ebi.pride.archive.loader.param.ProjectCvParamFinder;
+import uk.ac.ebi.pride.archive.loader.util.CvParamManager;
+import uk.ac.ebi.pride.archive.repo.assay.Assay;
+import uk.ac.ebi.pride.archive.repo.assay.AssayRepository;
+import uk.ac.ebi.pride.archive.repo.file.ProjectFile;
+import uk.ac.ebi.pride.archive.repo.file.ProjectFileRepository;
+import uk.ac.ebi.pride.archive.repo.param.CvParam;
+import uk.ac.ebi.pride.archive.repo.param.CvParamRepository;
+import uk.ac.ebi.pride.archive.repo.project.Project;
+import uk.ac.ebi.pride.archive.repo.project.ProjectRepository;
 
 import java.util.Collection;
 import java.util.Map;
