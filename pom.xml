@@ -22,7 +22,7 @@
 
     <properties>
         <archive.repo.version>0.1.17-SNAPSHOT</archive.repo.version>
-        <archive.data.provider.api.version>2.0.1-SNAPSHOT</archive.data.provider.api.version>
+        <archive.data.provider.api.version>2.0.1</archive.data.provider.api.version>
         <apache.commons.io.version>2.4</apache.commons.io.version>
     </properties>
 
