@@ -12,7 +12,7 @@
         <groupId>uk.ac.ebi.pride.maven</groupId>
         <artifactId>pride-base-master</artifactId>
         <version>1.0.3</version>
-    </parent> // TODO replace with pride-core parent
+    </parent>  <!--TODO replace with pride-core parent-->
 
     <properties>
         <archive.repo.version>1.0.1</archive.repo.version>
