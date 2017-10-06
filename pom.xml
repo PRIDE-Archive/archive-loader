@@ -14,16 +14,9 @@
         <version>1.0.3</version>
     </parent>
 
-    <scm>
-        <connection>scm:git:https://github.com/PRIDE-Archive/archive-loader.git</connection>
-        <developerConnection>scm:git:https://github.com/PRIDE-Archive/archive-loader.git</developerConnection>
-        <url>https://github.com/PRIDE-Archive/archive-loader</url>
-        <tag>HEAD</tag>
-    </scm>
-
     <properties>
-        <archive.repo.version>0.1.19</archive.repo.version>
-        <archive.data.provider.api.version>2.0.6</archive.data.provider.api.version>
+        <archive.repo.version>1.0.1</archive.repo.version>
+        <archive.data.provider.api.version>2.0.11</archive.data.provider.api.version>
         <apache.commons.io.version>2.4</apache.commons.io.version>
     </properties>
 
@@ -115,29 +108,25 @@
     </build>
 
     <repositories>
-        <!-- EBI repo -->
         <repository>
-            <id>nexus-ebi-repo</id>
-            <name>The EBI internal repository</name>
-            <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/</url>
-            <releases>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
+            <id>pst-release</id>
+            <name>EBI Nexus Repository</name>
+            <url>http://www.ebi.ac.uk/Tools/maven/repos/content/repositories/pst-release</url>
         </repository>
-
         <!-- EBI SNAPSHOT repo -->
         <repository>
-            <id>nexus-ebi-snapshot-repo</id>
-            <name>The EBI internal snapshot repository</name>
-            <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo-snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-            </snapshots>
+            <id>pst-snapshots</id>
+            <name>EBI Nexus Snapshots Repository</name>
+            <url>http://www.ebi.ac.uk/Tools/maven/repos/content/repositories/pst-snapshots</url>
         </repository>
     </repositories>
+
+    <scm>
+        <connection>scm:git:https://github.com/PRIDE-Archive/archive-loader.git</connection>
+        <developerConnection>scm:git:https://github.com/PRIDE-Archive/archive-loader.git</developerConnection>
+        <url>https://github.com/PRIDE-Archive/archive-loader</url>
+        <tag>HEAD</tag>
+    </scm>
+
 
 </project>
