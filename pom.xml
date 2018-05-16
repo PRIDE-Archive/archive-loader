@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uk.ac.ebi.pride.archive</groupId>
@@ -7,12 +8,6 @@
     <version>1.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <url>http://www.ebi.ac.uk/pride</url>
-
-    <parent>
-        <groupId>uk.ac.ebi.pride.maven</groupId>
-        <artifactId>pride-base-master</artifactId>
-        <version>1.0.3</version>
-    </parent>  <!--TODO replace with pride-core parent-->
 
     <properties>
         <archive.repo.version>1.0.1</archive.repo.version>
@@ -27,22 +22,31 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
+            <version>3.2.9.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
+            <version>3.2.9.RELEASE</version>
+
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
+            <version>3.2.9.RELEASE</version>
+
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+            <version>3.2.9.RELEASE</version>
+
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
+            <version>3.2.9.RELEASE</version>
+
         </dependency>
 
         <!-- PRIDE-R core-->
@@ -62,6 +66,7 @@
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
+            <version>2.2.8</version>
             <scope>test</scope>
         </dependency>
 
@@ -75,6 +80,8 @@
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>oracle-thin</artifactId>
+            <version>11.2.0.1.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -91,6 +98,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-source</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -106,6 +122,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
                 <configuration>
                     <additionalparam>-Xdoclint:none</additionalparam>
                 </configuration>
@@ -115,19 +132,33 @@
 
     </build>
 
+    <!-- Repos and distribution -->
     <repositories>
+        <repository>
+            <id>nexus-ebi-release-repo</id>
+            <url>http://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-repo/</url>
+        </repository>
+        <repository>
+            <id>nexus-ebi-snapshot-repo</id>
+            <url>http://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-snapshots/</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <!-- Deployment to EBI's release repository -->
         <repository>
             <id>pst-release</id>
             <name>EBI Nexus Repository</name>
             <url>http://www.ebi.ac.uk/Tools/maven/repos/content/repositories/pst-release</url>
         </repository>
-        <!-- EBI SNAPSHOT repo -->
-        <repository>
+        <!-- Deployment to EBI's snapshot repository -->
+        <snapshotRepository>
+            <uniqueVersion>false</uniqueVersion>
             <id>pst-snapshots</id>
             <name>EBI Nexus Snapshots Repository</name>
             <url>http://www.ebi.ac.uk/Tools/maven/repos/content/repositories/pst-snapshots</url>
-        </repository>
-    </repositories>
+        </snapshotRepository>
+    </distributionManagement>
 
     <scm>
         <connection>scm:git:https://github.com/PRIDE-Archive/archive-loader.git</connection>
