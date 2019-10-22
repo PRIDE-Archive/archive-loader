@@ -74,6 +74,7 @@ public class SubmissionLoader {
                 } catch (Exception ex) {
                     status.setRollbackOnly();
                     this.setException(ex);
+                    logger.error(ex.getMessage());
                     success = false;
                 }
 
@@ -101,7 +102,7 @@ public class SubmissionLoader {
             AssayCvParamFinder assayCvParamFinder = new AssayCvParamFinder();
             Collection<CvParam> cvParams = assayCvParamFinder.find(assay);
             cvParamManager.persistCvParams(cvParams);
-
+            logger.info("Saving assay: " + assay.getAccession());
             assayDao.save(assay);
         }
     }
@@ -132,7 +133,7 @@ public class SubmissionLoader {
 
             Long assayId = getAssayId(assayAccession, assays);
             projectFile.setAssayId(assayId);
-
+            logger.info("Saving project files : " + projectFile.getProjectId() + " assayID: " + projectFile.getAssayId() + " file: " +  projectFile.getFileName());
             projectFileDao.save(projectFile);
 
         }
