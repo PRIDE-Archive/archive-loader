@@ -1,7 +1,9 @@
 package uk.ac.ebi.pride.archive.loader;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
@@ -10,14 +12,13 @@ import uk.ac.ebi.pride.archive.loader.exception.SubmissionLoaderException;
 import uk.ac.ebi.pride.archive.loader.param.AssayCvParamFinder;
 import uk.ac.ebi.pride.archive.loader.param.ProjectCvParamFinder;
 import uk.ac.ebi.pride.archive.loader.util.CvParamManager;
-import uk.ac.ebi.pride.archive.repo.assay.Assay;
-import uk.ac.ebi.pride.archive.repo.assay.AssayRepository;
-import uk.ac.ebi.pride.archive.repo.file.ProjectFile;
-import uk.ac.ebi.pride.archive.repo.file.ProjectFileRepository;
-import uk.ac.ebi.pride.archive.repo.param.CvParam;
-import uk.ac.ebi.pride.archive.repo.param.CvParamRepository;
-import uk.ac.ebi.pride.archive.repo.project.Project;
-import uk.ac.ebi.pride.archive.repo.project.ProjectRepository;
+import uk.ac.ebi.pride.archive.repo.client.AssayRepoClient;
+import uk.ac.ebi.pride.archive.repo.client.FileRepoClient;
+import uk.ac.ebi.pride.archive.repo.client.ProjectRepoClient;
+import uk.ac.ebi.pride.archive.repo.models.assay.Assay;
+import uk.ac.ebi.pride.archive.repo.models.file.ProjectFile;
+import uk.ac.ebi.pride.archive.repo.models.param.CvParam;
+import uk.ac.ebi.pride.archive.repo.models.project.Project;
 
 import java.util.Collection;
 import java.util.Map;
@@ -31,22 +32,22 @@ public class SubmissionLoader {
     public static final Logger logger = LoggerFactory.getLogger(SubmissionLoader.class);
 
     private final TransactionTemplate transactionTemplate;
-    private final ProjectRepository projectDao;
-    private final AssayRepository assayDao;
-    private final ProjectFileRepository projectFileDao;
+    private final ProjectRepoClient projectRepoClient;
+    private final AssayRepoClient assayRepoClient;
+    private final FileRepoClient fileRepoClient;
     private final CvParamManager cvParamManager;
 
-
-    public SubmissionLoader(ProjectRepository projectDao,
-                            AssayRepository assayDao,
-                            ProjectFileRepository projectFileDao,
-                            CvParamRepository cvParamDao,
+    @Autowired
+    public SubmissionLoader(ProjectRepoClient projectRepoClient,
+                            AssayRepoClient assayRepoClient,
+                            FileRepoClient fileRepoClient,
+                            CvParamManager cvParamManager,
                             PlatformTransactionManager transactionManager) {
-        this.projectDao = projectDao;
-        this.assayDao = assayDao;
-        this.projectFileDao = projectFileDao;
+        this.projectRepoClient = projectRepoClient;
+        this.assayRepoClient = assayRepoClient;
+        this.fileRepoClient = fileRepoClient;
+        this.cvParamManager = cvParamManager;
         this.transactionTemplate = new TransactionTemplate(transactionManager);
-        this.cvParamManager = new CvParamManager(cvParamDao);
     }
 
 
@@ -56,7 +57,6 @@ public class SubmissionLoader {
         // create a new transaction call object
         ProjectLoaderTransactionCallback<Boolean> transactionCallback = new ProjectLoaderTransactionCallback<Boolean>() {
 
-            @Override
             public Boolean doInTransaction(TransactionStatus status) {
                 boolean success = true;
                 try {
@@ -94,7 +94,7 @@ public class SubmissionLoader {
     }
 
     private void persistAssays(final Project project,
-                               final Collection<Assay> assays) {
+                               final Collection<Assay> assays) throws JsonProcessingException {
         for (Assay assay : assays) {
             Long id = project.getId();
             assay.setProjectId(id);
@@ -103,7 +103,7 @@ public class SubmissionLoader {
             Collection<CvParam> cvParams = assayCvParamFinder.find(assay);
             cvParamManager.persistCvParams(cvParams);
             logger.info("Saving assay: " + assay.getAccession());
-            assayDao.save(assay);
+            assayRepoClient.save(assay);
         }
     }
 
@@ -112,17 +112,17 @@ public class SubmissionLoader {
      *
      * @param project project object
      */
-    private void persistProject(final Project project) {
+    private void persistProject(final Project project) throws JsonProcessingException {
         ProjectCvParamFinder projectCvParamFinder = new ProjectCvParamFinder();
         Collection<CvParam> cvParams = projectCvParamFinder.find(project);
         cvParamManager.persistCvParams(cvParams);
 
-        projectDao.save(project);
+        projectRepoClient.save(project);
     }
 
     private void persistFiles(final Project project,
                               final Collection<Assay> assays,
-                              final Map<ProjectFile, String> projectFiles) {
+                              final Map<ProjectFile, String> projectFiles) throws JsonProcessingException {
 
         for (Map.Entry<ProjectFile, String> projectFileEntry : projectFiles.entrySet()) {
             String assayAccession = projectFileEntry.getValue();
@@ -134,7 +134,7 @@ public class SubmissionLoader {
             Long assayId = getAssayId(assayAccession, assays);
             projectFile.setAssayId(assayId);
             logger.info("Saving project files : " + projectFile.getProjectId() + " assayID: " + projectFile.getAssayId() + " file: " +  projectFile.getFileName());
-            projectFileDao.save(projectFile);
+            fileRepoClient.save(projectFile);
 
         }
     }

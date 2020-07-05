@@ -1,7 +1,7 @@
 package uk.ac.ebi.pride.archive.loader.param;
 
-import uk.ac.ebi.pride.archive.repo.param.CvParam;
-import uk.ac.ebi.pride.archive.repo.project.*;
+import uk.ac.ebi.pride.archive.repo.models.param.CvParam;
+import uk.ac.ebi.pride.archive.repo.models.project.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,7 +12,6 @@ import java.util.Collection;
  */
 public class ProjectCvParamFinder implements CvParamFinder<Project> {
 
-    @Override
     public Collection<CvParam> find(Project project) {
         Collection<CvParam> cvParams = new ArrayList<CvParam>();
 

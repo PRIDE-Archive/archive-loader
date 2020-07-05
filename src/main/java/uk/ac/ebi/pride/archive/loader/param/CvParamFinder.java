@@ -1,8 +1,9 @@
 package uk.ac.ebi.pride.archive.loader.param;
 
-import uk.ac.ebi.pride.archive.repo.param.CvParam;
+import uk.ac.ebi.pride.archive.repo.models.param.CvParam;
 
 import java.util.Collection;
+
 
 /**
  * Interface for finding all the cv params within a given object
