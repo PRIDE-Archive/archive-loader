@@ -3,8 +3,6 @@ package uk.ac.ebi.pride.archive.loader.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import uk.ac.ebi.pride.archive.repo.client.CvParamRepoClient;
 import uk.ac.ebi.pride.archive.repo.models.param.CvParam;
 
@@ -19,7 +17,6 @@ import java.util.Map;
  * Date: 22/01/13
  * Time: 22:13
  */
-@Component
 public class CvParamManager {
 
     private static final Logger logger = LoggerFactory.getLogger(CvParamManager.class);
@@ -28,7 +25,6 @@ public class CvParamManager {
 
     private Map<String, CvParam> allParams = new HashMap<String, CvParam>();
 
-    @Autowired
     public CvParamManager(CvParamRepoClient cvParamRepoClient) {
         this.cvParamRepoClient = cvParamRepoClient;
         try {

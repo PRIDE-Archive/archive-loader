@@ -3,7 +3,6 @@ package uk.ac.ebi.pride.archive.loader;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
@@ -13,6 +12,7 @@ import uk.ac.ebi.pride.archive.loader.param.AssayCvParamFinder;
 import uk.ac.ebi.pride.archive.loader.param.ProjectCvParamFinder;
 import uk.ac.ebi.pride.archive.loader.util.CvParamManager;
 import uk.ac.ebi.pride.archive.repo.client.AssayRepoClient;
+import uk.ac.ebi.pride.archive.repo.client.CvParamRepoClient;
 import uk.ac.ebi.pride.archive.repo.client.FileRepoClient;
 import uk.ac.ebi.pride.archive.repo.client.ProjectRepoClient;
 import uk.ac.ebi.pride.archive.repo.models.assay.Assay;
@@ -37,16 +37,15 @@ public class SubmissionLoader {
     private final FileRepoClient fileRepoClient;
     private final CvParamManager cvParamManager;
 
-    @Autowired
     public SubmissionLoader(ProjectRepoClient projectRepoClient,
                             AssayRepoClient assayRepoClient,
                             FileRepoClient fileRepoClient,
-                            CvParamManager cvParamManager,
+                            CvParamRepoClient cvParamRepoClient,
                             PlatformTransactionManager transactionManager) {
         this.projectRepoClient = projectRepoClient;
         this.assayRepoClient = assayRepoClient;
         this.fileRepoClient = fileRepoClient;
-        this.cvParamManager = cvParamManager;
+        this.cvParamManager = new CvParamManager(cvParamRepoClient);
         this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
