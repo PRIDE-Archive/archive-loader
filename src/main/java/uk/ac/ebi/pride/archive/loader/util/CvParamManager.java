@@ -1,11 +1,14 @@
 package uk.ac.ebi.pride.archive.loader.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ebi.pride.archive.loader.exception.SubmissionLoaderException;
-import uk.ac.ebi.pride.archive.repo.param.CvParam;
-import uk.ac.ebi.pride.archive.repo.param.CvParamRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import uk.ac.ebi.pride.archive.repo.client.CvParamRepoClient;
+import uk.ac.ebi.pride.archive.repo.models.param.CvParam;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,24 +19,27 @@ import java.util.Map;
  * Date: 22/01/13
  * Time: 22:13
  */
+@Component
 public class CvParamManager {
 
     private static final Logger logger = LoggerFactory.getLogger(CvParamManager.class);
 
-    private CvParamRepository cvParamDao;
+    private final CvParamRepoClient cvParamRepoClient;
 
     private Map<String, CvParam> allParams = new HashMap<String, CvParam>();
 
-    public CvParamManager(CvParamRepository cvParamDao) {
-        if (cvParamDao == null) {
-            throw new SubmissionLoaderException("CvParam DAO not set!");
+    @Autowired
+    public CvParamManager(CvParamRepoClient cvParamRepoClient) {
+        this.cvParamRepoClient = cvParamRepoClient;
+        try {
+            cacheData();
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage(), e);
         }
-        this.cvParamDao = cvParamDao;
-        cacheData();
     }
 
-    private void cacheData() {
-        for (CvParam param : cvParamDao.findAll()) {
+    private void cacheData() throws IOException {
+        for (CvParam param : cvParamRepoClient.findAll()) {
             allParams.put(param.getAccession(), param);
         }
     }
@@ -42,7 +48,7 @@ public class CvParamManager {
         return allParams.get(accession);
     }
 
-    public void persistCvParams(Collection<CvParam> cvParams) {
+    public void persistCvParams(Collection<CvParam> cvParams) throws JsonProcessingException {
         for (CvParam cvParam : cvParams) {
             CvParam persistedCvParam = getCvParam(cvParam.getAccession());
             if (persistedCvParam != null) {
@@ -59,7 +65,7 @@ public class CvParamManager {
      *
      * @return true if the param has been stored, false otherwise.
      */
-    public void putCvParam(CvParam cvParam) {
+    public void putCvParam(CvParam cvParam) throws JsonProcessingException {
 
         String accession = cvParam.getAccession();
         String name = cvParam.getName();
@@ -77,7 +83,7 @@ public class CvParamManager {
 
         if (!allParams.containsKey(accession)) {
             try {
-                cvParamDao.save(cvParam);
+                cvParamRepoClient.save(cvParam);
                 logger.warn("Storing cv param: " + accession);
                 allParams.put(accession, cvParam);
             } catch (RuntimeException e) {

@@ -1,11 +1,11 @@
 package uk.ac.ebi.pride.archive.loader.param;
 
 
-import uk.ac.ebi.pride.archive.repo.assay.*;
-import uk.ac.ebi.pride.archive.repo.assay.instrument.*;
-import uk.ac.ebi.pride.archive.repo.assay.software.Software;
-import uk.ac.ebi.pride.archive.repo.assay.software.SoftwareCvParam;
-import uk.ac.ebi.pride.archive.repo.param.CvParam;
+import uk.ac.ebi.pride.archive.repo.models.assay.*;
+import uk.ac.ebi.pride.archive.repo.models.assay.instrument.*;
+import uk.ac.ebi.pride.archive.repo.models.assay.software.Software;
+import uk.ac.ebi.pride.archive.repo.models.assay.software.SoftwareCvParam;
+import uk.ac.ebi.pride.archive.repo.models.param.CvParam;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +16,6 @@ import java.util.Collection;
  */
 public class AssayCvParamFinder implements CvParamFinder<Assay> {
 
-    @Override
     public Collection<CvParam> find(Assay assay) {
         Collection<CvParam> cvParams = new ArrayList<CvParam>();
 
